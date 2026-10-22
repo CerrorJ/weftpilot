@@ -1,30 +1,9 @@
 import { useI18n } from './preferences'
 import { useEffect, useState } from 'react'
-import { handshakeSchema, type KernelHandshake } from '@weftpilot/agent-team-kernel/protocol'
+import { diagnosticPreviewSchema } from '../../../packages/kernel-client/diagnostics-contract'
 import { BackupPanel } from './backup-panel'
-interface Diagnostics {
-  handshake: KernelHandshake
-  artifactSha256: string
-  credentialsAvailable: boolean
-}
-const parseDiagnostics = (input: unknown): Diagnostics => {
-  if (
-    typeof input !== 'object' ||
-    input === null ||
-    !('handshake' in input) ||
-    !('artifactSha256' in input) ||
-    typeof input.artifactSha256 !== 'string' ||
-    !('credentialsAvailable' in input) ||
-    typeof input.credentialsAvailable !== 'boolean'
-  ) {
-    throw new Error('收到的诊断信息无效，请重新连接')
-  }
-  return {
-    handshake: handshakeSchema.parse(input.handshake),
-    artifactSha256: input.artifactSha256,
-    credentialsAvailable: input.credentialsAvailable,
-  }
-}
+import { EnvironmentPanel } from './environment-panel'
+type Diagnostics = ReturnType<typeof diagnosticPreviewSchema.parse>
 const useDiagnostics = () => {
   const [diagnostics, setDiagnostics] = useState<Diagnostics>()
   const [error, setError] = useState('')
@@ -34,7 +13,7 @@ const useDiagnostics = () => {
     setError('')
     try {
       if (!window.weftpilot) throw new Error('桌面桥接不可用，请从纬舟应用打开')
-      setDiagnostics(parseDiagnostics(await window.weftpilot.diagnostics()))
+      setDiagnostics(diagnosticPreviewSchema.parse(await window.weftpilot.diagnostics()))
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : '连接失败')
     } finally {
@@ -75,6 +54,7 @@ export const DiagnosticsPanel = () => {
       </div>
       {error && <p role="alert">{t(error)}</p>}
       {diagnostics && !error && <KernelDetails diagnostics={diagnostics} />}
+      {diagnostics && !error && <EnvironmentPanel diagnostics={diagnostics} />}
       <BackupPanel />
       <section className="next-step">
         <h2>{t('开始前')}</h2>

@@ -9,6 +9,7 @@ import { ModelVault } from './model-vault'
 import { FeishuVault } from './feishu-vault'
 import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
+import { DiagnosticReports } from './diagnostic-reports'
 
 let window: BrowserWindow | undefined
 let host: KernelController | undefined
@@ -71,22 +72,21 @@ const quit = async (): Promise<void> => {
   }
 }
 
-const diagnostics = async () => {
-  if (!host) throw new Error('内核未启动')
-  const handshake = await host.client.handshake()
-  const lock = JSON.parse(readFileSync(join(root, 'kernel-lock.json'), 'utf8')) as {
-    sourceCommit: string
-    sha256: string
-  }
-  if (handshake.sourceCommit !== lock.sourceCommit) throw new Error('内核源提交与锁定版本不一致')
-  return {
-    handshake,
-    artifactSha256: lock.sha256,
-    credentialsAvailable: new CredentialStore(
-      join(app.getPath('userData'), 'credentials'),
-    ).available(),
-  }
-}
+const diagnosticReports = new DiagnosticReports({
+  client: () => {
+    if (!host) throw new Error('内核未启动')
+    return host.client
+  },
+  window: () => window,
+  root,
+  desktop: {
+    version: app.getVersion(),
+    electron: process.versions.electron ?? 'unknown',
+    chromium: process.versions.chrome ?? 'unknown',
+  },
+  credentialsAvailable: () =>
+    new CredentialStore(join(app.getPath('userData'), 'credentials')).available(),
+})
 
 ipcMain.handle('weftpilot:diagnostics', async (event) => {
   if (
@@ -96,7 +96,17 @@ ipcMain.handle('weftpilot:diagnostics', async (event) => {
   ) {
     throw new Error('不允许的 IPC 来源')
   }
-  return diagnostics()
+  return diagnosticReports.query()
+})
+
+ipcMain.handle('weftpilot:exportDiagnostics', async (event, input: unknown) => {
+  if (
+    event.sender !== window?.webContents ||
+    event.senderFrame !== window.webContents.mainFrame ||
+    event.senderFrame.url !== rendererUrl
+  )
+    throw new Error('不允许的 IPC 来源')
+  return diagnosticReports.export(input)
 })
 
 const nativeUi = { window: () => window, tray: () => tray, quit, rendererUrl }

@@ -3,12 +3,14 @@ import { englishHuman } from './english-human'
 import { englishFeishu } from './english-feishu'
 import { englishSkills } from './english-skills'
 import { englishBackup } from './english-backup'
+import { englishDiagnostics } from './english-diagnostics'
 export const english: Record<string, string> = {
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,
   ...englishSkills,
   ...englishBackup,
+  ...englishDiagnostics,
   纬舟: 'WeftPilot',
   任务与交付: 'Tasks & deliveries',
   项目与角色: 'Projects & roles',

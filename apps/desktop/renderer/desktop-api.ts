@@ -4,6 +4,7 @@ declare global {
   interface Window {
     weftpilot?: {
       diagnostics(): Promise<unknown>
+      exportDiagnostics(input: { ticket: string; language: 'zh-CN' | 'en' }): Promise<unknown>
       appearance(input: {
         language: 'zh-CN' | 'en'
         theme: 'system' | 'light' | 'dark'

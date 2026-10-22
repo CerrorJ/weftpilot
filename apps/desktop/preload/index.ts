@@ -41,6 +41,8 @@ contextBridge.exposeInMainWorld(
   'weftpilot',
   Object.freeze({
     diagnostics: (): Promise<unknown> => ipcRenderer.invoke('weftpilot:diagnostics'),
+    exportDiagnostics: (input: unknown): Promise<unknown> =>
+      ipcRenderer.invoke('weftpilot:exportDiagnostics', input),
     appearance: (input: unknown): Promise<void> =>
       ipcRenderer.invoke('weftpilot:appearance', input),
     workflow: Object.freeze(workflow),

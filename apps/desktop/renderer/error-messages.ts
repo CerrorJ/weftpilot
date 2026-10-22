@@ -3,12 +3,14 @@ import { humanErrors } from './human-errors'
 import { feishuErrors } from './feishu-errors'
 import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
+import { diagnosticErrors } from './english-diagnostics'
 const messages: Record<string, [string, string]> = {
   ...productErrors,
   ...humanErrors,
   ...feishuErrors,
   ...skillErrors,
   ...backupErrors,
+  ...diagnosticErrors,
   GIT_ROOT_REQUIRED: [
     '请选择有效 Git 仓库的根目录',
     'Select the root directory of a valid Git repository.',

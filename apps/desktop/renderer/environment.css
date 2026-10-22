@@ -1,0 +1,37 @@
+.environment-checks {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+.environment-checks li {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.environment-checks strong {
+  text-align: right;
+  flex-shrink: 0;
+}
+.check-passed {
+  color: var(--forest);
+}
+.check-attention,
+.check-failed {
+  color: var(--error);
+}
+.check-unchecked {
+  color: var(--muted);
+}
+.diagnostic-export pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 24rem;
+  overflow: auto;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+}

@@ -65,6 +65,7 @@ export class KernelClient {
     method:
       | 'kernel.handshake'
       | 'kernel.health'
+      | 'kernel.diagnostics'
       | 'kernel.shutdown'
       | 'workspace.snapshot'
       | 'feishu.connect'
