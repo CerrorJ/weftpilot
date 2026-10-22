@@ -1,7 +1,8 @@
 import { execFileSync, spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
 import { randomUUID } from 'node:crypto'
-import { cp, mkdir, readFile, writeFile, readdir } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, writeFile, readdir } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { existsSync } from 'node:fs'
 import { resolve, dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -67,12 +68,13 @@ async function assembleInstaller() {
     JSON.stringify({ ...context, phase: 'preparing' }, null, 2),
     { flag: 'wx', flush: true },
   )
-  const appDirectory = resolve(`.kernel/installer-app-${operationId}`)
+  const appDirectory = await mkdtemp(join(tmpdir(), 'weftpilot-installer-app-'))
   const icons = resolve(`.kernel/installer-icons-${operationId}`)
   await prepareApp({ appDirectory, icons, metadata, version, validation, kernel })
   const { build } = await import('electron-builder')
   const config = nativeBuildConfiguration({ output, appDirectory, icons, validation, kernel })
-  const artifacts = await build({ config, publish: 'never' })
+  const artifacts = await build({ projectDir: appDirectory, config, publish: 'never' })
+  if (sourceRevision() !== sourceCommit) throw new Error('安装装配期间源码变化，拒绝生成更新清单')
   const files = await artifactDigests(output, artifacts)
   await writeFile(
     join(output, 'release-manifest.json'),

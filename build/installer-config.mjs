@@ -1,3 +1,5 @@
+import { resolve } from 'node:path'
+
 /** 本地未签名装配；签名、公证和公开更新渠道必须另行授权配置。 */
 export const installerConfiguration = ({ output, appDirectory, icons, validation = false }) => ({
   appId: validation ? 'io.weftpilot.desktop.validation' : 'io.weftpilot.desktop',
@@ -19,7 +21,7 @@ export const installerConfiguration = ({ output, appDirectory, icons, validation
     requestedExecutionLevel: 'asInvoker',
   },
   nsis: {
-    include: 'build/installer.nsh',
+    include: resolve('build/installer.nsh'),
     installerLanguages: ['zh_CN', 'en_US'],
     displayLanguageSelector: true,
     oneClick: false,
