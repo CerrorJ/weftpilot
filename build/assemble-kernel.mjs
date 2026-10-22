@@ -18,7 +18,15 @@ const runPnpm = (args) =>
 await mkdir(root, { recursive: true })
 if (!existsSync(`${source}/.git`))
   run('git', ['clone', '--no-checkout', lock.repository, source], root)
-run('git', ['fetch', 'origin', lock.sourceCommit], source)
+// CI 通过有范围的 checkout 提供私有源码，不保存 token；已有固定对象时无需再联网。
+try {
+  execFileSync('git', ['cat-file', '-e', `${lock.sourceCommit}^{commit}`], {
+    cwd: source,
+    stdio: 'ignore',
+  })
+} catch {
+  run('git', ['fetch', 'origin', lock.sourceCommit], source)
+}
 run('git', ['checkout', '--detach', lock.sourceCommit], source)
 if (execFileSync('git', ['status', '--porcelain'], { cwd: source, encoding: 'utf8' }).trim()) {
   throw new Error('内核构建检出包含改动，拒绝装配')
@@ -26,7 +34,11 @@ if (execFileSync('git', ['status', '--porcelain'], { cwd: source, encoding: 'utf
 runPnpm(['install', '--frozen-lockfile'])
 runPnpm(['build:kernel'])
 // npm pack 的 tarball 记录规范化时间戳，可重复重建同一固定源码产物。
-const npmEntry = resolve(process.execPath, '..', 'node_modules/npm/bin/npm-cli.js')
+const npmEntry = [
+  resolve(process.execPath, '..', 'node_modules/npm/bin/npm-cli.js'),
+  resolve(process.execPath, '../..', 'lib/node_modules/npm/bin/npm-cli.js'),
+].find((path) => existsSync(path))
+if (!npmEntry) throw new Error('未找到 Node 随附的 npm CLI，请使用锁定的官方 Node 工具链')
 run(process.execPath, [npmEntry, 'pack', '--pack-destination', root], `${source}/dist-kernel`)
 const archive = resolve(root, lock.artifact)
 const digest = createHash('sha256')

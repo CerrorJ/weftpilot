@@ -11,6 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
@@ -19,6 +21,19 @@ jobs:
           version: 12.3.4
       - run: pnpm install --frozen-lockfile
       - run: node node_modules/electron/install.js
+      - name: Validate private kernel access
+        id: kernel-pin
+        env:
+          AGENT_TEAM_READ_TOKEN: ${{ secrets.AGENT_TEAM_READ_TOKEN }}
+        run: node build/ci-kernel-pin.mjs
+      - name: Checkout locked Agent-Team kernel
+        uses: actions/checkout@v4
+        with:
+          repository: CerrorJ/Agent-Team
+          ref: ${{ steps.kernel-pin.outputs.commit }}
+          token: ${{ secrets.AGENT_TEAM_READ_TOKEN }}
+          path: .kernel/source
+          persist-credentials: false
       - run: pnpm kernel:assemble
       - run: pnpm typecheck
       - run: pnpm lint
