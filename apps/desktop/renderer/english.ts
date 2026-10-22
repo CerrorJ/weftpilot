@@ -1,4 +1,6 @@
-﻿export const english: Record<string, string> = {
+import { englishProduct } from './english-product'
+export const english: Record<string, string> = {
+  ...englishProduct,
   纬舟: 'WeftPilot',
   任务与交付: 'Tasks & deliveries',
   项目与角色: 'Projects & roles',

@@ -2,7 +2,14 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writeFile, readFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import { createFixture, launch, quit, configure, createTask, snapshot } from './workflow-helpers'
+import {
+  createFixture,
+  launch,
+  quit,
+  configure,
+  createTask,
+  businessSnapshot as snapshot,
+} from './workflow-helpers'
 
 test(
   '真实窗口：中英文与主题持久化，项目角色任务重启恢复，脏仓库不执行',
@@ -73,12 +80,12 @@ test(
 
 test(
   '真实 CLI：桌面创建到交付退回、新 Run 重试与人工验收',
-  { timeout: 180000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
+  { timeout: 300000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
   async () => {
     const fixture = await createFixture()
     const application = await launch(fixture.data)
     try {
-      const page = await configure(application, fixture.repository)
+      const page = await configure(application, fixture.repository, { activate: true })
       await createTask(
         page,
         'In this isolated repository create hello.txt containing exactly WEFTPILOT_M1_OK followed by a newline. Do not use network, install anything, touch other directories, commit or push. Reply briefly.',
@@ -116,12 +123,12 @@ test(
 
 test(
   '真实 CLI：请求停止和完全退出均等待在途进程结束',
-  { timeout: 150000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
+  { timeout: 240000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
   async () => {
     const fixture = await createFixture()
     const application = await launch(fixture.data)
     try {
-      const page = await configure(application, fixture.repository)
+      const page = await configure(application, fixture.repository, { activate: true })
       await createTask(
         page,
         'For this isolated test, first run a shell command that waits 40 seconds (Start-Sleep on Windows or sleep elsewhere). After the wait write hello.txt containing WEFTPILOT_M1_OK. Do not use network, commit or push.',
@@ -130,9 +137,12 @@ test(
       await page.waitForFunction(
         async () => {
           const value = (await window.weftpilot?.workflow.snapshot()) as
-            { logs: { label: string }[] } | undefined
+            | { runs: { id: string; purpose?: string }[]; logs: { runId: string; label: string }[] }
+            | undefined
+          const run = value?.runs.filter((item) => item.purpose !== 'role_trial').at(-1)
           return value?.logs.some(
             (item) =>
+              item.runId === run?.id &&
               !['session', 'stats', 'retry', 'result', 'error', 'tool_end'].includes(item.label),
           )
         },
@@ -165,8 +175,15 @@ const assertEndedProcesses = async (data: string) => {
     const runs = database
       .prepare('SELECT data FROM runs ORDER BY rowid')
       .all()
-      .map((row) => JSON.parse(String(row.data)) as { processState: string; status: string })
-    assert.equal(runs.length, 2)
+      .map(
+        (row) =>
+          JSON.parse(String(row.data)) as {
+            processState: string
+            status: string
+            purpose?: string
+          },
+      )
+    assert.equal(runs.filter((run) => run.purpose !== 'role_trial').length, 2)
     assert.ok(runs.every((run) => run.processState === 'confirmed_ended'))
     const segments = database.prepare('SELECT pid,ended_at FROM execution_segments').all()
     for (const segment of segments) {
@@ -180,12 +197,12 @@ const assertEndedProcesses = async (data: string) => {
 
 test(
   '真实 CLI：启动后立即停止的竞争重复三次',
-  { timeout: 90000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
+  { timeout: 180000, skip: process.env.WEFTPILOT_REAL_CLI !== '1' },
   async () => {
     const fixture = await createFixture()
     const application = await launch(fixture.data)
     try {
-      const page = await configure(application, fixture.repository)
+      const page = await configure(application, fixture.repository, { activate: true })
       await createTask(
         page,
         'Create hello.txt containing WEFTPILOT_M1_OK in this isolated directory only. Do not use network, commit or push.',

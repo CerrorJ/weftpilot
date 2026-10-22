@@ -13,6 +13,13 @@ export interface WorkflowBridge {
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,
   ): Promise<unknown>
   saveRole(input: Submission<Input<'role.save'>>): Promise<unknown>
+  saveModel(input: Submission<Input<'model.save'>>): Promise<unknown>
+  saveRequirement(input: Submission<Input<'requirement.save'>>): Promise<unknown>
+  saveTeam(input: Submission<Input<'team.save'>>): Promise<unknown>
+  trialRole(input: Submission<Input<'role.trial'>>): Promise<unknown>
+  setRoleEnabled(input: Submission<Input<'role.setEnabled'>>): Promise<unknown>
+  createTeamTask(input: Submission<Input<'team.createTask'>>): Promise<unknown>
+  startTeam(input: Submission<Input<'team.start'>>): Promise<unknown>
   createTask(input: Submission<Input<'task.create'>>): Promise<unknown>
   startRun(input: Submission<Input<'run.start'>>): Promise<unknown>
   stopRun(input: Submission<Input<'run.stop'>>): Promise<unknown>

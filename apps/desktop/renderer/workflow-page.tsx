@@ -5,6 +5,7 @@ import { ProjectSetup } from './project-setup'
 import { RoleSetup } from './role-setup'
 import { TaskCreate } from './task-create'
 import { TaskWorkspace } from './task-workspace'
+import { TeamTaskCreate } from './team-task-create'
 const latestRoles = (roles: RoleVersion[]) => {
   const latest = new Map<string, RoleVersion>()
   for (const role of roles) {
@@ -42,11 +43,12 @@ export const WorkflowPage = ({ setup, actions }: { setup: boolean; actions: Work
       ) : setup ? (
         <>
           <ProjectSetup projects={state.projects} actions={actions} />
-          <RoleSetup roles={roles} actions={actions} />
+          <RoleSetup state={state} actions={actions} />
         </>
       ) : (
         <>
           <TaskCreate projects={state.projects} roles={roles} actions={actions} />
+          <TeamTaskCreate state={state} actions={actions} />
           <TaskWorkspace state={state} actions={actions} />
         </>
       )}

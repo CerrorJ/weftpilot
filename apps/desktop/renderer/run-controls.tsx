@@ -53,7 +53,7 @@ const StartRun = ({ task, actions }: Omit<ControlsContext, 'run'>) => {
       disabled={actions.busy}
       onClick={() => {
         void actions.execute({
-          type: 'run.start',
+          type: task.purpose === 'team_parent' ? 'team.start' : 'run.start',
           taskId: task.id,
           expectedVersion: task.version,
         })

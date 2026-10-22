@@ -5,26 +5,7 @@ import {
   type WorkspaceSnapshot,
 } from '@weftpilot/agent-team-kernel/protocol'
 import { workflow } from './desktop-api'
-
-const sendCommand = (command: BusinessCommand, key: string): Promise<unknown> => {
-  const api = workflow()
-  switch (command.type) {
-    case 'role.save':
-      return api.saveRole({ key, input: command })
-    case 'task.create':
-      return api.createTask({ key, input: command })
-    case 'run.start':
-      return api.startRun({ key, input: command })
-    case 'run.stop':
-      return api.stopRun({ key, input: command })
-    case 'run.retry':
-      return api.retryRun({ key, input: command })
-    case 'delivery.accept':
-      return api.acceptDelivery({ key, input: command })
-    case 'project.create':
-      throw new Error('项目目录须从系统对话框选择')
-  }
-}
+import { sendCommand } from './command-sender'
 
 export const useWorkspace = () => {
   const [state, setState] = useState<WorkspaceSnapshot>()

@@ -8,7 +8,7 @@
 
 ## 当前阶段
 
-架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。当前开发分支已建立 Electron/React 工程与真实 Agent-Team 嵌入内核，并接入 M1 项目、角色、任务执行与交付验收；Windows 真实 CLI 与打包测试、独立 Tester、Reviewer 已通过，正在推进 M2。私有内核的跨仓 CI 凭据、macOS 原生验收等记录后继续开发，不提前标为通过。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
+架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。当前开发分支已建立 Electron/React 工程与真实 Agent-Team 嵌入内核，并接入 M1 项目、角色、任务执行与交付验收；Windows 真实 CLI 与打包测试、独立 Tester、Reviewer 已通过，M2 已接入对象版本、角色试运行和真实依赖团队闭环；整体尚未封板。私有内核的跨仓 CI 凭据、macOS 原生验收等记录后继续开发，不提前标为通过。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
 
 **Agent-Team 是唯一内核；纬舟消费固定提交与摘要的产物。项目、角色、Run、调度、Git、CLI 和验收均在内核维护，桌面只消费协议。界面支持中英文、浅色/深色/跟随系统，并保存本机偏好。**
 
@@ -36,7 +36,7 @@
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
-git switch feat/local-workflow
+git switch feat/product-teams
 ```
 
 先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4：

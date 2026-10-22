@@ -33,7 +33,9 @@ export const TaskWorkspace = ({
 }) => {
   const { t } = useI18n()
   const [selected, setSelected] = useState('')
-  const task = state.tasks.find((item) => item.id === selected) ?? state.tasks.at(-1)
+  const tasks = state.tasks.filter((item) => item.purpose !== 'role_trial')
+  const task =
+    tasks.find((item) => item.id === selected) ?? tasks.filter((item) => !item.parentTaskId).at(-1)
   if (!task)
     return (
       <section className="empty-state">
@@ -44,7 +46,7 @@ export const TaskWorkspace = ({
   return (
     <div className="task-workspace">
       <section className="task-list" aria-label={t('任务列表')}>
-        {[...state.tasks].reverse().map((item) => (
+        {[...tasks].reverse().map((item) => (
           <button
             key={item.id}
             aria-pressed={item.id === task.id}
@@ -58,7 +60,13 @@ export const TaskWorkspace = ({
           </button>
         ))}
       </section>
-      <TaskDetail key={task.id} task={task} state={state} actions={actions} />
+      <TaskDetail
+        key={task.id}
+        task={task}
+        state={state}
+        actions={actions}
+        selectTask={setSelected}
+      />
     </div>
   )
 }

@@ -3,8 +3,9 @@ import { useState } from 'react'
 import './desktop-api'
 import { DiagnosticsPanel } from './diagnostics'
 import { WorkflowPage } from './workflow-page'
+import { ProductPage } from './product-page'
 import { useWorkspace } from './use-workspace'
-const pages = ['任务与交付', '项目与角色', '内核信息'] as const
+const pages = ['任务与交付', '项目与角色', '模型、需求与团队', '内核信息'] as const
 type Page = (typeof pages)[number]
 export const App = () => (
   <PreferencesProvider>
@@ -47,6 +48,8 @@ const AppShell = () => {
       <main>
         {page === '内核信息' ? (
           <DiagnosticsPanel />
+        ) : page === '模型、需求与团队' ? (
+          <ProductPage actions={actions} />
         ) : (
           <WorkflowPage setup={page === '项目与角色'} actions={actions} />
         )}

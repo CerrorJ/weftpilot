@@ -3,6 +3,8 @@ import { mkdtemp, mkdir, rm } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { existsSync } from 'node:fs'
+import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright'
 import type {} from '../../apps/desktop/renderer/desktop-api'
 import type { WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
@@ -29,6 +31,20 @@ export const snapshot = async (page: Page): Promise<WorkspaceSnapshot> => {
   return state as WorkspaceSnapshot
 }
 
+/** 业务闭环断言不把角色健康检查当作用户任务，但原始 snapshot 保留完整试运行历史。 */
+export const businessSnapshot = async (page: Page): Promise<WorkspaceSnapshot> => {
+  const state = await snapshot(page)
+  const runs = state.runs.filter((run) => run.purpose !== 'role_trial')
+  return {
+    ...state,
+    runs,
+    tasks: state.tasks.filter((task) => task.purpose !== 'role_trial'),
+    deliveries: state.deliveries.filter((delivery) =>
+      runs.some((run) => run.id === delivery.runId),
+    ),
+  }
+}
+
 export const createFixture = async () => {
   const directory = await mkdtemp(join(tmpdir(), '纬舟 workflow '))
   const repository = join(directory, '测试 repository #')
@@ -52,11 +68,15 @@ export const createFixture = async () => {
     directory,
     repository,
     data: join(directory, 'app-data'),
-    cleanup: () => rm(directory, { recursive: true, force: true }),
+    cleanup: () => cleanupFixture(directory),
   }
 }
 
-export const configure = async (application: ElectronApplication, repository: string) => {
+export const configure = async (
+  application: ElectronApplication,
+  repository: string,
+  options: { activate?: boolean } = {},
+) => {
   const page = await application.firstWindow()
   // 仅替代系统目录选择；业务创建、协议、数据库、Git 与执行器全部使用真实实现。
   await application.evaluate(({ dialog }, path) => {
@@ -73,12 +93,49 @@ export const configure = async (application: ElectronApplication, repository: st
   await page.getByLabel('工具权限').selectOption('workspace-write')
   await page.getByRole('button', { name: '创建角色', exact: true }).click()
   await page.getByRole('option', { name: '测试开发者 · v1' }).waitFor({ state: 'attached' })
+  if (options.activate) await activateRole(page)
   return page
+}
+
+const activateRole = async (page: Page): Promise<void> => {
+  await page.getByRole('button', { name: '真实试运行', exact: true }).click()
+  const enable = page
+    .getByRole('button', { name: '启用角色', exact: true })
+    .and(page.locator(':enabled'))
+  await enable.waitFor({ timeout: 120_000 })
+  await enable.click()
+}
+
+const cleanupFixture = async (directory: string): Promise<void> => {
+  const path = join(directory, 'app-data/kernel/kernel.sqlite')
+  if (existsSync(path)) {
+    const database = new DatabaseSync(path, { readOnly: true })
+    try {
+      const unconfirmed = database
+        .prepare('SELECT data FROM runs')
+        .all()
+        .some((row) =>
+          ['active', 'uncertain'].includes(
+            (JSON.parse(String(row.data)) as { processState: string }).processState,
+          ),
+        )
+      if (unconfirmed) {
+        console.warn('保留尚未确认结束的隔离测试数据：', directory)
+        return
+      }
+    } finally {
+      database.close()
+    }
+  }
+  await rm(directory, { recursive: true, force: true })
 }
 
 export const createTask = async (page: Page, goal: string) => {
   await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-  await page.locator('.task-create summary').click()
+  await page
+    .locator('.task-create summary')
+    .filter({ hasText: /^创建任务$/ })
+    .click()
   await page.getByLabel('任务名称', { exact: true }).fill('验证真实闭环')
   await page.getByLabel('任务目标', { exact: true }).fill(goal)
   await page

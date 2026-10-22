@@ -8,6 +8,13 @@ const submissionSchema = z
   .strict()
 const commandTypes = {
   saveRole: 'role.save',
+  saveModel: 'model.save',
+  saveRequirement: 'requirement.save',
+  saveTeam: 'team.save',
+  trialRole: 'role.trial',
+  setRoleEnabled: 'role.setEnabled',
+  createTeamTask: 'team.createTask',
+  startTeam: 'team.start',
   createTask: 'task.create',
   startRun: 'run.start',
   stopRun: 'run.stop',

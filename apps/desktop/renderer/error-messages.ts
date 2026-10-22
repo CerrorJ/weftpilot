@@ -1,4 +1,6 @@
+import { productErrors } from './product-errors'
 const messages: Record<string, [string, string]> = {
+  ...productErrors,
   GIT_ROOT_REQUIRED: [
     '请选择有效 Git 仓库的根目录',
     'Select the root directory of a valid Git repository.',

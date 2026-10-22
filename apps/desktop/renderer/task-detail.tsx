@@ -6,12 +6,14 @@ import { runLabel, taskLabels } from './task-workspace'
 import { DeliveryReview } from './delivery-review'
 import { RunControls } from './run-controls'
 import { RunActivity } from './run-activity'
+import { TaskRelations, RunInputs } from './task-relations'
 interface TaskContext {
   task: Task
   state: WorkspaceSnapshot
   actions: WorkspaceActions
+  selectTask: (id: string) => void
 }
-export const TaskDetail = ({ task, state, actions }: TaskContext) => {
+export const TaskDetail = ({ task, state, actions, selectTask }: TaskContext) => {
   const { t } = useI18n()
   const [selected, setSelected] = useState('')
   const runs = state.runs
@@ -30,6 +32,7 @@ export const TaskDetail = ({ task, state, actions }: TaskContext) => {
       <h3>{t('验收条件')}</h3>
       <p className="preserve-text">{task.acceptanceCriteria}</p>
       <RunControls task={task} run={latest} actions={actions} />
+      <TaskRelations task={task} state={state} selectTask={selectTask} />
       {runs.length > 0 && (
         <label>
           {t('执行历史')}
@@ -48,6 +51,7 @@ export const TaskDetail = ({ task, state, actions }: TaskContext) => {
       {run && (
         <>
           <RunDetails run={run} />
+          <RunInputs run={run} state={state} />
           <RunActivity runId={run.id} cursor={state.cursor} />
           <DeliveryReview task={task} run={run} state={state} actions={actions} />
         </>
