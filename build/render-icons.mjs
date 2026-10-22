@@ -3,11 +3,13 @@ import { writeFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve, join } from 'node:path'
 
 // 仅将仓库原创SVG栅格化为平台图标，不调用设计服务或下载品牌素材。
+const directory = resolve(process.argv[2])
+mkdirSync(directory, { recursive: true })
+// 构建辅助浏览器的缓存也限定到独立暂存目录，不使用真实产品userData。
+app.setPath('userData', join(directory, 'renderer-data'))
 app
   .whenReady()
   .then(async () => {
-    const directory = resolve(process.argv[2])
-    mkdirSync(directory, { recursive: true })
     const window = new BrowserWindow({
       show: false,
       width: 1024,

@@ -7,6 +7,7 @@ import { resolve, dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { installerConfiguration, installerEnvironment } from './installer-config.mjs'
 import { releaseInputs, sourceRevision, hashBytes } from './release-inputs.mjs'
+import { verifyPackagedKernel } from './verify-packaged-kernel.mjs'
 
 const args = process.argv.slice(2)
 const worker = args.includes('--worker')
@@ -68,13 +69,9 @@ async function assembleInstaller() {
   )
   const appDirectory = resolve(`.kernel/installer-app-${operationId}`)
   const icons = resolve(`.kernel/installer-icons-${operationId}`)
-  await prepareApp({ appDirectory, icons, metadata, version, validation })
+  await prepareApp({ appDirectory, icons, metadata, version, validation, kernel })
   const { build } = await import('electron-builder')
-  const config = installerConfiguration({ output, appDirectory, icons, validation })
-  config.electronDist = join(
-    dirname(createRequire(import.meta.url).resolve('electron/package.json')),
-    'dist',
-  )
+  const config = nativeBuildConfiguration({ output, appDirectory, icons, validation, kernel })
   const artifacts = await build({ config, publish: 'never' })
   const files = await artifactDigests(output, artifacts)
   await writeFile(
@@ -95,6 +92,20 @@ async function assembleInstaller() {
   console.log(`未签名本地安装器与更新清单：${output}`)
 }
 
+function nativeBuildConfiguration(input) {
+  const config = installerConfiguration(input)
+  config.electronDist = join(
+    dirname(createRequire(import.meta.url).resolve('electron/package.json')),
+    'dist',
+  )
+  config.afterPack = (packed) =>
+    verifyPackagedKernel(
+      join(packed.packager.getResourcesDir(packed.appOutDir), 'app/dist'),
+      input.kernel,
+    )
+  return config
+}
+
 function assemblyProvenance({ operationId, sourceCommit, version, kernel }) {
   return {
     operationId,
@@ -113,9 +124,13 @@ function assemblyProvenance({ operationId, sourceCommit, version, kernel }) {
   }
 }
 
-async function prepareApp({ appDirectory, icons, metadata, version, validation }) {
+async function prepareApp({ appDirectory, icons, metadata, version, validation, kernel }) {
   await mkdir(appDirectory, { recursive: true })
-  await cp('dist', join(appDirectory, 'dist'), { recursive: true })
+  await cp('dist', join(appDirectory, 'dist'), {
+    recursive: true,
+    filter: (path) => resolve(path) !== resolve('dist/kernel'),
+  })
+  await copyLockedKernel(appDirectory, kernel)
   const appMetadata = {
     name: validation ? 'weftpilot-validation' : metadata.name,
     productName: validation ? 'WeftPilotValidation' : 'WeftPilot',
@@ -129,6 +144,14 @@ async function prepareApp({ appDirectory, icons, metadata, version, validation }
   })
   const electron = createRequire(import.meta.url)('electron')
   execFileSync(electron, ['build/render-icons.mjs', icons], { stdio: 'inherit', timeout: 30_000 })
+}
+
+async function copyLockedKernel(appDirectory, kernel) {
+  for (const file of Object.keys(kernel.files)) {
+    const target = join(appDirectory, 'dist/kernel', file)
+    await mkdir(dirname(target), { recursive: true })
+    await cp(join('dist/kernel', file), target)
+  }
 }
 
 async function artifactDigests(output, artifacts) {

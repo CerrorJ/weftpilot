@@ -3,7 +3,8 @@ export const installerConfiguration = ({ output, appDirectory, icons, validation
   appId: validation ? 'io.weftpilot.desktop.validation' : 'io.weftpilot.desktop',
   productName: validation ? 'WeftPilotValidation' : 'WeftPilot',
   directories: { app: appDirectory, output, buildResources: icons },
-  files: ['dist/**/*', 'package.json'],
+  // 独立FileSet避免主目录默认排除d.ts；锁定内核的类型与许可也是完整产物的一部分。
+  files: ['package.json', { from: 'dist', to: 'dist', filter: ['**/*'] }],
   electronVersion: '42.0.0',
   asar: false,
   npmRebuild: false,
