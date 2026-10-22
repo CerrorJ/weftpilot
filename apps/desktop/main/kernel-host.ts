@@ -38,6 +38,8 @@ export class KernelHost {
     )
     this.client = new KernelClient({
       send: (message) => this.child.postMessage(message),
+      acknowledgeShutdown: (requestId) =>
+        this.child.postMessage({ kind: 'shutdown-ack', protocolVersion: 1, requestId }),
       onMessage: (listener) => {
         this.child.on('message', listener)
       },
@@ -56,7 +58,7 @@ export class KernelHost {
       if (this.exitCode !== 0) throw new Error('内核异常退出，需要确认运行状态')
       return
     }
-    await this.client.request('kernel.shutdown')
+    await this.client.shutdown()
     let timer: ReturnType<typeof setTimeout> | undefined
     try {
       await Promise.race([

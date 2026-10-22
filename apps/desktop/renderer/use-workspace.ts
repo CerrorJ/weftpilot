@@ -23,6 +23,7 @@ export const useWorkspace = () => {
       const incoming = workspaceSnapshotSchema.parse(await workflow().snapshot())
       setState((current) => (current && current.cursor > incoming.cursor ? current : incoming))
     } catch (reason) {
+      if (reason instanceof Error && reason.message.includes('MAINTENANCE_BUSY')) return
       setError(reason instanceof Error ? reason.message : '连接中断，状态待确认')
     } finally {
       querying.current = false

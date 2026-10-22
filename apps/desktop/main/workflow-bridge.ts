@@ -6,6 +6,8 @@ import type { ModelVault } from './model-vault'
 import { prepareModelSubmission } from './model-submission'
 import type { FeishuVault } from './feishu-vault'
 import { registerFeishuBridge } from './feishu-bridge'
+import { registerMaintenanceBridge } from './maintenance-bridge'
+import type { KernelController } from './kernel-controller'
 
 const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
@@ -37,6 +39,7 @@ export const registerWorkflowBridge = (options: {
   rendererUrl: string
   vault: () => ModelVault
   feishuVault: () => FeishuVault
+  controller: () => KernelController
 }): void => {
   const assertSender = (event: IpcMainInvokeEvent) => {
     const window = options.window()
@@ -63,6 +66,7 @@ export const registerWorkflowBridge = (options: {
     })
   }
   registerProjectPicker({ ...options, assertSender })
+  registerMaintenanceBridge({ assertSender, controller: options.controller })
   registerFeishuBridge({ assertSender, client: options.client, vault: options.feishuVault })
   ipcMain.handle('workflow:saveModel', async (event, raw: unknown) => {
     assertSender(event)

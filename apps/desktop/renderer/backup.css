@@ -1,0 +1,45 @@
+.backup-panel {
+  margin-top: 40px;
+}
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.backup-result,
+.restore-preview {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.backup-panel code {
+  overflow-wrap: anywhere;
+}
+.restore-preview dl {
+  display: grid;
+  gap: 12px;
+}
+.restore-preview dl > div {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) 2fr;
+  gap: 16px;
+}
+.restore-preview dd {
+  margin: 0;
+}
+.backup-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.backup-consent input {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 4px;
+}
+@media (max-width: 820px) {
+  .restore-preview dl > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}

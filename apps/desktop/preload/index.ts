@@ -2,6 +2,10 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type { WorkflowBridge } from '../../../packages/kernel-client/bridge-contract'
 
 const workflow: WorkflowBridge = {
+  createBackup: (input) => ipcRenderer.invoke('workflow:createBackup', input),
+  selectBackup: (language) => ipcRenderer.invoke('workflow:selectBackup', language),
+  restoreBackup: (ticket) => ipcRenderer.invoke('workflow:restoreBackup', ticket),
+  maintenanceStatus: () => ipcRenderer.invoke('workflow:maintenanceStatus'),
   snapshot: () => ipcRenderer.invoke('workflow:snapshot'),
   createProject: (input) => ipcRenderer.invoke('workflow:createProject', input),
   saveRole: (input) => ipcRenderer.invoke('workflow:saveRole', input),

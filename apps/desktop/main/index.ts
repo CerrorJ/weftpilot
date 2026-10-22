@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { readFileSync } from 'node:fs'
 import { KernelHost } from './kernel-host'
+import { KernelController } from './kernel-controller'
 import { CredentialStore } from './credentials'
 import { ModelVault } from './model-vault'
 import { FeishuVault } from './feishu-vault'
@@ -10,7 +11,7 @@ import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
 
 let window: BrowserWindow | undefined
-let host: KernelHost | undefined
+let host: KernelController | undefined
 let tray: Tray | undefined
 let quitting = false
 let quitPending = false
@@ -39,7 +40,7 @@ const createWindow = (): void => {
   })
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   window.webContents.on('will-navigate', (event) => {
-    event.preventDefault()
+    if (event.url !== rendererUrl) event.preventDefault()
   })
   window.on('close', (event) => {
     if (!quitting) {
@@ -102,6 +103,10 @@ const nativeUi = { window: () => window, tray: () => tray, quit, rendererUrl }
 registerAppearance(nativeUi)
 
 registerWorkflowBridge({
+  controller: () => {
+    if (!host) throw new Error('内核未启动')
+    return host
+  },
   window: () => window,
   rendererUrl,
   vault: () => {
@@ -129,7 +134,7 @@ if (ownsInstance)
       }
       modelVault = new ModelVault(join(app.getPath('userData'), 'credentials/models'), encryption)
       feishuVault = new FeishuVault(join(app.getPath('userData'), 'credentials/feishu'), encryption)
-      host = new KernelHost(root, join(app.getPath('userData'), 'kernel'), modelVault, feishuVault)
+      host = createController(modelVault, feishuVault)
       createWindow()
       const image = nativeImage.createFromPath(join(root, 'renderer/brand/tray.png'))
       tray = new Tray(image.resize({ width: 20, height: 20 }))
@@ -157,3 +162,14 @@ app.on('activate', () => window?.show())
 app.on('window-all-closed', () => {
   /* 窗口关闭后保留宿主与工具进程。 */
 })
+
+const createController = (vault: ModelVault, feishu: FeishuVault): KernelController => {
+  const lock = JSON.parse(readFileSync(join(root, 'kernel-lock.json'), 'utf8')) as {
+    sourceCommit: string
+  }
+  return new KernelController({
+    userData: app.getPath('userData'),
+    sourceCommit: lock.sourceCommit,
+    createHost: (directory) => new KernelHost(root, directory, vault, feishu),
+  })
+}

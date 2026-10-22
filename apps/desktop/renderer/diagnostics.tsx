@@ -1,6 +1,7 @@
 import { useI18n } from './preferences'
 import { useEffect, useState } from 'react'
 import { handshakeSchema, type KernelHandshake } from '@weftpilot/agent-team-kernel/protocol'
+import { BackupPanel } from './backup-panel'
 interface Diagnostics {
   handshake: KernelHandshake
   artifactSha256: string
@@ -74,6 +75,7 @@ export const DiagnosticsPanel = () => {
       </div>
       {error && <p role="alert">{t(error)}</p>}
       {diagnostics && !error && <KernelDetails diagnostics={diagnostics} />}
+      <BackupPanel />
       <section className="next-step">
         <h2>{t('开始前')}</h2>
         <p>{t('项目、角色和任务由同一内核管理。这里展示实际运行的版本及产物摘要。')}</p>

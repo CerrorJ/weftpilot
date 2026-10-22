@@ -10,6 +10,10 @@ export interface Submission<T> {
 
 /** 页面只接触命名业务操作；项目目录来自系统对话框，不接受任意文件路径。 */
 export interface WorkflowBridge {
+  createBackup(input: { key: string; language: 'zh-CN' | 'en' }): Promise<unknown>
+  selectBackup(language: 'zh-CN' | 'en'): Promise<unknown>
+  restoreBackup(ticket: string): Promise<unknown>
+  maintenanceStatus(): Promise<unknown>
   snapshot(): Promise<unknown>
   createProject(
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,

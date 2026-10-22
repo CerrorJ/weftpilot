@@ -12,7 +12,16 @@ import {
 export interface KernelTransport {
   send(message: KernelRequest): void
   onMessage(listener: (message: unknown) => void): void
+  acknowledgeShutdown?(requestId: string): void
 }
+
+type MaintenanceMethod = 'workspace.backup' | 'workspace.backup.inspect' | 'workspace.restore'
+type MaintenanceInput = {
+  [Method in MaintenanceMethod]: Omit<
+    Extract<KernelRequest, { method: Method }>,
+    'requestId' | 'protocolVersion'
+  >
+}[MaintenanceMethod]
 
 interface PendingRequest {
   resolve(value: unknown): void
@@ -31,6 +40,25 @@ export class KernelClient {
 
   async handshake(): Promise<KernelHandshake> {
     return handshakeSchema.parse(await this.request('kernel.handshake'))
+  }
+
+  /** 先验证停机结果，再通知私有传输端退出；仍由宿主另行核对 OS 退出。 */
+  async shutdown(): Promise<void> {
+    const requestId = randomUUID()
+    const result = await this.sendRequest({
+      protocolVersion: 1,
+      requestId,
+      method: 'kernel.shutdown',
+      ...(this.transport.acknowledgeShutdown ? { acknowledgeExit: true as const } : {}),
+    })
+    if (
+      typeof result !== 'object' ||
+      result === null ||
+      !('state' in result) ||
+      result.state !== 'stopped'
+    )
+      throw new Error('内核未确认安全停止')
+    this.transport.acknowledgeShutdown?.(requestId)
   }
 
   request(
@@ -63,7 +91,11 @@ export class KernelClient {
     return this.sendRequest({ protocolVersion: 1, requestId: randomUUID(), method, id })
   }
 
-  private sendRequest(request: KernelRequest): Promise<unknown> {
+  maintenance(input: MaintenanceInput): Promise<unknown> {
+    return this.sendRequest({ ...input, protocolVersion: 1, requestId: randomUUID() }, 180_000)
+  }
+
+  private sendRequest(request: KernelRequest, timeoutMs = 30_000): Promise<unknown> {
     if (this.disconnected) return Promise.reject(new Error('内核连接已中断，请重启纬舟后重新检测'))
     if (this.pending.size >= 100) return Promise.reject(new Error('内核请求过多，请稍后重试'))
     const requestId = request.requestId
@@ -71,7 +103,7 @@ export class KernelClient {
       const timer = setTimeout(() => {
         this.pending.delete(requestId)
         reject(new Error('内核响应超时，执行状态待确认'))
-      }, 30_000)
+      }, timeoutMs)
       this.pending.set(requestId, { resolve, reject, timer })
       try {
         this.transport.send(request)
