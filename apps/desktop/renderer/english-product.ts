@@ -1,4 +1,14 @@
 export const englishProduct: Record<string, string> = {
+  '模型配置追加版本，角色固定所选版本。可使用 CLI 账户或自定义接口；凭据由系统加密保存。':
+    'Model profiles are versioned and pinned by roles. Use a CLI account or custom endpoint; credentials are encrypted by the system.',
+  认证方式: 'Authentication',
+  '使用 CLI 账户': 'Use CLI account',
+  自定义接口与密钥: 'Custom endpoint and API key',
+  接口地址: 'Endpoint URL',
+  'API 密钥': 'API key',
+  留空保留该接口的已有密钥: 'Leave blank to keep this endpoint’s saved key',
+  '修改接口地址需重新填写密钥；旧版本继续使用原密钥。保存后请重新试运行角色。':
+    'Enter a new key when changing endpoints. Older versions keep their original key. Run a new role trial after saving.',
   '模型、需求与团队': 'Models, requirements & teams',
   '将团队使用的配置保存为可追踪版本。':
     'Save traceable versions of the configurations your team uses.',

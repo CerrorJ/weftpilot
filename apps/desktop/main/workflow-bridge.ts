@@ -2,13 +2,14 @@ import { dialog, ipcMain, type BrowserWindow, type IpcMainInvokeEvent } from 'el
 import { z } from 'zod'
 import { businessCommandSchema, type BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
 import type { KernelClient } from '../../../packages/kernel-client/client'
+import type { ModelVault } from './model-vault'
+import { prepareModelSubmission } from './model-submission'
 
 const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
   .strict()
 const commandTypes = {
   saveRole: 'role.save',
-  saveModel: 'model.save',
   saveRequirement: 'requirement.save',
   saveTeam: 'team.save',
   trialRole: 'role.trial',
@@ -27,6 +28,7 @@ export const registerWorkflowBridge = (options: {
   window: () => BrowserWindow | undefined
   client: () => KernelClient
   rendererUrl: string
+  vault: () => ModelVault
 }): void => {
   const assertSender = (event: IpcMainInvokeEvent) => {
     const window = options.window()
@@ -53,6 +55,12 @@ export const registerWorkflowBridge = (options: {
     })
   }
   registerProjectPicker({ ...options, assertSender })
+  ipcMain.handle('workflow:saveModel', async (event, raw: unknown) => {
+    assertSender(event)
+    const input = submissionSchema.parse(raw)
+    const command = await prepareModelSubmission({ ...input, vault: options.vault() })
+    return options.client().command(command, input.key)
+  })
   for (const method of ['delivery', 'run', 'activity'] as const)
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
       assertSender(event)

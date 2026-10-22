@@ -1,6 +1,7 @@
 import type { BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
 
 type Input<T extends BusinessCommand['type']> = Omit<Extract<BusinessCommand, { type: T }>, 'type'>
+export type ModelSubmission = Input<'model.save'> & { secret?: string }
 export interface Submission<T> {
   key: string
   input: T
@@ -13,7 +14,7 @@ export interface WorkflowBridge {
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,
   ): Promise<unknown>
   saveRole(input: Submission<Input<'role.save'>>): Promise<unknown>
-  saveModel(input: Submission<Input<'model.save'>>): Promise<unknown>
+  saveModel(input: Submission<ModelSubmission>): Promise<unknown>
   saveRequirement(input: Submission<Input<'requirement.save'>>): Promise<unknown>
   saveTeam(input: Submission<Input<'team.save'>>): Promise<unknown>
   trialRole(input: Submission<Input<'role.trial'>>): Promise<unknown>

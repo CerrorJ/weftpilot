@@ -2,8 +2,10 @@ import { useState } from 'react'
 import type { ModelProfile } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
-import { TextField, formText } from './form-fields'
+import { TextField } from './form-fields'
 import { latestVersions } from './object-versions'
+import { ModelProviderFields } from './model-provider-fields'
+import { modelDraft } from './model-draft'
 
 export const ModelSetup = ({ actions }: { actions: WorkspaceActions }) => {
   const { t } = useI18n()
@@ -14,9 +16,7 @@ export const ModelSetup = ({ actions }: { actions: WorkspaceActions }) => {
     <section className="setup-section">
       <h2>{t('模型配置')}</h2>
       <p>
-        {t(
-          '模型配置追加版本，角色保存确切配置快照。当前可使用本机 CLI 账户；自定义服务凭证接入仍在开发。',
-        )}
+        {t('模型配置追加版本，角色固定所选版本。可使用 CLI 账户或自定义接口；凭据由系统加密保存。')}
       </p>
       <label>
         {t('编辑模型配置')}
@@ -42,18 +42,10 @@ const ModelForm = ({
 }) => {
   const { t } = useI18n()
   const fields = profile ?? { name: '', cli: 'codex', model: '', reasoningEffort: '' }
-  if (profile && profile.provider !== 'cli-managed')
-    return <p>{t('此自定义配置尚需安全凭证接入，当前不会用于执行。')}</p>
   return (
     <form onSubmit={(event) => submitModel(event, profile, actions)}>
       <TextField label={t('配置名称')} name="name" value={fields.name} />
-      <label>
-        {t('兼容 CLI')}
-        <select name="cli" defaultValue={fields.cli}>
-          <option value="codex">Codex</option>
-          <option value="claude">Claude Code</option>
-        </select>
-      </label>
+      <ModelProviderFields profile={profile} />
       <TextField
         label={t('模型标识（可选）')}
         name="model"
@@ -84,17 +76,12 @@ const submitModel = (
   actions: WorkspaceActions,
 ) => {
   event.preventDefault()
-  const form = new FormData(event.currentTarget)
-  void actions.execute({
-    type: 'model.save',
-    ...(profile ? { id: profile.id } : {}),
-    expectedVersion: profile?.version ?? 0,
-    name: formText(form, 'name'),
-    cli: formText(form, 'cli') === 'claude' ? 'claude' : 'codex',
-    provider: 'cli-managed',
-    model: formText(form, 'model'),
-    baseUrl: '',
-    credentialRef: null,
-    reasoningEffort: formText(form, 'effort') as ModelProfile['reasoningEffort'],
+  const element = event.currentTarget
+  const form = new FormData(element)
+  void actions.saveModel(modelDraft(form, profile)).then((result) => {
+    if (result) {
+      const field = element.elements.namedItem('secret')
+      if (field instanceof HTMLInputElement) field.value = ''
+    }
   })
 }

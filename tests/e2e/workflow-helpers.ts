@@ -31,6 +31,21 @@ export const snapshot = async (page: Page): Promise<WorkspaceSnapshot> => {
   return state as WorkspaceSnapshot
 }
 
+/** 在 Node 侧等待异步 IPC；waitForFunction 将 Promise 本身视为真，不能用于业务完成判定。 */
+export const waitForSnapshot = async (options: {
+  page: Page
+  predicate: (state: WorkspaceSnapshot) => boolean
+  timeout: number
+}): Promise<WorkspaceSnapshot> => {
+  const deadline = Date.now() + options.timeout
+  while (Date.now() < deadline) {
+    const state = await snapshot(options.page)
+    if (options.predicate(state)) return state
+    await new Promise((resolve) => setTimeout(resolve, 150))
+  }
+  throw new Error('WORKSPACE_STATE_TIMEOUT')
+}
+
 /** 业务闭环断言不把角色健康检查当作用户任务，但原始 snapshot 保留完整试运行历史。 */
 export const businessSnapshot = async (page: Page): Promise<WorkspaceSnapshot> => {
   const state = await snapshot(page)

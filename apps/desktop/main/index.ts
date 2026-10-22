@@ -1,9 +1,10 @@
-import { app, BrowserWindow, Tray, nativeImage, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, Tray, nativeImage, ipcMain, dialog, safeStorage } from 'electron'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { readFileSync } from 'node:fs'
 import { KernelHost } from './kernel-host'
 import { CredentialStore } from './credentials'
+import { ModelVault } from './model-vault'
 import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
 
@@ -12,6 +13,7 @@ let host: KernelHost | undefined
 let tray: Tray | undefined
 let quitting = false
 let quitPending = false
+let modelVault: ModelVault | undefined
 const root = __dirname
 const rendererUrl = pathToFileURL(join(root, 'renderer/index.html')).href
 if (process.env.WEFTPILOT_TEST_DATA) app.setPath('userData', process.env.WEFTPILOT_TEST_DATA)
@@ -100,6 +102,10 @@ registerAppearance(nativeUi)
 registerWorkflowBridge({
   window: () => window,
   rendererUrl,
+  vault: () => {
+    if (!modelVault) throw new Error('CREDENTIAL_STORAGE_UNAVAILABLE')
+    return modelVault
+  },
   client: () => {
     if (!host) throw new Error('内核未启动')
     return host.client
@@ -110,7 +116,12 @@ if (ownsInstance)
   void app
     .whenReady()
     .then(() => {
-      host = new KernelHost(root, join(app.getPath('userData'), 'kernel'))
+      modelVault = new ModelVault(join(app.getPath('userData'), 'credentials/models'), {
+        available: () => safeStorage.isEncryptionAvailable(),
+        encrypt: (value) => safeStorage.encryptString(value),
+        decrypt: (value) => safeStorage.decryptString(value),
+      })
+      host = new KernelHost(root, join(app.getPath('userData'), 'kernel'), modelVault)
       createWindow()
       const image = nativeImage.createFromPath(join(root, 'renderer/brand/tray.png'))
       tray = new Tray(image.resize({ width: 20, height: 20 }))

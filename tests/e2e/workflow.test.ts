@@ -7,6 +7,7 @@ import {
   launch,
   quit,
   configure,
+  waitForSnapshot,
   createTask,
   businessSnapshot as snapshot,
 } from './workflow-helpers'
@@ -134,21 +135,18 @@ test(
         'For this isolated test, first run a shell command that waits 40 seconds (Start-Sleep on Windows or sleep elsewhere). After the wait write hello.txt containing WEFTPILOT_M1_OK. Do not use network, commit or push.',
       )
       await page.getByRole('button', { name: '开始真实执行' }).click()
-      await page.waitForFunction(
-        async () => {
-          const value = (await window.weftpilot?.workflow.snapshot()) as
-            | { runs: { id: string; purpose?: string }[]; logs: { runId: string; label: string }[] }
-            | undefined
-          const run = value?.runs.filter((item) => item.purpose !== 'role_trial').at(-1)
-          return value?.logs.some(
+      await waitForSnapshot({
+        page,
+        timeout: 60000,
+        predicate: (state) => {
+          const run = state.runs.filter((item) => item.purpose !== 'role_trial').at(-1)
+          return state.logs.some(
             (item) =>
               item.runId === run?.id &&
               !['session', 'stats', 'retry', 'result', 'error', 'tool_end'].includes(item.label),
           )
         },
-        undefined,
-        { timeout: 60000 },
-      )
+      })
       await page.getByRole('button', { name: '请求停止', exact: true }).click()
       await page.getByRole('heading', { name: /已停止/ }).waitFor({ timeout: 15000 })
       const state = await snapshot(page)

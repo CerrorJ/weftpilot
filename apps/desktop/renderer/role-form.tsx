@@ -58,10 +58,10 @@ const RoleRuntime = ({ role, models }: Omit<RoleContext, 'actions'>) => {
         {t('模型配置')}
         <select key={cli} name="profile" defaultValue={profileForCli(role, cli)}>
           <option value="">{t('使用 CLI 账户与手动模型')}</option>
-          {models
+          {roleModelOptions(role, models)
             .filter((item) => item.cli === cli)
             .map((item) => (
-              <option key={item.id} value={item.id}>
+              <option key={`${item.id}@${item.version}`} value={`${item.id}@${item.version}`}>
                 {item.name} · v{item.version}
               </option>
             ))}
@@ -84,6 +84,17 @@ const RoleRuntime = ({ role, models }: Omit<RoleContext, 'actions'>) => {
   )
 }
 
+/** 当前角色的历史引用必须仍可选，不能因“只列最新版本”静默退回 CLI 账户。 */
+const roleModelOptions = (
+  role: RoleVersion | undefined,
+  models: ModelProfile[],
+): ModelProfile[] => {
+  const pinned = role?.modelProfileSnapshot
+  if (!pinned || models.some((item) => item.id === pinned.id && item.version === pinned.version))
+    return models
+  return [...models, pinned]
+}
+
 const submitRole = (event: React.FormEvent<HTMLFormElement>, { role, actions }: RoleContext) => {
   event.preventDefault()
   const element = event.currentTarget
@@ -96,7 +107,7 @@ const submitRole = (event: React.FormEvent<HTMLFormElement>, { role, actions }: 
       name: formText(form, 'name'),
       responsibility: formText(form, 'responsibility'),
       cli: formText(form, 'cli') === 'claude' ? 'claude' : 'codex',
-      modelProfileId: formText(form, 'profile') || null,
+      modelProfileRef: selectedModel(formText(form, 'profile')),
       model: formText(form, 'model'),
       permission: form.get('permission') === 'workspace-write' ? 'workspace-write' : 'read-only',
     })
@@ -106,4 +117,12 @@ const submitRole = (event: React.FormEvent<HTMLFormElement>, { role, actions }: 
 }
 
 const profileForCli = (role: RoleVersion | undefined, cli: string) =>
-  role?.cli === cli ? (role.modelProfileSnapshot?.id ?? '') : ''
+  role?.cli === cli && role.modelProfileSnapshot
+    ? `${role.modelProfileSnapshot.id}@${role.modelProfileSnapshot.version}`
+    : ''
+
+const selectedModel = (value: string) => {
+  if (!value) return null
+  const [id, version] = value.split('@')
+  return { id: id!, version: Number(version) }
+}

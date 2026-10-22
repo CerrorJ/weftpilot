@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { KernelClient } from '../../../packages/kernel-client/client'
+import type { ModelVault } from './model-vault'
+import { hostCredentials } from './host-credentials'
 
 interface KernelLock {
   sourceCommit: string
@@ -17,7 +19,7 @@ export class KernelHost {
   private readonly exited: Promise<void>
   private exitCode: number | undefined
 
-  constructor(root: string, dataDirectory: string) {
+  constructor(root: string, dataDirectory: string, vault: ModelVault) {
     const lock = JSON.parse(readFileSync(join(root, 'kernel-lock.json'), 'utf8')) as KernelLock
     for (const [file, digest] of Object.entries(lock.files)) {
       const actual = createHash('sha256')
@@ -29,6 +31,10 @@ export class KernelHost {
       serviceName: 'WeftPilot Agent-Team',
       stdio: 'pipe',
     })
+    this.child.on(
+      'message',
+      hostCredentials({ vault, send: (value) => this.child.postMessage(value) }),
+    )
     this.client = new KernelClient({
       send: (message) => this.child.postMessage(message),
       onMessage: (listener) => {

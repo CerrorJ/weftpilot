@@ -1,4 +1,8 @@
 export const productErrors: Record<string, [string, string]> = {
+  CREDENTIAL_STORAGE_UNAVAILABLE: [
+    '系统加密存储不可用，无法保存或读取凭据',
+    'System encryption is unavailable. Credentials cannot be saved or read.',
+  ],
   MODEL_CONFIG_INVALID: [
     '模型配置与 CLI 或接口地址不兼容',
     'The model profile does not match the CLI or endpoint.',
