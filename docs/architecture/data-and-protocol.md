@@ -1,26 +1,26 @@
-# 数据、执行状态与通信协议 v0.1
+# 数据、执行状态与通信协议 v0.2
 
-状态：待确认。本文是合同草案，不表示数据库或接口已经实现。
+状态：v0.2 协议设计草案，按已确认的 Agent-Team 打包内核方向修订；细节由 M0 技术验证。所有业务对象、状态机、数据库和权威事件在 Agent-Team 内核实现并统一维护，纬舟只消费协议和投影，不创建第二份业务持久化。本文不表示接口已经实现。
 
 ## 1. 领域对象
 
-| 对象 | 核心字段与约束 |
-| --- | --- |
-| Workspace | 内部 ID、名称、所有者、数据版本；首版单所有者 |
-| Project | workspaceId、名称、仓库地址、本机路径、默认分支、团队；路径属于设备绑定信息 |
-| Requirement / RequirementVersion | 项目、原始需求、澄清结果、计划、验收条件、版本 |
-| Task | 必填 projectId，可选 requirementVersionId、执行角色、依赖、优先级、状态、版本 |
-| Role / RoleVersion | 职责、CLI、模型引用、Skill 引用、权限版本、并发、启用状态；版本不可变 |
-| Team / TeamRole | 角色成员、协调者、派发规则、依赖拓扑和修订版本 |
-| ModelProfile | 提供方、模型标识、兼容 CLI、参数、凭据引用；不保存密钥明文 |
-| Skill / InstalledSkillVersion | 来源、可展示元数据、固定 ref/提交、内容摘要、兼容性、安装位置 |
-| Run | taskId、projectId、尝试序号、配置快照、状态、版本、retryOfRunId、时间 |
-| ExecutionSegment | runId、片段序号、CLI 会话、进程身份、启动/终止证据；审批续接可生成新片段 |
-| HumanRequest | runId、类型、内容/操作摘要、状态、到期时间、决定者和版本 |
-| Artifact / Delivery | runId、需求版本、文件/提交/Diff/测试证据、内容摘要、交付版本 |
-| Acceptance | deliveryId、验收条目、结论、原因、操作者；保留历史 |
-| ChannelBinding | 内部对象与飞书租户、应用、会话、话题的关联；不是业务主键 |
-| Event / CommandReceipt | 持久事件、游标；命令幂等键、请求摘要和处理结果 |
+| 对象                             | 核心字段与约束                                                                |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| Workspace                        | 内部 ID、名称、所有者、数据版本；首版单所有者                                 |
+| Project                          | workspaceId、名称、仓库地址、本机路径、默认分支、团队；路径属于设备绑定信息   |
+| Requirement / RequirementVersion | 项目、原始需求、澄清结果、计划、验收条件、版本                                |
+| Task                             | 必填 projectId，可选 requirementVersionId、执行角色、依赖、优先级、状态、版本 |
+| Role / RoleVersion               | 职责、CLI、模型引用、Skill 引用、权限版本、并发、启用状态；版本不可变         |
+| Team / TeamRole                  | 角色成员、协调者、派发规则、依赖拓扑和修订版本                                |
+| ModelProfile                     | 提供方、模型标识、兼容 CLI、参数、凭据引用；不保存密钥明文                    |
+| Skill / InstalledSkillVersion    | 来源、可展示元数据、固定 ref/提交、内容摘要、兼容性、安装位置                 |
+| Run                              | taskId、projectId、尝试序号、配置快照、状态、版本、retryOfRunId、时间         |
+| ExecutionSegment                 | runId、片段序号、CLI 会话、进程身份、启动/终止证据；审批续接可生成新片段      |
+| HumanRequest                     | runId、类型、内容/操作摘要、状态、到期时间、决定者和版本                      |
+| Artifact / Delivery              | runId、需求版本、文件/提交/Diff/测试证据、内容摘要、交付版本                  |
+| Acceptance                       | deliveryId、验收条目、结论、原因、操作者；保留历史                            |
+| ChannelBinding                   | 内部对象与飞书租户、应用、会话、话题的关联；不是业务主键                      |
+| Event / CommandReceipt           | 持久事件、游标；命令幂等键、请求摘要和处理结果                                |
 
 所有业务 ID 独立生成，飞书 ID 仅作为映射。所有跨对象操作校验 workspace、project、task、run 的归属一致性，不能只凭一个 runId 执行。
 
@@ -54,16 +54,16 @@ Project 的仓库地址与本机 checkout 分开：换设备后重新关联本�
 
 ### Run：一次尝试的执行状态
 
-| 当前状态 | 允许的主要后继 | 依据 |
-| --- | --- | --- |
-| queued | preparing、cancelled、failed | 获取调度资源、用户取消、无法继续排队 |
-| preparing | running、stopping、failed | 工作目录和执行准备完成；准备失败 |
-| running | waiting_input、waiting_approval、stopping、succeeded、failed | 归一化 CLI 事件与内核判断 |
-| waiting_input | running、stopping、failed | 有效回答、停止、到期策略 |
-| waiting_approval | running、stopping、failed | 有效决定；拒绝或到期不能继续被拒操作 |
-| stopping | stopped、failed | 进程树终止已确认；终止失败进入故障处理 |
-| interrupted | 无 | 对账后确认本次执行已无法可靠续接 |
-| succeeded / failed / cancelled / stopped | 无 | 终态，不重置到 running |
+| 当前状态                                 | 允许的主要后继                                               | 依据                                   |
+| ---------------------------------------- | ------------------------------------------------------------ | -------------------------------------- |
+| queued                                   | preparing、cancelled、failed                                 | 获取调度资源、用户取消、无法继续排队   |
+| preparing                                | running、stopping、failed                                    | 工作目录和执行准备完成；准备失败       |
+| running                                  | waiting_input、waiting_approval、stopping、succeeded、failed | 归一化 CLI 事件与内核判断              |
+| waiting_input                            | running、stopping、failed                                    | 有效回答、停止、到期策略               |
+| waiting_approval                         | running、stopping、failed                                    | 有效决定；拒绝或到期不能继续被拒操作   |
+| stopping                                 | stopped、failed                                              | 进程树终止已确认；终止失败进入故障处理 |
+| interrupted                              | 无                                                           | 对账后确认本次执行已无法可靠续接       |
+| succeeded / failed / cancelled / stopped | 无                                                           | 终态，不重置到 running                 |
 
 重启对账可以把已无存活执行且缺少可靠结束证据的非终态 Run 标记为 `interrupted`；这是恢复路径，不是只凭心跳超时触发的普通转换。若进程身份仍未知，保持状态待确认并阻止自动重跑。
 
@@ -97,6 +97,8 @@ WAL 可支持读取与写入并发，但仍需管理写事务、checkpoint 与�
 数据库迁移编号递增且已发布迁移不可修改；升级前使用一致性备份，验证迁移和恢复。不在数据库打开写入时只复制主文件冒充完整备份，具体采用驱动支持的一致性备份方式。[SQLite 备份 API](https://www.sqlite.org/backup.html)。
 
 ## 5. 命令合同
+
+共享契约由 Agent-Team 发布，纬舟锁定版本使用。桌面宿主只进行传输、身份注入与系统能力桥接，不在桥接层实现业务裁决；初始化握手协商 kernelVersion、protocolVersion、capabilities 和数据兼容范围，具体打包与兼容规则见 [内核集成方案](kernel-integration.md)。
 
 桌面桥接只暴露命名方法，例如 `projects.list`、`roles.saveDraft`、`roles.test`、`tasks.create`、`runs.start`、`runs.stop`、`runs.retry`、`humanRequests.resolve`、`deliveries.accept`。
 
