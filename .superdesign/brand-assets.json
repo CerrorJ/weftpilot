@@ -1,0 +1,18 @@
+{
+  "assets/brand/mark.svg": {
+    "assetKey": "assets-brand-mark.svg",
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/6031de23-9bd4-46fe-bb93-09c040d0b26d/brand-assets/assets-brand-mark.svg/mark.svg"
+  },
+  "assets/brand/mark-light.svg": {
+    "assetKey": "assets-brand-mark-light.svg",
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/6031de23-9bd4-46fe-bb93-09c040d0b26d/brand-assets/assets-brand-mark-light.svg/mark-light.svg"
+  },
+  "assets/brand/mark-mono.svg": {
+    "assetKey": "assets-brand-mark-mono.svg",
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/6031de23-9bd4-46fe-bb93-09c040d0b26d/brand-assets/assets-brand-mark-mono.svg/mark-mono.svg"
+  },
+  "assets/brand/app-icon.svg": {
+    "assetKey": "assets-brand-app-icon.svg",
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/6031de23-9bd4-46fe-bb93-09c040d0b26d/brand-assets/assets-brand-app-icon.svg/app-icon.svg"
+  }
+}
