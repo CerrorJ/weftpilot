@@ -6,6 +6,7 @@ import {
   type KernelHandshake,
   type KernelRequest,
   type KernelResponse,
+  type BusinessCommand,
 } from '@weftpilot/agent-team-kernel/protocol'
 
 export interface KernelTransport {
@@ -32,18 +33,41 @@ export class KernelClient {
     return handshakeSchema.parse(await this.request('kernel.handshake'))
   }
 
-  request(method: Exclude<KernelRequest['method'], 'kernel.events'>): Promise<unknown> {
+  request(
+    method: 'kernel.handshake' | 'kernel.health' | 'kernel.shutdown' | 'workspace.snapshot',
+  ): Promise<unknown> {
+    return this.sendRequest({ protocolVersion: 1, requestId: randomUUID(), method })
+  }
+
+  command(command: BusinessCommand, key: string): Promise<unknown> {
+    return this.sendRequest({
+      protocolVersion: 1,
+      requestId: randomUUID(),
+      method: 'workspace.command',
+      command,
+      key,
+    })
+  }
+
+  detail(
+    method: 'workspace.delivery' | 'workspace.run' | 'workspace.activity',
+    id: string,
+  ): Promise<unknown> {
+    return this.sendRequest({ protocolVersion: 1, requestId: randomUUID(), method, id })
+  }
+
+  private sendRequest(request: KernelRequest): Promise<unknown> {
     if (this.disconnected) return Promise.reject(new Error('内核连接已中断，请重启纬舟后重新检测'))
     if (this.pending.size >= 100) return Promise.reject(new Error('内核请求过多，请稍后重试'))
-    const requestId = randomUUID()
+    const requestId = request.requestId
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pending.delete(requestId)
         reject(new Error('内核响应超时，执行状态待确认'))
-      }, 10_000)
+      }, 30_000)
       this.pending.set(requestId, { resolve, reject, timer })
       try {
-        this.transport.send({ protocolVersion: 1, requestId, method })
+        this.transport.send(request)
       } catch (error) {
         this.finish(requestId, error instanceof Error ? error : new Error('发送失败'))
       }

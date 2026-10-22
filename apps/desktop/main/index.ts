@@ -1,9 +1,11 @@
-import { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, Tray, nativeImage, ipcMain, dialog } from 'electron'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { readFileSync } from 'node:fs'
 import { KernelHost } from './kernel-host'
 import { CredentialStore } from './credentials'
+import { registerWorkflowBridge } from './workflow-bridge'
+import { registerAppearance, setNativeMenus } from './appearance'
 
 let window: BrowserWindow | undefined
 let host: KernelHost | undefined
@@ -92,6 +94,18 @@ ipcMain.handle('weftpilot:diagnostics', async (event) => {
   return diagnostics()
 })
 
+const nativeUi = { window: () => window, tray: () => tray, quit, rendererUrl }
+registerAppearance(nativeUi)
+
+registerWorkflowBridge({
+  window: () => window,
+  rendererUrl,
+  client: () => {
+    if (!host) throw new Error('内核未启动')
+    return host.client
+  },
+})
+
 if (ownsInstance)
   void app
     .whenReady()
@@ -101,44 +115,8 @@ if (ownsInstance)
       const image = nativeImage.createFromPath(join(root, 'renderer/brand/tray.png'))
       tray = new Tray(image.resize({ width: 20, height: 20 }))
       tray.setToolTip('纬舟 WeftPilot')
-      tray.setContextMenu(
-        Menu.buildFromTemplate([
-          { label: '打开纬舟', click: () => window?.show() },
-          {
-            label: '完全退出',
-            click: () => {
-              void quit()
-            },
-          },
-        ]),
-      )
       tray.on('double-click', () => window?.show())
-      Menu.setApplicationMenu(
-        Menu.buildFromTemplate([
-          {
-            label: '纬舟',
-            submenu: [
-              {
-                label: '完全退出',
-                accelerator: 'CmdOrCtrl+Q',
-                click: () => {
-                  void quit()
-                },
-              },
-            ],
-          },
-          {
-            label: '编辑',
-            submenu: [
-              { role: 'undo' },
-              { role: 'redo' },
-              { role: 'copy' },
-              { role: 'paste' },
-              { role: 'selectAll' },
-            ],
-          },
-        ]),
-      )
+      setNativeMenus(nativeUi, 'zh-CN')
     })
     .catch(async (error: unknown) => {
       await dialog.showMessageBox({

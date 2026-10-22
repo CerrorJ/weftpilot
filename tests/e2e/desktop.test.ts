@@ -31,6 +31,7 @@ test(
     })
     try {
       const page = await application.firstWindow()
+      await page.getByRole('button', { name: '内核信息', exact: true }).click()
       const pageErrors: string[] = []
       page.on('pageerror', (error) => {
         pageErrors.push(error.message)
