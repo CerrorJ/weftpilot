@@ -1,6 +1,6 @@
-﻿# M1 本机任务闭环开发记录
+# M1 本机任务闭环开发记录
 
-2026-10-23。Windows 本机范围验收通过，独立 Tester 通过、Reviewer APPROVE；外部待办见 [清单](pending-external-validation.md)。
+2026-10-23。开发构建通过独立 Tester/Reviewer；打包真实 CLI 停止补验重新打开，尚未封板。外部待办见 [清单](pending-external-validation.md)。
 
 ## 实际能力
 
@@ -46,7 +46,7 @@ node --import tsx --test tests/e2e/workflow.test.ts
 
 ## 关联版本与后续
 
-当前两仓开发分支均为 feat/local-workflow。内核 0.2.3 / 协议 1 / schema 2，源提交 e4a0fd50ad1d6d5f4cdfa13b6282458f375ff016；确切 tarball 和文件摘要见 config/kernel-lock.json。桌面实现提交 1755620d（完整 SHA 以 git log 为准），已推送。
+当前两仓开发分支均为 feat/local-workflow。内核 0.2.3 / 协议 1 / schema 2，源提交 e4a0fd50ad1d6d5f4cdfa13b6282458f375ff016；确切 tarball 和文件摘要见 config/kernel-lock.json。桌面实现提交 1755620（完整 SHA 以 git log 为准），已推送。
 
 已完成 Tester/Reviewer、打包回归与提交推送，继续推进 M2 需求版本、模型、第二 CLI、角色试运行、团队与依赖。macOS 原生运行、跨仓 CI 凭据、真实飞书租户、签名和公开发行仍未验证或授权；不以本机 Windows 结果替代。
 
@@ -57,3 +57,9 @@ node --import tsx --test tests/e2e/workflow.test.ts
 ## M1 退出记录
 
 2026-10-23，Windows 本机真实闭环通过；独立 Tester 通过、Reviewer APPROVE，无尚存必修项。打包 exe 的默认 E2E 由父代理和独立 Tester 均运行：2 项通过，3 项真实模型测试有意跳过；开发构建的真实 CLI 模型测试另行全部通过。不能把打包默认测试称为已运行模型测试。macOS、跨仓 CI 凭据、真实飞书和发行授权保留外部待办，按用户授权继续 M2，不以这些待办停工。
+
+## 最新补验：打包停止故障重新打开
+
+独立 Tester 在 0.2.3 打包 exe 中观察到停止请求后 STATE_UNCERTAIN，不能由开发构建通过或默认 E2E 覆盖。原失败现场保留，未修改状态或按根 PID 消失宣称已停止。此前退出结论仅保留为当时已执行路径的历史记录。
+
+当前锁定 0.2.4 / db18e0ccf78753da99dc27d796d6f593d61bb030，增加系统终止返回码/耗时诊断与绝对系统工具路径，仍需真实打包复现和验收；没有放宽结束判定，也尚未声称故障修复。M2 工作独立保存在 feat/product-teams，内核 700da70 已包含需求/模型/团队版本、第二 CLI 与真实角色试运行基础（59/59 测试），尚未通过 M2 阶段验收。
