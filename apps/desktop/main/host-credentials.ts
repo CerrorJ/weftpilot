@@ -3,10 +3,12 @@ import {
   credentialResponseSchema,
 } from '@weftpilot/agent-team-kernel/protocol'
 import type { ModelVault } from './model-vault'
+import type { FeishuVault } from './feishu-vault'
 
 /** 只监听本次 UtilityProcess 的私有端口，不注册读取密钥的 renderer IPC。 */
 export const hostCredentials = (options: {
   vault: ModelVault
+  feishuVault?: FeishuVault
   send: (message: unknown) => void
 }): ((message: unknown) => void) => {
   let active = 0
@@ -16,8 +18,11 @@ export const hostCredentials = (options: {
     const { id, binding } = request.data
     if (active >= 8) return
     active++
-    void options.vault
-      .read(binding)
+    const read =
+      'appId' in binding
+        ? (options.feishuVault?.read(binding) ?? Promise.reject(new Error('FEISHU_NOT_CONFIGURED')))
+        : options.vault.read(binding)
+    void read
       .catch(() => null)
       .then((value) => {
         try {

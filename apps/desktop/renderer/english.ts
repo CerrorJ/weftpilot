@@ -1,8 +1,10 @@
 import { englishProduct } from './english-product'
 import { englishHuman } from './english-human'
+import { englishFeishu } from './english-feishu'
 export const english: Record<string, string> = {
   ...englishProduct,
   ...englishHuman,
+  ...englishFeishu,
   纬舟: 'WeftPilot',
   任务与交付: 'Tasks & deliveries',
   项目与角色: 'Projects & roles',

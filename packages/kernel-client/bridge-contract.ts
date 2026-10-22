@@ -2,6 +2,7 @@ import type { BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
 
 type Input<T extends BusinessCommand['type']> = Omit<Extract<BusinessCommand, { type: T }>, 'type'>
 export type ModelSubmission = Input<'model.save'> & { secret?: string }
+export type FeishuSubmission = Input<'feishu.save'> & { secret?: string }
 export interface Submission<T> {
   key: string
   input: T
@@ -27,6 +28,11 @@ export interface WorkflowBridge {
   retryRun(input: Submission<Input<'run.retry'>>): Promise<unknown>
   acceptDelivery(input: Submission<Input<'delivery.accept'>>): Promise<unknown>
   resolveHuman(input: Submission<Input<'human.resolve'>>): Promise<unknown>
+  saveFeishu(input: Submission<FeishuSubmission>): Promise<unknown>
+  connectFeishu(): Promise<unknown>
+  disconnectFeishu(): Promise<unknown>
+  feishuStatus(): Promise<unknown>
+  openFeishuConsole(): Promise<void>
   delivery(id: string): Promise<unknown>
   run(id: string): Promise<unknown>
   activity(id: string): Promise<unknown>

@@ -4,6 +4,8 @@ import { businessCommandSchema, type BusinessCommand } from '@weftpilot/agent-te
 import type { KernelClient } from '../../../packages/kernel-client/client'
 import type { ModelVault } from './model-vault'
 import { prepareModelSubmission } from './model-submission'
+import type { FeishuVault } from './feishu-vault'
+import { registerFeishuBridge } from './feishu-bridge'
 
 const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
@@ -30,6 +32,7 @@ export const registerWorkflowBridge = (options: {
   client: () => KernelClient
   rendererUrl: string
   vault: () => ModelVault
+  feishuVault: () => FeishuVault
 }): void => {
   const assertSender = (event: IpcMainInvokeEvent) => {
     const window = options.window()
@@ -56,6 +59,7 @@ export const registerWorkflowBridge = (options: {
     })
   }
   registerProjectPicker({ ...options, assertSender })
+  registerFeishuBridge({ assertSender, client: options.client, vault: options.feishuVault })
   ipcMain.handle('workflow:saveModel', async (event, raw: unknown) => {
     assertSender(event)
     const input = submissionSchema.parse(raw)

@@ -6,7 +6,10 @@ import {
 } from '@weftpilot/agent-team-kernel/protocol'
 import { workflow } from './desktop-api'
 import { sendCommand } from './command-sender'
-import type { ModelSubmission } from '../../../packages/kernel-client/bridge-contract'
+import type {
+  ModelSubmission,
+  FeishuSubmission,
+} from '../../../packages/kernel-client/bridge-contract'
 import { useSubmission } from './use-submission'
 
 export const useWorkspace = () => {
@@ -40,16 +43,25 @@ export const useWorkspace = () => {
       workflow().createProject({ key, input }),
     )
   const saveModel = async (input: ModelSubmission) => {
-    return perform(await modelFingerprint(input), (key) => workflow().saveModel({ key, input }))
+    return perform(await secretFingerprint(input, 'model'), (key) =>
+      workflow().saveModel({ key, input }),
+    )
   }
-  return { state, error, busy, refresh, execute, createProject, saveModel }
+  const saveFeishu = async (input: FeishuSubmission) =>
+    perform(await secretFingerprint(input, 'feishu'), (key) =>
+      workflow().saveFeishu({ key, input }),
+    )
+  return { state, error, busy, refresh, execute, createProject, saveModel, saveFeishu }
 }
 
 export type WorkspaceActions = ReturnType<typeof useWorkspace>
 
-const modelFingerprint = async (input: ModelSubmission): Promise<string> => {
+const secretFingerprint = async (
+  input: ModelSubmission | FeishuSubmission,
+  scope: string,
+): Promise<string> => {
   // 幂等缓存只保留摘要，不延长明文密钥的生命周期。
   const encoded = new TextEncoder().encode(JSON.stringify(input))
   const digest = await crypto.subtle.digest('SHA-256', encoded)
-  return `model:${Array.from(new Uint8Array(digest), (item) => item.toString(16).padStart(2, '0')).join('')}`
+  return `${scope}:${Array.from(new Uint8Array(digest), (item) => item.toString(16).padStart(2, '0')).join('')}`
 }

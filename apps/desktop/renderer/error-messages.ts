@@ -1,8 +1,10 @@
 import { productErrors } from './product-errors'
 import { humanErrors } from './human-errors'
+import { feishuErrors } from './feishu-errors'
 const messages: Record<string, [string, string]> = {
   ...productErrors,
   ...humanErrors,
+  ...feishuErrors,
   GIT_ROOT_REQUIRED: [
     '请选择有效 Git 仓库的根目录',
     'Select the root directory of a valid Git repository.',
@@ -59,7 +61,7 @@ const messages: Record<string, [string, string]> = {
 
 /** 协议错误按稳定代码翻译，避免把 Electron 包装通道或原始异常作为产品提示。 */
 export const translateError = (text: string, english: boolean): string | undefined => {
-  const code = text.match(/\b([A-Z][A-Z_]+):/)?.[1]
+  const code = text.match(/\b[A-Z][A-Z_]+\b/g)?.find((candidate) => messages[candidate])
   const pair = code ? messages[code] : undefined
   return pair ? `${code}: ${pair[english ? 1 : 0]}` : undefined
 }

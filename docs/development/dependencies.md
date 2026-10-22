@@ -21,6 +21,7 @@ Codex 0.163.0、Claude Code 2.1.308 已完成 Windows 桌面/打包真实执行�
 
 内核包来自用户指定的 Agent-Team 固定提交，package.json 声明 ISC；Zod MIT。
 原始内核 bundle 保留第三方许可注释，并附带 THIRD-PARTY-NOTICES.txt。
+M3内核还包含锁定MCP SDK 1.30.0、飞书SDK 1.71.1与隔离HTTP实例axios 1.18.1，均按实际bundle依赖图保存完整许可；SDK HTTP需返回正文并保留headers特例，不把裸Axios对象当作等价契约。
 纬舟自身许可证仍由所有者决定，本轮没有新授予开源许可。
 
 SQLite 使用 Node 内建 node:sqlite，在真实 Electron 工具进程中验证；不引入需重编译 ABI 的 SQLite 扩展。

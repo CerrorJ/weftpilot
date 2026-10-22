@@ -7,7 +7,15 @@ import { ProductPage } from './product-page'
 import { useWorkspace } from './use-workspace'
 import type { WorkspaceActions } from './use-workspace'
 import { HumanPage } from './human-page'
-const pages = ['任务与交付', '待处理', '项目与角色', '模型、需求与团队', '内核信息'] as const
+import { FeishuPage } from './feishu-page'
+const pages = [
+  '任务与交付',
+  '待处理',
+  '项目与角色',
+  '模型、需求与团队',
+  '飞书连接',
+  '内核信息',
+] as const
 type Page = (typeof pages)[number]
 export const App = () => (
   <PreferencesProvider>
@@ -56,6 +64,7 @@ const AppShell = () => {
 
 const PageContent = ({ page, actions }: { page: Page; actions: WorkspaceActions }) => {
   if (page === '内核信息') return <DiagnosticsPanel />
+  if (page === '飞书连接') return <FeishuPage actions={actions} />
   if (page === '待处理') return <HumanPage actions={actions} />
   if (page === '模型、需求与团队') return <ProductPage actions={actions} />
   return <WorkflowPage setup={page === '项目与角色'} actions={actions} />

@@ -11,6 +11,7 @@ type ConfigurationOrDecisionCommand = Extract<
       | 'team.save'
       | 'project.create'
       | 'human.resolve'
+      | 'feishu.save'
   }
 >
 export const sendCommand = (command: BusinessCommand, key: string): Promise<unknown> => {
@@ -22,6 +23,8 @@ export const sendCommand = (command: BusinessCommand, key: string): Promise<unkn
       return api.saveModel({ key, input: command })
     case 'human.resolve':
       return api.resolveHuman({ key, input: command })
+    case 'feishu.save':
+      return api.saveFeishu({ key, input: command })
     case 'requirement.save':
       return api.saveRequirement({ key, input: command })
     case 'team.save':

@@ -34,7 +34,14 @@ export class KernelClient {
   }
 
   request(
-    method: 'kernel.handshake' | 'kernel.health' | 'kernel.shutdown' | 'workspace.snapshot',
+    method:
+      | 'kernel.handshake'
+      | 'kernel.health'
+      | 'kernel.shutdown'
+      | 'workspace.snapshot'
+      | 'feishu.connect'
+      | 'feishu.disconnect'
+      | 'feishu.status',
   ): Promise<unknown> {
     return this.sendRequest({ protocolVersion: 1, requestId: randomUUID(), method })
   }

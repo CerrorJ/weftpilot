@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import { KernelHost } from './kernel-host'
 import { CredentialStore } from './credentials'
 import { ModelVault } from './model-vault'
+import { FeishuVault } from './feishu-vault'
 import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
 
@@ -14,6 +15,7 @@ let tray: Tray | undefined
 let quitting = false
 let quitPending = false
 let modelVault: ModelVault | undefined
+let feishuVault: FeishuVault | undefined
 const root = __dirname
 const rendererUrl = pathToFileURL(join(root, 'renderer/index.html')).href
 if (process.env.WEFTPILOT_TEST_DATA) app.setPath('userData', process.env.WEFTPILOT_TEST_DATA)
@@ -106,6 +108,10 @@ registerWorkflowBridge({
     if (!modelVault) throw new Error('CREDENTIAL_STORAGE_UNAVAILABLE')
     return modelVault
   },
+  feishuVault: () => {
+    if (!feishuVault) throw new Error('CREDENTIAL_STORAGE_UNAVAILABLE')
+    return feishuVault
+  },
   client: () => {
     if (!host) throw new Error('内核未启动')
     return host.client
@@ -116,12 +122,14 @@ if (ownsInstance)
   void app
     .whenReady()
     .then(() => {
-      modelVault = new ModelVault(join(app.getPath('userData'), 'credentials/models'), {
+      const encryption = {
         available: () => safeStorage.isEncryptionAvailable(),
-        encrypt: (value) => safeStorage.encryptString(value),
-        decrypt: (value) => safeStorage.decryptString(value),
-      })
-      host = new KernelHost(root, join(app.getPath('userData'), 'kernel'), modelVault)
+        encrypt: (value: string) => safeStorage.encryptString(value),
+        decrypt: (value: Buffer) => safeStorage.decryptString(value),
+      }
+      modelVault = new ModelVault(join(app.getPath('userData'), 'credentials/models'), encryption)
+      feishuVault = new FeishuVault(join(app.getPath('userData'), 'credentials/feishu'), encryption)
+      host = new KernelHost(root, join(app.getPath('userData'), 'kernel'), modelVault, feishuVault)
       createWindow()
       const image = nativeImage.createFromPath(join(root, 'renderer/brand/tray.png'))
       tray = new Tray(image.resize({ width: 20, height: 20 }))
