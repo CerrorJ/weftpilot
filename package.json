@@ -1,0 +1,42 @@
+{
+  "name": "weftpilot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "scripts": {
+    "kernel:assemble": "node build/assemble-kernel.mjs",
+    "dev": "pnpm build && electron .",
+    "build": "node build/build-desktop.mjs",
+    "package": "pnpm build && node build/package-desktop.mjs",
+    "typecheck": "tsc --noEmit && tsc -p apps/desktop/renderer/tsconfig.json",
+    "lint": "eslint . && node build/check-lines.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "tsx --tsconfig tsconfig.runtime.json --test tests/*.test.ts",
+    "test:e2e": "node --import tsx --test tests/e2e/*.test.ts"
+  },
+  "main": "dist/main.cjs",
+  "dependencies": {
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@electron/packager": "19.0.3",
+    "@types/node": "26.1.1",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "electron": "42.0.0",
+    "esbuild": "0.27.4",
+    "eslint": "10.0.3",
+    "playwright": "1.58.2",
+    "prettier": "3.9.6",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.1"
+  }
+}

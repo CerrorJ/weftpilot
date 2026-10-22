@@ -1,0 +1,40 @@
+name: Desktop
+on:
+  push:
+    branches: [main, 'feat/**', 'fix/**']
+  pull_request:
+jobs:
+  desktop:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.3.4
+      - run: pnpm install --frozen-lockfile
+      - run: node node_modules/electron/install.js
+      - run: pnpm kernel:assemble
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+      - run: pnpm package
+      - run: pnpm test:e2e
+      - name: Packaged application (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:WEFTPILOT_PACKAGED_EXE = (Resolve-Path release/WeftPilot-win32-x64/WeftPilot.exe).Path
+          pnpm test:e2e
+      - name: Packaged application (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          export WEFTPILOT_PACKAGED_EXE="$(find "$PWD/release" -path '*/WeftPilot.app/Contents/MacOS/WeftPilot' -print -quit)"
+          test -n "$WEFTPILOT_PACKAGED_EXE"
+          pnpm test:e2e

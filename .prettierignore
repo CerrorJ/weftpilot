@@ -1,0 +1,7 @@
+node_modules/
+dist/
+release/
+.kernel/
+pnpm-lock.yaml
+.impeccable/
+.tmp/

@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/CerrorJ/Agent-Team.git",
+  "kernelVersion": "0.1.0",
+  "protocolVersion": 1,
+  "dataSchemaVersion": 1,
+  "sourceCommit": "8a1491aeab5b6dd194083fb3b1e7a94afa1c3ce9",
+  "platform": "any",
+  "arch": "any",
+  "runtimeAbi": "node:sqlite (Node >=22.13)",
+  "artifact": "weftpilot-agent-team-kernel-0.1.0.tgz",
+  "sha256": "aa5bd73958f28cf6b7b62debe2f878b5836c547a7d70afd19709168ad7b4718c",
+  "files": {
+    "embedded-entry.js": "67833fdb52c331ac68453865ac575a410972508b900d1b2c65995a8ac0582d13",
+    "kernel.js": "3e0b7302cbe781e28c49c06f0e47a063d4ccecb910bf1f9f36ac5830685d9f70",
+    "manifest.json": "4a8eda49f56a3e05da35f0383866d889fdd7ff2680900ecfd6987597e8a4506c",
+    "package.json": "9f07c3274befd8b4e74b111adaea375fe245e577df6e4deaa1a18e05305815c4",
+    "protocol.js": "ff2b6f1b12b5fe3b5c665c223b3352c498559316a007ef756dc8ec9d899f8ce1",
+    "README.md": "19eabfda0d6ca07d1c27efd0639d9784865b6d9c6909e852b828369c45f85436",
+    "THIRD-PARTY-NOTICES.txt": "b660fbd28ab427627ac90a7599cb23721bfe817ab67ad735ed85ac99eae1389a",
+    "types/kernel/embedded-entry.d.ts": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+    "types/kernel/journal.d.ts": "5d735440930e0e459a706deb5713ca734eac5be72a315a4bf4018838f07a7350",
+    "types/kernel/kernel.d.ts": "0f1ca3acd7d0e46c4a7133ade87a2fb4bb49a6e970f1a5a0b9b5e4c1c378be89",
+    "types/kernel/protocol.d.ts": "796f53774480fca9ac07e6b2ddb6ef9b93a4ad90e15c6759798a7f003d52ef7b"
+  }
+}

@@ -1,0 +1,42 @@
+import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { existsSync } from 'node:fs'
+import { readFile, mkdir, writeFile, rename, rm } from 'node:fs/promises'
+import { resolve } from 'node:path'
+
+const lock = JSON.parse(await readFile('config/kernel-lock.json', 'utf8'))
+const root = resolve('.kernel')
+const source = resolve(root, 'source')
+const run = (command, args, cwd) =>
+  execFileSync(command, args, { cwd, stdio: 'inherit', shell: false })
+const pnpmEntry = process.env.npm_execpath
+if (!pnpmEntry) throw new Error('请使用 pnpm kernel:assemble')
+const runPnpm = (args) =>
+  /\.exe$/i.test(pnpmEntry)
+    ? run(pnpmEntry, args, source)
+    : run(process.execPath, [pnpmEntry, ...args], source)
+await mkdir(root, { recursive: true })
+if (!existsSync(`${source}/.git`))
+  run('git', ['clone', '--no-checkout', lock.repository, source], root)
+run('git', ['fetch', 'origin', lock.sourceCommit], source)
+run('git', ['checkout', '--detach', lock.sourceCommit], source)
+if (execFileSync('git', ['status', '--porcelain'], { cwd: source, encoding: 'utf8' }).trim()) {
+  throw new Error('内核构建检出包含改动，拒绝装配')
+}
+runPnpm(['install', '--frozen-lockfile'])
+runPnpm(['build:kernel'])
+// npm pack 的 tarball 记录规范化时间戳，可重复重建同一固定源码产物。
+const npmEntry = resolve(process.execPath, '..', 'node_modules/npm/bin/npm-cli.js')
+run(process.execPath, [npmEntry, 'pack', '--pack-destination', root], `${source}/dist-kernel`)
+const archive = resolve(root, lock.artifact)
+const digest = createHash('sha256')
+  .update(await readFile(archive))
+  .digest('hex')
+if (digest !== lock.sha256) throw new Error('内核产物 SHA-256 不匹配，拒绝装配')
+const staging = resolve(root, 'staging')
+await mkdir(staging, { recursive: true })
+run('tar', ['-xf', archive, '-C', staging], root)
+await writeFile(`${staging}/package/artifact-lock.json`, JSON.stringify(lock, null, 2) + '\n')
+if (existsSync(`${root}/package`)) await rm(`${root}/package`, { recursive: true })
+await rename(`${staging}/package`, `${root}/package`)
+console.log(`已装配内核 ${lock.kernelVersion} / ${lock.sourceCommit}`)

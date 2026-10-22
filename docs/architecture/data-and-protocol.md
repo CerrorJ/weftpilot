@@ -106,12 +106,12 @@ WAL 可支持读取与写入并发，但仍需管理写事务、checkpoint 与�
 
 ```ts
 interface CommandEnvelope<T> {
-  protocolVersion: 1;
-  requestId: string;
-  idempotencyKey: string;
-  workspaceId: string;
-  expectedVersion?: number; // 修改已有对象时必须指定
-  payload: T;
+  protocolVersion: 1
+  requestId: string
+  idempotencyKey: string
+  workspaceId: string
+  expectedVersion?: number // 修改已有对象时必须指定
+  payload: T
 }
 ```
 

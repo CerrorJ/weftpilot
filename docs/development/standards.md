@@ -4,6 +4,8 @@
 
 ## 1. 需求与实现依据
 
+2026-10-22 已进入正式工程阶段，M0 已建立下述检查命令；真实执行结果与范围见 [开发交接](progress.md)。本文件中的“尚无 package.json”属于设计时点，不能当作免执行当前检查的理由。
+
 - 架构选择以用户确认记录为准，产品行为参考 `product-design` 分支的角色、任务和验收流程。
 - 区分已实现、模拟、待实现和待验证，不用截图、静态页面或一次正常路径证明真实集成完成。
 - 接到功能需求后明确触发条件、输入、结果、失败方式和验收证据，再编写实现。
@@ -44,7 +46,7 @@
  */
 async function resolveApproval(command: ResolveApprovalCommand) {
   // 先持久化决定与 outbox，事务外再发送飞书通知，避免锁跨越网络等待。
-  return approvals.resolve(command);
+  return approvals.resolve(command)
 }
 ```
 
@@ -81,12 +83,9 @@ M0 在实际配置中建立以下普通源码规则，并单独配置测试/生�
 
 ```js
 const sourceSizeRules = {
-  "max-lines": [
-    "error",
-    { max: 300, skipBlankLines: true, skipComments: true },
-  ],
-  "max-lines-per-function": [
-    "error",
+  'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+  'max-lines-per-function': [
+    'error',
     {
       max: 50,
       skipBlankLines: true,
@@ -94,10 +93,10 @@ const sourceSizeRules = {
       IIFEs: true,
     },
   ],
-  "max-depth": ["error", 3],
-  complexity: ["error", 10],
-  "max-params": ["error", 4],
-};
+  'max-depth': ['error', 3],
+  complexity: ['error', 10],
+  'max-params': ['error', 4],
+}
 ```
 
 ## 3A. 原子性与副作用边界
