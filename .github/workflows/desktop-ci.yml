@@ -39,6 +39,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm test
+      - run: pnpm test:packaging
       - run: pnpm package
       - run: pnpm test:e2e
       - name: Packaged application (Windows)
@@ -47,6 +48,8 @@ jobs:
         run: |
           $env:WEFTPILOT_PACKAGED_EXE = (Resolve-Path release/WeftPilot-win32-x64/WeftPilot.exe).Path
           pnpm test:e2e
+      - name: Assemble unsigned native validation installer
+        run: pnpm package:installer --validation --validation-version 0.0.1
       - name: Packaged application (macOS)
         if: runner.os == 'macOS'
         run: |
