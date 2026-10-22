@@ -7,7 +7,7 @@
 ## 当前状态
 
 M0 本机原生与打包验收、独立 Tester 和 Reviewer 通过，但远端干净构建缺少必要的跨仓读取凭据，阶段最终验收仍未完成。macOS 桌面原生运行尚未验证。
-M1 已接入真实项目/角色/Task/Run、Codex、Git worktree、状态日志、停止重试、交付与验收界面。Windows 真实 CLI 闭环和停止测试通过；独立 Tester 发现的立即停止竞争已修复，正在完成复验与 Reviewer 审查，尚不宣布阶段验收通过。新增中英文、浅深主题与跟随系统设置，偏好经刷新及重启验证。详见 [M1 开发记录](m1-local-workflow.md)。M2—M4 尚未开始。
+M1 已接入真实项目/角色/Task/Run、Codex、Git worktree、状态日志、停止重试、交付与验收界面。Windows 真实 CLI 闭环和停止测试通过；独立 Tester 复验通过，Reviewer APPROVE（受影响回归 8/8）。M1 Windows 本机验收通过，继续 M2；外部平台/凭据验收仍待处理。新增中英文、浅深主题与跟随系统设置，偏好经刷新及重启验证。详见 [M1 开发记录](m1-local-workflow.md)。M2—M4 尚未开始。
 
 ## 当前真实阻塞与已备好的修复
 

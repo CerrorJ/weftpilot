@@ -1,6 +1,6 @@
 ﻿# M1 本机任务闭环开发记录
 
-2026-10-23。当前为验收进行中，未宣布 M1 最终通过；外部待办见 [清单](pending-external-validation.md)。
+2026-10-23。Windows 本机范围验收通过，独立 Tester 通过、Reviewer APPROVE；外部待办见 [清单](pending-external-validation.md)。
 
 ## 实际能力
 
@@ -46,10 +46,14 @@ node --import tsx --test tests/e2e/workflow.test.ts
 
 ## 关联版本与后续
 
-当前两仓开发分支均为 feat/local-workflow。内核 0.2.3 / 协议 1 / schema 2，源提交 e4a0fd50ad1d6d5f4cdfa13b6282458f375ff016；确切 tarball 和文件摘要见 config/kernel-lock.json。桌面提交在本记录同一功能分支中，完成独立评审后补充提交锚点。
+当前两仓开发分支均为 feat/local-workflow。内核 0.2.3 / 协议 1 / schema 2，源提交 e4a0fd50ad1d6d5f4cdfa13b6282458f375ff016；确切 tarball 和文件摘要见 config/kernel-lock.json。桌面实现提交 1755620d（完整 SHA 以 git log 为准），已推送。
 
-接下来先完成 Tester/Reviewer、打包回归与提交推送，再推进 M2 需求版本、模型、第二 CLI、角色试运行、团队与依赖。macOS 原生运行、跨仓 CI 凭据、真实飞书租户、签名和公开发行仍未验证或授权；不以本机 Windows 结果替代。
+已完成 Tester/Reviewer、打包回归与提交推送，继续推进 M2 需求版本、模型、第二 CLI、角色试运行、团队与依赖。macOS 原生运行、跨仓 CI 凭据、真实飞书租户、签名和公开发行仍未验证或授权；不以本机 Windows 结果替代。
 
 ## 审查修复验证
 
-独立 Reviewer 复现的两项 P1 已修复：交付包含从基准到工作树的已提交与未提交变更，且保留补丁空白；进程终止失败不会被根进程 exit 0 掩盖。另修复异常代码前缀和按 Run 查询历史日志。新 Run 固定退回意见，正常取消不再附带 CLI 失败码。新版内核 52/52 测试，桌面真实 CLI 四项检查（含普通界面）全部通过；独立复验和最终审查结论待补。
+独立 Reviewer 复现的两项 P1 已修复：交付包含从基准到工作树的已提交与未提交变更，且保留补丁空白；进程终止失败不会被根进程 exit 0 掩盖。另修复异常代码前缀和按 Run 查询历史日志。新 Run 固定退回意见，正常取消不再附带 CLI 失败码。新版内核 52/52 测试，桌面真实 CLI 四项检查（含普通界面）全部通过；独立 Tester 复验通过，Reviewer APPROVE，并独立执行受影响回归 8/8 通过。
+
+## M1 退出记录
+
+2026-10-23，Windows 本机真实闭环通过；独立 Tester 通过、Reviewer APPROVE，无尚存必修项。打包 exe 的默认 E2E 由父代理和独立 Tester 均运行：2 项通过，3 项真实模型测试有意跳过；开发构建的真实 CLI 模型测试另行全部通过。不能把打包默认测试称为已运行模型测试。macOS、跨仓 CI 凭据、真实飞书和发行授权保留外部待办，按用户授权继续 M2，不以这些待办停工。
