@@ -15,6 +15,10 @@ export interface WorkflowBridge {
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,
   ): Promise<unknown>
   saveRole(input: Submission<Input<'role.save'>>): Promise<unknown>
+  saveSkillSource(input: Submission<Input<'skill.source.save'>>): Promise<unknown>
+  importSkill(input: Submission<Input<'skill.import'>>): Promise<unknown>
+  activateSkill(input: Submission<Input<'skill.activate'>>): Promise<unknown>
+  uninstallSkill(input: Submission<Input<'skill.uninstall'>>): Promise<unknown>
   saveModel(input: Submission<ModelSubmission>): Promise<unknown>
   saveRequirement(input: Submission<Input<'requirement.save'>>): Promise<unknown>
   saveTeam(input: Submission<Input<'team.save'>>): Promise<unknown>

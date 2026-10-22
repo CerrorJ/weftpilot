@@ -1,5 +1,6 @@
 import type { BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
 import { workflow } from './desktop-api'
+import { isSkillCommand, sendSkillCommand } from './skill-command-sender'
 
 type ConfigurationOrDecisionCommand = Extract<
   BusinessCommand,
@@ -12,9 +13,14 @@ type ConfigurationOrDecisionCommand = Extract<
       | 'project.create'
       | 'human.resolve'
       | 'feishu.save'
+      | 'skill.source.save'
+      | 'skill.import'
+      | 'skill.activate'
+      | 'skill.uninstall'
   }
 >
 export const sendCommand = (command: BusinessCommand, key: string): Promise<unknown> => {
+  if (isSkillCommand(command)) return sendSkillCommand(command, key)
   const api = workflow()
   switch (command.type) {
     case 'role.save':

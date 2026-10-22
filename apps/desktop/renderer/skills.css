@@ -1,0 +1,70 @@
+.skill-page {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+.skill-import-form {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.skill-record {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+.skill-record-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.skill-record h3 {
+  margin: 0;
+}
+.skill-record code {
+  overflow-wrap: anywhere;
+  font-size: 0.86em;
+}
+.skill-preview details {
+  margin: 16px 0;
+}
+.skill-preview summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+}
+.skill-preview pre {
+  background: var(--surface-hover);
+  padding: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+  max-height: 420px;
+  overflow: auto;
+  font: inherit;
+}
+.skill-preview li {
+  margin-bottom: 8px;
+}
+.skill-consent,
+.role-skills label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.skill-consent input,
+.role-skills input {
+  width: auto;
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+.role-skills {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 16px;
+}
+@media (max-width: 820px) {
+  .skill-record-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

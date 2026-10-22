@@ -1,8 +1,17 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { ModelProfile, RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
+import { RoleSkills, selectedSkills } from './role-skills'
+import {
+  readRoleDraft,
+  writeRoleDraft,
+  clearRoleDraft,
+  roleDraftKey,
+  initialRoleDraft,
+} from './role-draft'
+import { RoleRuntime } from './role-runtime'
 interface RoleContext {
   role: RoleVersion | undefined
   models: ModelProfile[]
@@ -11,23 +20,25 @@ interface RoleContext {
 
 export const RoleForm = ({ role, models, actions }: RoleContext) => {
   const { t } = useI18n()
+  const [revision, setRevision] = useState(0)
+  const key = roleDraftKey(role)
+  const draft = useMemo(() => readRoleDraft(key) ?? initialRoleDraft(role), [key, revision, role])
   return (
-    <form onSubmit={(event) => submitRole(event, { role, models, actions })}>
-      <TextField name="name" label={t('角色名称')} value={role?.name ?? ''} />
-      <TextField
-        name="responsibility"
-        label={t('职责')}
-        value={role?.responsibility ?? ''}
-        multiline
-      />
-      <RoleRuntime role={role} models={models} />
-      <label>
-        {t('工具权限')}
-        <select name="permission" defaultValue={role?.permission ?? 'read-only'}>
-          <option value="read-only">{t('只读建议')}</option>
-          <option value="workspace-write">{t('隔离工作目录内写入')}</option>
-        </select>
-      </label>
+    <form
+      key={revision}
+      onChange={(event) => writeRoleDraft(key, event.currentTarget)}
+      onSubmit={(event) =>
+        submitRole(event, { role, models, actions }, () => {
+          clearRoleDraft(key)
+          setRevision((value) => value + 1)
+        })
+      }
+    >
+      <TextField name="name" label={t('角色名称')} value={draft.name} />
+      <TextField name="responsibility" label={t('职责')} value={draft.responsibility} multiline />
+      <RoleRuntime role={role} models={models} draft={draft} />
+      <RolePermission value={draft.permission} />
+      <RoleSkills skills={actions.state?.skills ?? []} selected={draft.skills} />
       <p className="field-note">
         {t('Codex 使用受控沙箱；Claude 当前仅开放受限文件工具。试运行失败或状态待确认时不能启用。')}
       </p>
@@ -38,64 +49,11 @@ export const RoleForm = ({ role, models, actions }: RoleContext) => {
   )
 }
 
-const RoleRuntime = ({ role, models }: Omit<RoleContext, 'actions'>) => {
-  const { t } = useI18n()
-  const [cli, setCli] = useState(role?.cli ?? 'codex')
-  return (
-    <>
-      <label>
-        CLI
-        <select
-          name="cli"
-          value={cli}
-          onChange={(event) => setCli(event.target.value as 'codex' | 'claude')}
-        >
-          <option value="codex">Codex</option>
-          <option value="claude">Claude Code</option>
-        </select>
-      </label>
-      <label>
-        {t('模型配置')}
-        <select key={cli} name="profile" defaultValue={profileForCli(role, cli)}>
-          <option value="">{t('使用 CLI 账户与手动模型')}</option>
-          {roleModelOptions(role, models)
-            .filter((item) => item.cli === cli)
-            .map((item) => (
-              <option key={`${item.id}@${item.version}`} value={`${item.id}@${item.version}`}>
-                {item.name} · v{item.version}
-              </option>
-            ))}
-        </select>
-      </label>
-      <TextField
-        name="model"
-        label={t('模型（可选）')}
-        value={role?.model ?? ''}
-        optional
-        placeholder={t('留空使用 CLI 默认模型')}
-      />
-      {role?.modelProfileSnapshot && (
-        <p className="field-note">
-          {t('当前固定模型版本：')}
-          {role.modelProfileSnapshot.name} · v{role.modelProfileSnapshot.version}
-        </p>
-      )}
-    </>
-  )
-}
-
-/** 当前角色的历史引用必须仍可选，不能因“只列最新版本”静默退回 CLI 账户。 */
-const roleModelOptions = (
-  role: RoleVersion | undefined,
-  models: ModelProfile[],
-): ModelProfile[] => {
-  const pinned = role?.modelProfileSnapshot
-  if (!pinned || models.some((item) => item.id === pinned.id && item.version === pinned.version))
-    return models
-  return [...models, pinned]
-}
-
-const submitRole = (event: React.FormEvent<HTMLFormElement>, { role, actions }: RoleContext) => {
+const submitRole = (
+  event: React.FormEvent<HTMLFormElement>,
+  { role, actions }: RoleContext,
+  saved: () => void,
+) => {
   event.preventDefault()
   const element = event.currentTarget
   const form = new FormData(element)
@@ -110,19 +68,28 @@ const submitRole = (event: React.FormEvent<HTMLFormElement>, { role, actions }: 
       modelProfileRef: selectedModel(formText(form, 'profile')),
       model: formText(form, 'model'),
       permission: form.get('permission') === 'workspace-write' ? 'workspace-write' : 'read-only',
+      skills: selectedSkills(form),
     })
     .then((result) => {
-      if (result && !role) element.reset()
+      if (result) saved()
     })
 }
-
-const profileForCli = (role: RoleVersion | undefined, cli: string) =>
-  role?.cli === cli && role.modelProfileSnapshot
-    ? `${role.modelProfileSnapshot.id}@${role.modelProfileSnapshot.version}`
-    : ''
 
 const selectedModel = (value: string) => {
   if (!value) return null
   const [id, version] = value.split('@')
   return { id: id!, version: Number(version) }
+}
+
+const RolePermission = ({ value }: { value: string }) => {
+  const { t } = useI18n()
+  return (
+    <label>
+      {t('工具权限')}
+      <select name="permission" defaultValue={value}>
+        <option value="read-only">{t('只读建议')}</option>
+        <option value="workspace-write">{t('隔离工作目录内写入')}</option>
+      </select>
+    </label>
+  )
 }

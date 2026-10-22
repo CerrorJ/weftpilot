@@ -5,6 +5,7 @@ import { useI18n } from './preferences'
 import { latestVersions } from './object-versions'
 import { RoleForm } from './role-form'
 import { RoleHealth } from './role-health'
+import { readSelectedRole, rememberSelectedRole } from './role-draft'
 
 export const RoleSetup = ({
   state,
@@ -14,7 +15,7 @@ export const RoleSetup = ({
   actions: WorkspaceActions
 }) => {
   const { t } = useI18n()
-  const [selected, setSelected] = useState('')
+  const [selected, setSelected] = useState(readSelectedRole)
   const roles = latestVersions(state.roles)
   const role = roles.find((item) => item.id === selected)
   return (
@@ -23,17 +24,7 @@ export const RoleSetup = ({
       <p>
         {t('配置变更生成新版本，已有 Run 保留原快照。每个新版本必须通过真实试运行，再由你启用。')}
       </p>
-      <label>
-        {t('编辑角色')}
-        <select value={selected} onChange={(event) => setSelected(event.target.value)}>
-          <option value="">{t('新建角色')}</option>
-          {roles.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name} · v{item.version}
-            </option>
-          ))}
-        </select>
-      </label>
+      <RoleSelector selected={selected} roles={roles} select={setSelected} />
       <RoleForm
         key={`${selected}:${role?.version ?? 0}`}
         role={role}
@@ -51,5 +42,36 @@ export const RoleSetup = ({
         ))}
       </div>
     </section>
+  )
+}
+
+const RoleSelector = ({
+  selected,
+  roles,
+  select,
+}: {
+  selected: string
+  roles: WorkspaceSnapshot['roles']
+  select: (id: string) => void
+}) => {
+  const { t } = useI18n()
+  return (
+    <label>
+      {t('编辑角色')}
+      <select
+        value={selected}
+        onChange={(event) => {
+          select(event.target.value)
+          rememberSelectedRole(event.target.value)
+        }}
+      >
+        <option value="">{t('新建角色')}</option>
+        {roles.map((item) => (
+          <option key={item.id} value={item.id}>
+            {item.name} · v{item.version}
+          </option>
+        ))}
+      </select>
+    </label>
   )
 }

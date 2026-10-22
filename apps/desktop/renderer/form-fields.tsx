@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 interface TextFieldProps {
   label: string
   name: string
@@ -14,11 +16,13 @@ export const TextField = ({
   optional,
   placeholder,
 }: TextFieldProps) => {
+  const labelId = useId()
   return (
     <label>
-      {label}
+      <span id={labelId}>{label}</span>
       {multiline ? (
         <textarea
+          aria-labelledby={labelId}
           name={name}
           defaultValue={value}
           required={!optional}
@@ -27,6 +31,7 @@ export const TextField = ({
         />
       ) : (
         <input
+          aria-labelledby={labelId}
           name={name}
           defaultValue={value}
           required={!optional}
