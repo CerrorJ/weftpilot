@@ -36,7 +36,7 @@
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
-git switch feat/product-teams
+git switch feat/human-workflows
 ```
 
 先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4：

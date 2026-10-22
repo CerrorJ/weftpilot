@@ -1,0 +1,30 @@
+.human-request-list {
+  display: grid;
+  gap: 20px;
+}
+.human-request {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  background: var(--input-background);
+}
+.human-request-form,
+.request-resolution {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-top: 16px;
+}
+.human-request form {
+  margin-bottom: 18px;
+}
+.human-request h3,
+.human-request h4 {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+.human-request fieldset {
+  min-width: 0;
+}
+.human-request legend {
+  overflow-wrap: anywhere;
+}

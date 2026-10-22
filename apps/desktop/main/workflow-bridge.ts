@@ -21,6 +21,7 @@ const commandTypes = {
   stopRun: 'run.stop',
   retryRun: 'run.retry',
   acceptDelivery: 'delivery.accept',
+  resolveHuman: 'human.resolve',
 } as const
 
 /** 系统目录选择与业务命令分开；所有操作验证顶层渲染进程来源。 */

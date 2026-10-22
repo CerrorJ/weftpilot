@@ -1,9 +1,17 @@
 import type { BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
 import { workflow } from './desktop-api'
 
-type CatalogCommand = Extract<
+type ConfigurationOrDecisionCommand = Extract<
   BusinessCommand,
-  { type: 'role.save' | 'model.save' | 'requirement.save' | 'team.save' | 'project.create' }
+  {
+    type:
+      | 'role.save'
+      | 'model.save'
+      | 'requirement.save'
+      | 'team.save'
+      | 'project.create'
+      | 'human.resolve'
+  }
 >
 export const sendCommand = (command: BusinessCommand, key: string): Promise<unknown> => {
   const api = workflow()
@@ -12,6 +20,8 @@ export const sendCommand = (command: BusinessCommand, key: string): Promise<unkn
       return api.saveRole({ key, input: command })
     case 'model.save':
       return api.saveModel({ key, input: command })
+    case 'human.resolve':
+      return api.resolveHuman({ key, input: command })
     case 'requirement.save':
       return api.saveRequirement({ key, input: command })
     case 'team.save':
@@ -24,7 +34,7 @@ export const sendCommand = (command: BusinessCommand, key: string): Promise<unkn
 }
 
 const sendExecution = (
-  command: Exclude<BusinessCommand, CatalogCommand>,
+  command: Exclude<BusinessCommand, ConfigurationOrDecisionCommand>,
   key: string,
 ): Promise<unknown> => {
   const api = workflow()

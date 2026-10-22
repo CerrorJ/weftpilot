@@ -17,6 +17,7 @@ const workflow: WorkflowBridge = {
   stopRun: (input) => ipcRenderer.invoke('workflow:stopRun', input),
   retryRun: (input) => ipcRenderer.invoke('workflow:retryRun', input),
   acceptDelivery: (input) => ipcRenderer.invoke('workflow:acceptDelivery', input),
+  resolveHuman: (input) => ipcRenderer.invoke('workflow:resolveHuman', input),
   delivery: (id) => ipcRenderer.invoke('workflow:delivery', id),
   run: (id) => ipcRenderer.invoke('workflow:run', id),
   activity: (id) => ipcRenderer.invoke('workflow:activity', id),

@@ -7,6 +7,7 @@ import { DeliveryReview } from './delivery-review'
 import { RunControls } from './run-controls'
 import { RunActivity } from './run-activity'
 import { TaskRelations, RunInputs } from './task-relations'
+import { RunHumanRequests } from './human-request-card'
 interface TaskContext {
   task: Task
   state: WorkspaceSnapshot
@@ -53,6 +54,7 @@ export const TaskDetail = ({ task, state, actions, selectTask }: TaskContext) =>
           <RunDetails run={run} />
           <RunInputs run={run} state={state} />
           <RunActivity runId={run.id} cursor={state.cursor} />
+          <RunHumanRequests runId={run.id} actions={actions} />
           <DeliveryReview task={task} run={run} state={state} actions={actions} />
         </>
       )}

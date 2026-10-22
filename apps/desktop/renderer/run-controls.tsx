@@ -17,7 +17,9 @@ export const RunControls = ({ task, run, actions }: ControlsContext) => {
     )
   if (run.status === 'stopping')
     return <p role="status">{t('停止请求已记录，正在确认进程树结束。')}</p>
-  const stop = ['queued', 'preparing', 'running'].includes(run.status)
+  const stop = ['queued', 'preparing', 'running', 'waiting_input', 'waiting_approval'].includes(
+    run.status,
+  )
   const retry = run.processState === 'confirmed_ended' && task.status === 'ready'
   return (
     <div className="run-controls">
@@ -28,7 +30,7 @@ export const RunControls = ({ task, run, actions }: ControlsContext) => {
             void actions.execute({ type: 'run.stop', runId: run.id, expectedVersion: run.version })
           }}
         >
-          {t('请求停止')}
+          {t(stopCaption(run.status))}
         </button>
       )}
       {retry && (
@@ -44,6 +46,9 @@ export const RunControls = ({ task, run, actions }: ControlsContext) => {
     </div>
   )
 }
+
+const stopCaption = (status: Run['status']): string =>
+  ['waiting_input', 'waiting_approval'].includes(status) ? '结束等待并停止' : '请求停止'
 
 const StartRun = ({ task, actions }: Omit<ControlsContext, 'run'>) => {
   const { t } = useI18n()

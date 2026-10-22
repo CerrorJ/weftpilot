@@ -2,7 +2,7 @@
 
 本机验证：Windows x64，Node 24.18.0，pnpm 12.3.4，Git 2.53.0。
 Electron 42.0.0 的工具进程实际报告 Node 24.15.0。
-Codex 0.163.0、Claude Code 2.1.308 已安装；尚未作为桌面任务执行验收。
+Codex 0.163.0、Claude Code 2.1.308 已完成 Windows 桌面/打包真实执行、团队交接和人工处理增量验收；具体范围及失败证据见各阶段记录。
 依赖版本与完整传递依赖锁在 package.json / pnpm-lock.yaml，CI 冻结安装。
 
 | 依赖                                     | 用途、取舍                                                                | 许可         |

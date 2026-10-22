@@ -26,6 +26,7 @@ export interface WorkflowBridge {
   stopRun(input: Submission<Input<'run.stop'>>): Promise<unknown>
   retryRun(input: Submission<Input<'run.retry'>>): Promise<unknown>
   acceptDelivery(input: Submission<Input<'delivery.accept'>>): Promise<unknown>
+  resolveHuman(input: Submission<Input<'human.resolve'>>): Promise<unknown>
   delivery(id: string): Promise<unknown>
   run(id: string): Promise<unknown>
   activity(id: string): Promise<unknown>

@@ -15,6 +15,8 @@ export const runLabel = (run: Run) => {
     queued: '排队中',
     preparing: '准备目录',
     running: '执行中',
+    waiting_input: '等待澄清',
+    waiting_approval: '等待确认',
     stopping: '停止中',
     stopped: '已停止',
     succeeded: '执行成功',
