@@ -114,11 +114,15 @@ test(
       await page.locator('.appearance-settings summary').click()
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
       await page.getByRole('combobox', { name: 'Appearance', exact: true }).selectOption('dark')
+      // 偏好由React effect应用并保存，需观察生效后再退出，不能把选择事件当成持久化确认。
+      await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
       await quit(application)
       application = await launch(fixture.data)
       page = await application.firstWindow()
       assert.deepEqual((await snapshot(page)).models, original.models)
       assert.equal((await snapshot(page)).skillSources.length, 0)
+      // preload IPC可早于React首次渲染就绪；仍须精确验证重启后的主题值。
+      await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
       await page.getByRole('button', { name: 'Kernel', exact: true }).click()
       await page
