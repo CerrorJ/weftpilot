@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { mkdtemp, mkdir, symlink, realpath, rm } from 'node:fs/promises'
-import { join, relative, isAbsolute } from 'node:path'
+import { join, relative, isAbsolute, dirname, basename } from 'node:path'
 import { tmpdir } from 'node:os'
 import { createFixture } from './e2e/workflow-helpers'
 
 test('真实Git夹具在TEMP目录别名下仍返回内核使用的规范路径', async () => {
+  const temporaryRoot = await realpath(tmpdir())
   const directory = await mkdtemp(join(tmpdir(), 'weftpilot-temp-alias-'))
   const target = join(directory, '实际 temp #')
   const alias = join(directory, 'alias temp')
@@ -24,7 +25,13 @@ test('真实Git夹具在TEMP目录别名下仍返回内核使用的规范路径'
   } finally {
     if (previous === undefined) delete process.env[key]
     else process.env[key] = previous
-    await fixture?.cleanup()
+    assert.equal(dirname(await realpath(directory)), temporaryRoot)
+    assert.ok(basename(directory).startsWith('weftpilot-temp-alias-'))
+    if (fixture) {
+      const local = relative(await realpath(target), await realpath(fixture.directory))
+      assert.ok(local && !local.startsWith('..') && !isAbsolute(local))
+      await fixture.cleanup()
+    }
     // 仅删除本次新建的temp父目录及其内部自有链接/夹具，不触及其他测试或用户数据。
     await rm(directory, { recursive: true, force: true })
   }

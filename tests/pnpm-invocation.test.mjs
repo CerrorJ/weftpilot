@@ -1,10 +1,16 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { execFileSync } from 'node:child_process'
-import { mkdtemp, writeFile, rm } from 'node:fs/promises'
+import { mkdtemp, writeFile, rm, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, dirname, basename } from 'node:path'
 import { pnpmInvocation } from '../build/pnpm-invocation.mjs'
+
+const removeFixture = async (directory, prefix) => {
+  assert.equal(dirname(await realpath(directory)), await realpath(tmpdir()))
+  assert.ok(basename(directory).startsWith(prefix))
+  await rm(directory, { recursive: true, force: true })
+}
 
 test('真实原生进程直接运行，参数保留且不经过shell', async () => {
   const invocation = await pnpmInvocation(process.execPath)
@@ -37,7 +43,7 @@ test('JS与无扩展名Node包装器仍使用当前Node，中文空格路径可�
       assert.deepEqual(JSON.parse(result), ['literal space #'])
     }
   } finally {
-    await rm(directory, { recursive: true, force: true })
+    await removeFixture(directory, 'weftpilot-pnpm-')
   }
 })
 
@@ -53,6 +59,6 @@ test('无扩展名Mach-O/ELF入口不交给Node；未知包装器与缺少入口
     await assert.rejects(pnpmInvocation(entry), /无法识别pnpm入口/)
     await assert.rejects(pnpmInvocation(undefined), /请使用 pnpm/)
   } finally {
-    await rm(directory, { recursive: true, force: true })
+    await removeFixture(directory, 'weftpilot-pnpm-header-')
   }
 })
