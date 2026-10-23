@@ -8,7 +8,7 @@
 
 ## 当前阶段
 
-架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能、备份恢复、诊断及Windows验证安装器的真实闭环已验证，整体尚未封板。私有内核跨仓CI凭据、macOS原生等外部待办记录后继续开发，不提前标为通过。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
+架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能、备份恢复、诊断及Windows验证安装器的真实闭环已验证，整体尚未封板。私有内核CI读取已解决，[Windows/macOS CI](https://github.com/CerrorJ/weftpilot/actions/runs/39915331008)全绿，含真实开发/打包Electron运行及本机安装包装配；macOS用户设备、真实CLI、实际安装升级等仍待验收。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
 
 **Agent-Team 是唯一内核；纬舟消费固定提交与摘要的产物。项目、角色、Run、调度、Git、CLI 和验收均在内核维护，桌面只消费协议。界面支持中英文、浅色/深色/跟随系统，并保存本机偏好。**
 
@@ -38,7 +38,7 @@
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
-git switch feat/skills-release
+git switch fix/native-pnpm-launch
 ```
 
 先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4。应直接安装官方`pnpm@12.3.4`；旧pnpm 11启动器自动切到12时仍可能改写工具链锁。不要仅以仓库内`pnpm --version`判断启动器版本。CI相关说明见[原生pnpm修复记录](docs/development/ci-native-pnpm.md)。

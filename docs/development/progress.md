@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-最新CI进展：用户已配置专用只读凭据，Desktop第19次attempt2两平台均成功检出私有内核，“缺跨仓凭证”已解决。随后macOS暴露原生pnpm入口误传Node的新构建问题，Windows因fail-fast取消；正在`fix/native-pnpm-launch`独立工作区修复，见[CI修复记录](ci-native-pnpm.md)。下文历史“缺凭据”描述不再代表当前状态，双平台CI尚未记整体通过。
+最新CI进展：用户已配置专用只读凭据，`fix/native-pnpm-launch`源码`34bfa29`的[双平台CI](https://github.com/CerrorJ/weftpilot/actions/runs/39915331008)已全部通过。修复原生pnpm启动、测试临时路径别名、规范化pnpm12工具链锁及主题初始化等待。两平台各21项单测、6项装配回归、开发/实际打包Electron各9通过11显式跳过；Windows NSIS与macOS ARM64 DMG/ZIP装配均成功。见[CI修复记录](ci-native-pnpm.md)。下文历史“缺凭据/CI未通过”描述不再代表当前状态；用户设备、真实CLI和macOS安装升级等剩余验收仍保留。
 
 M0本机原生与打包、M1真实闭环、M2双CLI团队已完成Windows限定范围的独立验收；M3人工处理和飞书本机适配也通过。远端桌面CI仍缺跨仓凭证，真实飞书租户、自定义模型成功路径和macOS原生仍待验证，不将局部通过扩写为完整跨平台通过。
 M4技能版本、真实双CLI技能交付、备份恢复、只读诊断与预览导出已接入并分别经Tester/Reviewer通过；当前桌面锁定`0.5.8/2d347d1/schema7`。备份桌面关联`b9ad0e9`，诊断关联`1b5b845`；补审关闭SQLite触发器P1、盘根P2、恢复退出竞争及坏业务JSON无法导出报告P2。参见[M4诊断记录](m4-diagnostics.md)、[备份记录](m4-backup.md)、[技能记录](m4-skills.md)。Windows未签名NSIS验证身份安装/升级/卸载经开发者与独立Tester分别真实通过，默认用户目录、运行中拒绝、升级保持密文/偏好及卸载保留均核对；安装器Reviewer最终APPROVE，正式身份本地候选从干净`bf85620`构建、摘要及默认原生9项通过，未覆盖安装正式环境。参见[M4安装器记录](m4-installers.md)及[统一发行交接](release-readiness.md)。M4整体仍因macOS原生等外部条件未完成。

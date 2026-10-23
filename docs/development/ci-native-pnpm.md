@@ -37,4 +37,23 @@ pnpm build
 
 pnpm官方[锁文件说明](https://github.com/pnpm/pnpm.io/blob/main/docs/lockfile.md)区分工具链启动文档和项目依赖图，[上游问题](https://github.com/pnpm/pnpm/issues/14009)也记录冻结安装可能更新工具链元数据；本次仅规范化固定12.3.4的工具链记录，不升级依赖，不设置忽略版本或废弃的管理开关。
 
-独立Tester/Reviewer已通过pnpm启动、夹具路径与清理边界增量；锁规范化补验和最终远端CI结果后续补记。原目录仍保持`product-design`及其已有未跟踪产物，不切换、清理或覆盖旧失败现场。
+独立Tester/Reviewer已通过pnpm启动、夹具路径与清理边界增量；锁规范化补验和最终远端CI结果见下节。原目录仍保持`product-design`及其已有未跟踪产物，不切换、清理或覆盖旧失败现场。
+
+## 最终验收
+
+`34bfa29ab01dab9535fa10011c4ec63673c30500`的[真实双平台CI](https://github.com/CerrorJ/weftpilot/actions/runs/39915331008)最终全部通过；没有修改内核版本、协议、schema、115文件或tarball锁。
+
+| 范围                                | Windows x64 runner | macOS ARM64 runner |
+| ----------------------------------- | ------------------ | ------------------ |
+| 私有内核检出、原生产物重建与SHA校验 | 通过               | 通过               |
+| strict/lint/format                  | 通过               | 通过               |
+| 单元与装配回归                      | 21/21、6/6         | 21/21、6/6         |
+| 开发Electron默认E2E                 | 9通过、11显式跳过  | 9通过、11显式跳过  |
+| 实际打包Electron默认E2E             | 9通过、11显式跳过  | 9通过、11显式跳过  |
+| 未签名validation安装包装配          | NSIS成功           | DMG/ZIP成功        |
+
+macOS最后一次前序失败是备份重启后立刻读取主题得到null：preload IPC快于React首次effect。测试在选择主题后退出前和重启后等待可观察的dark主题，仍保留精确属性断言，不sleep、不扩大超时、不重试或跳过；本机独立真实备份专项2/2及新CI均通过。
+
+独立Tester还核对stock12冻结安装前后完整锁SHA不变、构建后工作树干净，以及项目锁第二文档134636字节与旧版逐字节相同。独立agent-browser实看握手、隐藏继续、菜单退出exit0与kernel.stopped通过；辅助脚本首次退出后读取已释放句柄的错误保留，新数据修正验证后通过。Reviewer最终补审APPROVE至`34bfa29`，无待修复P0/P1/P2/P3，独立确认锁、检查及远端双平台成功；本机原始证据均放忽略的`.tmp/evidence/ci-native-pnpm-{tester,review}.md`。
+
+此结论覆盖CI实际执行范围，不能替代macOS用户设备的CLI、安装/升级/卸载、Keychain提示、其他架构与签名/公证/公开更新验证。后续交接文档提交不冒充此已验收源码提交；原型分支、原内核脏改动和旧失败现场保持不动。
