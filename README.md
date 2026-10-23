@@ -12,6 +12,8 @@
 
 **Agent-Team 是唯一内核；纬舟消费固定提交与摘要的产物。项目、角色、Run、调度、Git、CLI 和验收均在内核维护，桌面只消费协议。界面支持中英文、浅色/深色/跟随系统，并保存本机偏好。**
 
+在界面“设置 / Settings”中切换“语言 / Language”和“外观 / Appearance”，立即生效并在重启后保留。当前本地候选、验证范围及后续入口见[发行交接](docs/development/release-readiness.md)。
+
 ## 分支职责
 
 | 分支                                                                         | 维护内容                                                        |
