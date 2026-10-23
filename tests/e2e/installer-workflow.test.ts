@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { join } from 'node:path'
-import { readFile, readdir, access, mkdir, writeFile } from 'node:fs/promises'
+import { join, resolve } from 'node:path'
+import { randomUUID } from 'node:crypto'
+import { readFile, readdir, access, mkdir, writeFile, realpath, rename } from 'node:fs/promises'
 import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication } from 'playwright'
 import { createFixture, configure, snapshot, quit } from './workflow-helpers'
@@ -9,6 +10,7 @@ import {
   validationArtifact,
   validationRegistration,
   runValidationInstaller,
+  validationProfileDirectory,
 } from '../helpers/installer-runtime'
 
 test(
@@ -25,6 +27,23 @@ test(
     const fixture = await createFixture()
     const directory = join(fixture.directory, '安装 # Windows')
     const executablePath = join(directory, 'WeftPilotValidation.exe')
+    const data = await validationProfileDirectory()
+    await assert.rejects(access(data), { code: 'ENOENT' }, '已有验收profile不能接管或读取')
+    await mkdir(data)
+    const owner = randomUUID()
+    const ownerFile = join(data, '.weftpilot-validation-owner')
+    await writeFile(ownerFile, owner, { flag: 'wx', mode: 0o600 })
+    await writeFile(
+      join(fixture.directory, 'validation-profile-owner.json'),
+      JSON.stringify({ owner, data }),
+      { flag: 'wx' },
+    )
+    const environment = Object.fromEntries(
+      Object.entries(process.env).filter(
+        (entry): entry is [string, string] =>
+          entry[1] !== undefined && !/^WEFTPILOT_TEST_DATA$/i.test(entry[0]),
+      ),
+    )
     let application: ElectronApplication | undefined
     let passed = false
     const setup = (executable: string, action: 'install' | 'uninstall') =>
@@ -35,12 +54,13 @@ test(
       application = await electron.launch({
         executablePath,
         args: [],
-        env: { ...process.env, WEFTPILOT_TEST_DATA: fixture.data },
+        env: environment,
       })
       assert.equal(
         await application.evaluate(({ app }) => app.getVersion()),
         first.manifest.version,
       )
+      assert.equal(await application.evaluate(({ app }) => app.getPath('userData')), data)
       let page = await configure(application, fixture.repository)
       await page.evaluate(() =>
         window.weftpilot!.workflow.saveModel({
@@ -74,7 +94,7 @@ test(
       assert.deepEqual(await snapshot(page), before)
       await quit(application)
       application = undefined
-      const encryptedDirectory = join(fixture.data, 'credentials/models')
+      const encryptedDirectory = join(data, 'credentials/models')
       const encryptedNames = await readdir(encryptedDirectory)
       const encryptedBefore = await readFile(join(encryptedDirectory, encryptedNames[0]!))
       assert.equal(encryptedBefore.includes(Buffer.from('installer-synthetic-secret')), false)
@@ -83,7 +103,7 @@ test(
       application = await electron.launch({
         executablePath,
         args: [],
-        env: { ...process.env, WEFTPILOT_TEST_DATA: fixture.data },
+        env: environment,
       })
       page = await application.firstWindow()
       assert.equal(
@@ -98,14 +118,13 @@ test(
         encryptedBefore,
       )
       const decrypted = await application.evaluate(
-        async ({ safeStorage }, path) =>
-          safeStorage.decryptString(await (await import('node:fs/promises')).readFile(path)),
-        join(encryptedDirectory, encryptedNames[0]!),
+        ({ safeStorage }, bytes) => safeStorage.decryptString(Buffer.from(bytes)),
+        [...encryptedBefore],
       )
       assert.equal(JSON.parse(decrypted).secret, 'installer-synthetic-secret')
       await quit(application)
       application = undefined
-      const database = new DatabaseSync(join(fixture.data, 'kernel/kernel.sqlite'), {
+      const database = new DatabaseSync(join(data, 'kernel/kernel.sqlite'), {
         readOnly: true,
       })
       assert.equal(
@@ -119,7 +138,7 @@ test(
       )
       assert.equal(await validationRegistration(), null)
       await assert.rejects(access(executablePath))
-      await access(join(fixture.data, 'kernel/kernel.sqlite'))
+      await access(join(data, 'kernel/kernel.sqlite'))
       assert.deepEqual(
         await readFile(join(encryptedDirectory, encryptedNames[0]!)),
         encryptedBefore,
@@ -137,11 +156,16 @@ test(
             stopped: true,
             uninstalled: true,
             dataRetained: true,
+            defaultUserData: true,
           },
           null,
           2,
         ),
       )
+      // 只移动本轮新建、带确切所有权标记的独立profile；保留数据断言在移动之前完成。
+      assert.equal(await realpath(data), resolve(data))
+      assert.equal(await readFile(ownerFile, 'utf8'), owner)
+      await rename(data, fixture.data)
       passed = true
     } finally {
       if (application) await application.close().catch(() => undefined)

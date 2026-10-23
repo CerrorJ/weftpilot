@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { installerConfiguration, installerEnvironment } from './installer-config.mjs'
 import { releaseInputs, sourceRevision, hashBytes } from './release-inputs.mjs'
 import { verifyPackagedKernel } from './verify-packaged-kernel.mjs'
+import { releaseManifestSchema } from '../packages/release-assembly/manifest.ts'
 
 const args = process.argv.slice(2)
 const worker = args.includes('--worker')
@@ -79,13 +80,13 @@ async function assembleInstaller() {
   await writeFile(
     join(output, 'release-manifest.json'),
     JSON.stringify(
-      {
+      releaseManifestSchema.parse({
         formatVersion: 1,
         ...context,
         createdAt: new Date().toISOString(),
         appId: config.appId,
         artifacts: files,
-      },
+      }),
       null,
       2,
     ),

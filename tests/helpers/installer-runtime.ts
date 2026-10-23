@@ -30,6 +30,21 @@ const manifestSchema = z.object({
   artifacts: z.array(artifactSchema),
 })
 
+export const validationProfileDirectory = async (): Promise<string> => {
+  const { stdout } = await execute(
+    powershell,
+    [
+      '-NoProfile',
+      '-NonInteractive',
+      '-Command',
+      "[Environment]::GetFolderPath('ApplicationData')",
+    ],
+    { windowsHide: true },
+  )
+  assert.ok(stdout.trim())
+  return join(stdout.trim(), 'WeftPilotValidation')
+}
+
 export const validationArtifact = async (manifestPath: string) => {
   const manifest = manifestSchema.parse(JSON.parse(await readFile(manifestPath, 'utf8')))
   const installer = manifest.artifacts.find((file) =>

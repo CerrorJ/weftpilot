@@ -8,7 +8,7 @@
 
 ## 当前阶段
 
-架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能版本管理正在打包验收，整体尚未封板。私有内核跨仓CI凭据、macOS原生等外部待办记录后继续开发，不提前标为通过。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
+架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能、备份恢复、诊断及Windows验证安装器的真实闭环已验证，整体尚未封板。私有内核跨仓CI凭据、macOS原生等外部待办记录后继续开发，不提前标为通过。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
 
 **Agent-Team 是唯一内核；纬舟消费固定提交与摘要的产物。项目、角色、Run、调度、Git、CLI 和验收均在内核维护，桌面只消费协议。界面支持中英文、浅色/深色/跟随系统，并保存本机偏好。**
 
@@ -36,7 +36,7 @@
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
-git switch feat/human-workflows
+git switch feat/skills-release
 ```
 
 先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4：
@@ -48,7 +48,7 @@ pnpm kernel:assemble
 pnpm dev
 ```
 
-`pnpm kernel:assemble` 在隔离缓存中检出锁定内核、冻结安装、构建并校验 tarball 摘要，无需相邻源码目录。`pnpm package` 构建当前系统的应用目录；签名、安装器与更新在 M4 验证。完整检查和打包验收命令见开发交接。
+`pnpm kernel:assemble` 在隔离缓存中检出锁定内核、冻结安装、构建并校验 tarball 摘要，无需相邻源码目录。`pnpm package` 构建当前系统的全新应用目录；`pnpm package:installer`从干净提交装配本机未签名安装器，`pnpm release:verify <输出目录>`校验实际摘要。签名、公证和公开发布未授权。完整检查和打包验收命令见开发交接与[安装器记录](docs/development/m4-installers.md)。
 
 当前 Agent-Team 为私有仓库，新设备须单独获得正常 Git 读取授权。CI 使用专用 `AGENT_TEAM_READ_TOKEN` Secret，不继承开发设备登录状态。
 
