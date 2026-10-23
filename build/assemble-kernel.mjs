@@ -3,18 +3,15 @@ import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { readFile, mkdir, writeFile, rename, rm } from 'node:fs/promises'
 import { resolve } from 'node:path'
+import { pnpmInvocation } from './pnpm-invocation.mjs'
 
 const lock = JSON.parse(await readFile('config/kernel-lock.json', 'utf8'))
 const root = resolve('.kernel')
 const source = resolve(root, 'source')
 const run = (command, args, cwd) =>
   execFileSync(command, args, { cwd, stdio: 'inherit', shell: false })
-const pnpmEntry = process.env.npm_execpath
-if (!pnpmEntry) throw new Error('请使用 pnpm kernel:assemble')
-const runPnpm = (args) =>
-  /\.exe$/i.test(pnpmEntry)
-    ? run(pnpmEntry, args, source)
-    : run(process.execPath, [pnpmEntry, ...args], source)
+const pnpm = await pnpmInvocation(process.env.npm_execpath)
+const runPnpm = (args) => run(pnpm.command, [...pnpm.prefix, ...args], source)
 await mkdir(root, { recursive: true })
 if (!existsSync(`${source}/.git`))
   run('git', ['clone', '--no-checkout', lock.repository, source], root)

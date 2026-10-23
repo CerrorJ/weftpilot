@@ -14,7 +14,7 @@
     "package": "pnpm build && node build/package-desktop.mjs",
     "package:installer": "node build/package-installer.mjs",
     "release:verify": "node build/verify-release.mjs",
-    "test:packaging": "node --test tests/installer-policy.test.mjs",
+    "test:packaging": "node --test tests/installer-policy.test.mjs tests/pnpm-invocation.test.mjs",
     "typecheck": "tsc --noEmit && tsc -p apps/desktop/renderer/tsconfig.json",
     "lint": "eslint . && node build/check-lines.mjs",
     "format": "prettier --write .",
