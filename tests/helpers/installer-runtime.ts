@@ -9,6 +9,12 @@ import { z } from 'zod'
 const execute = promisify(execFile)
 const registryPath =
   'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\bc4ac491-53bb-5b76-859b-e0506a33e933'
+const registryPaths = [
+  registryPath,
+  registryPath.replace('HKCU:', 'HKLM:'),
+  registryPath.replace('Software\\', 'Software\\WOW6432Node\\'),
+  registryPath.replace('HKCU:', 'HKLM:').replace('Software\\', 'Software\\WOW6432Node\\'),
+]
 const powershell = join(
   process.env.SystemRoot ?? 'C:/Windows',
   'System32/WindowsPowerShell/v1.0/powershell.exe',
@@ -59,16 +65,36 @@ export const validationArtifact = async (manifestPath: string) => {
 }
 
 export const validationRegistration = async () => {
-  const script = `$entry=Get-ItemProperty -LiteralPath '${registryPath}' -ErrorAction SilentlyContinue; if($null -eq $entry){'null'}else{@{version=$entry.DisplayVersion;uninstall=$entry.UninstallString}|ConvertTo-Json -Compress}`
+  // 机器级或32位注册也属于已有安装，不能仅因当前用户默认位置为空就覆盖它。
+  const script = `$ErrorActionPreference='Stop'; $paths=@('${registryPaths.join("','")}'); $entries=@(foreach($path in $paths){if(Test-Path -LiteralPath $path){$entry=Get-ItemProperty -LiteralPath $path; @{key=$path;version=$entry.DisplayVersion;uninstall=$entry.UninstallString}}}); ConvertTo-Json -InputObject $entries -Compress`
   const { stdout } = await execute(
     powershell,
     ['-NoProfile', '-NonInteractive', '-Command', script],
     { windowsHide: true },
   )
-  return z
-    .object({ version: z.string(), uninstall: z.string() })
-    .nullable()
+  const entries = z
+    .array(z.object({ key: z.string(), version: z.string(), uninstall: z.string() }))
     .parse(JSON.parse(stdout))
+  assert.ok(
+    entries.length <= 1 && entries.every((entry) => entry.key === registryPath),
+    '发现其他位置的验证安装，拒绝接管或覆盖',
+  )
+  return entries[0] ?? null
+}
+
+/** 无注册但仍活着的验证进程也不能接管；权限/查询异常直接失败。 */
+export const assertValidationProcessAbsent = async (): Promise<void> => {
+  const { stdout } = await execute(
+    powershell,
+    [
+      '-NoProfile',
+      '-NonInteractive',
+      '-Command',
+      "$ErrorActionPreference='Stop'; @(Get-CimInstance Win32_Process -Filter \"Name='WeftPilotValidation.exe'\").Count",
+    ],
+    { windowsHide: true },
+  )
+  assert.equal(stdout.trim(), '0', '发现运行中的验证应用，拒绝接管或覆盖')
 }
 
 /** 仅驱动本轮合成目录内的独立身份安装器；不运行注册表里返回的任意命令。 */

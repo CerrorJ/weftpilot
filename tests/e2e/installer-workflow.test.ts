@@ -11,6 +11,7 @@ import {
   validationRegistration,
   runValidationInstaller,
   validationProfileDirectory,
+  assertValidationProcessAbsent,
 } from '../helpers/installer-runtime'
 
 test(
@@ -21,6 +22,7 @@ test(
   },
   async () => {
     assert.equal(await validationRegistration(), null, '发现已有独立验收安装，拒绝接管或覆盖')
+    await assertValidationProcessAbsent()
     const first = await validationArtifact(process.env.WEFTPILOT_INSTALLER_V1_MANIFEST ?? '')
     const second = await validationArtifact(process.env.WEFTPILOT_INSTALLER_V2_MANIFEST ?? '')
     assert.notEqual(first.manifest.version, second.manifest.version)
