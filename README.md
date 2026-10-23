@@ -41,7 +41,7 @@ cd weftpilot
 git switch feat/skills-release
 ```
 
-先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4：
+先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4。应直接安装官方`pnpm@12.3.4`；旧pnpm 11启动器自动切到12时仍可能改写工具链锁。不要仅以仓库内`pnpm --version`判断启动器版本。CI相关说明见[原生pnpm修复记录](docs/development/ci-native-pnpm.md)。
 
 ```sh
 pnpm install --frozen-lockfile
