@@ -27,4 +27,8 @@ pnpm build
 
 新增3项回归覆盖真实原生子进程的原样参数、真实JS/无扩展名Node包装器在中文空格路径下运行，以及合成Mach-O/ELF头不传Node与未知包装器拒绝。连同原安装策略共6项通过。本机Windows全新内核检出、冻结安装与构建重打包通过，115文件tarball摘要仍与原锁一致。合成Mach-O头只验证分流，不能冒充macOS原生执行；真实macOS结果须以新CI运行记录为准。
 
-独立Tester/Reviewer与修复后远端CI结果后续补记。原目录仍保持`product-design`及其已有未跟踪产物，不切换、清理或覆盖旧失败现场。
+`9214f18`修复后的[真实双平台运行](https://github.com/CerrorJ/weftpilot/actions/runs/39913178558)已确认两平台均完成内核装配、strict/lint/format、20项单测、6项装配回归和应用目录打包，macOS原生pnpm启动错误关闭。
+
+该次CI仍有测试失败：两平台6个E2E均等待项目目录原始文本超时。Windows临时路径使用`RUNNER~1`短名，macOS使用`/var/folders`别名，内核按既有约定保存规范路径；原测试夹具错误地用别名比较真实路径。仅在夹具创建时先`realpath`，保持路径精确比较和真实内核，不延长超时或跳过用例。新增真实目录链接/junction作为TEMP的回归，覆盖Git仓库夹具路径规范化，本机21项单测与strict/lint通过；新CI结果待补。
+
+独立Tester/Reviewer与最终远端CI结果后续补记。原目录仍保持`product-design`及其已有未跟踪产物，不切换、清理或覆盖旧失败现场。

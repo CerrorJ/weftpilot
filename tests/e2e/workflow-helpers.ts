@@ -1,5 +1,5 @@
 ﻿import assert from 'node:assert/strict'
-import { mkdtemp, mkdir, rm } from 'node:fs/promises'
+import { mkdtemp, mkdir, rm, realpath } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -61,7 +61,8 @@ export const businessSnapshot = async (page: Page): Promise<WorkspaceSnapshot> =
 }
 
 export const createFixture = async () => {
-  const directory = await mkdtemp(join(tmpdir(), '纬舟 workflow '))
+  // runner的TEMP可能是Windows短路径或macOS /var别名；内核持久化的是真实路径。
+  const directory = await realpath(await mkdtemp(join(tmpdir(), '纬舟 workflow ')))
   const repository = join(directory, '测试 repository #')
   await mkdir(repository)
   execFileSync('git', ['init', '-b', 'main'], { cwd: repository, stdio: 'ignore' })
