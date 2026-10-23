@@ -49,6 +49,11 @@ jobs:
         run: |
           $env:WEFTPILOT_PACKAGED_EXE = (Resolve-Path release/WeftPilot-win32-x64/WeftPilot.exe).Path
           pnpm test:e2e
+      - name: Inspect source changes before installer
+        run: |
+          git status --short
+          git diff --stat
+          git diff -- pnpm-lock.yaml package.json pnpm-workspace.yaml
       - name: Assemble unsigned native validation installer
         run: pnpm package:installer --validation --validation-version 0.0.1
       - name: Packaged application (macOS)

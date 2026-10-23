@@ -20,8 +20,8 @@ export const releaseInputs = async () => {
 
 export const sourceRevision = () => {
   const git = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
-  if (git(['status', '--porcelain']))
-    throw new Error('发行装配需要干净提交，请先完成并提交当前改动')
+  const changes = git(['status', '--porcelain'])
+  if (changes) throw new Error(`发行装配需要干净提交，请先完成并提交当前改动：\n${changes}`)
   return git(['rev-parse', 'HEAD'])
 }
 
