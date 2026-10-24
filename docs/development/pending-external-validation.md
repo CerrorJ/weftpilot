@@ -3,6 +3,10 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+后续080客户端`fa30eb8`[双平台CI 40102151584](https://github.com/CerrorJ/weftpilot/actions/runs/40102151584)成功，实际包各31通过15跳过，本次未复现Keychain；它没有包含b2d测试身份隔离。该结果不能证明原失败已修复，历史及隔离后失败分别保留，仍需Mac用户设备/旧密文/升级证据。
+
+独立测试身份隔离试验`b2d13e2`的[CI 40101800458](https://github.com/CerrorJ/weftpilot/actions/runs/40101800458)没有解决Mac目标失败：实际包26通过3失败14跳过，备份/诊断密钥保存仍不可用，另一个选项等待超时未确定同根因。Windows成功，安装包装配均成功；该分支未合入080，原始记录保留。详见[调查结果](macos-keychain-investigation.md)。
+
 Keychain后续已核对固定Electron42源码与官方说明，区分已知的应用名命名空间事实和仍未确认的系统失败根因，见[原生调查](macos-keychain-investigation.md)。未修改加密实现或签名设置。
 
 当前后续角色卡片`2cb75c1`的[CI 40099809043](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)为Windows成功、macOS实际包失败：35单元/6装配与两平台开发应用通过，macOS实际包备份保存合成密钥再次`CREDENTIAL_STORAGE_UNAVAILABLE`（28通过1失败14跳过），安装包装配成功。18465此前全绿保留原归属，本次不能写成未复现或当前全通过。根因仍待定位，继续独立CLI检查开发，不跳过加密断言或回退明文。

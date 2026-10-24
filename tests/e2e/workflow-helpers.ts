@@ -8,7 +8,13 @@ import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright'
 import type {} from '../../apps/desktop/renderer/desktop-api'
 import type { WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
-import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
+import {
+  openRoleEditor,
+  goRoleStep,
+  saveRoleEditor,
+  activateSavedRole,
+  waitRoleCard,
+} from './role-helpers'
 
 export const launch = (data: string) => {
   const executablePath = process.env.WEFTPILOT_PACKAGED_EXE
@@ -114,7 +120,7 @@ export const configure = async (
   await goRoleStep(page, 3)
   await page.getByLabel('工具权限').selectOption('workspace-write')
   await saveRoleEditor(page)
-  await page.getByRole('option', { name: '测试开发者 · v1' }).waitFor({ state: 'attached' })
+  await waitRoleCard(page, '测试开发者', 1)
   if (options.activate) await activateRole(page)
   return page
 }

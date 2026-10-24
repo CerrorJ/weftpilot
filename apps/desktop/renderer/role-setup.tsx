@@ -24,27 +24,16 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
   const [opening, setOpening] = useState(false)
   const roles = latestVersions(state.roles)
   const role = roles.find((item) => item.id === selected)
-  const select = (id: string) => {
+  const edit = (id: string) => {
     setSelected(id)
     rememberSelectedRole(id)
-  }
-  const edit = (id: string) => {
-    select(id)
     setOpening(true)
   }
   return (
     <>
-      <PageHeading title="角色管理" description={roleCatalogDescription}>
-        <button className="primary" onClick={() => edit('')} disabled={actions.busy}>
-          {t('创建角色')}
-        </button>
-      </PageHeading>
+      <RoleCatalogHeading busy={actions.busy} create={() => edit('')} />
       {actions.error && <p role="alert">{t(actions.error)}</p>}
       <section className="role-catalog" aria-label={t('角色列表')}>
-        <div className="role-catalog-toolbar">
-          <RoleSelector selected={selected} roles={roles} select={select} />
-          {role && <button onClick={() => setOpening(true)}>{t('编辑角色配置')}</button>}
-        </div>
         <RoleForm
           key={selected}
           role={role}
@@ -61,6 +50,32 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
         <RoleCardList roles={roles} state={state} actions={actions} edit={edit} />
       </section>
     </>
+  )
+}
+
+const RoleCatalogHeading = ({ busy, create }: { busy: boolean; create: () => void }) => {
+  const { t } = useI18n()
+  return (
+    <PageHeading
+      title="角色管理"
+      description={roleCatalogDescription}
+      eyebrow="ROLES / CAPABILITIES"
+    >
+      <button className="primary role-create-action" onClick={create} disabled={busy}>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        {t('创建角色')}
+      </button>
+    </PageHeading>
   )
 }
 
@@ -102,30 +117,5 @@ const RoleCardList = ({
         {t('版本与登录请在CLI步骤分别检查，模型需真实试运行；飞书角色路由仍待完善。')}
       </p>
     </>
-  )
-}
-
-const RoleSelector = ({
-  selected,
-  roles,
-  select,
-}: {
-  selected: string
-  roles: WorkspaceSnapshot['roles']
-  select: (id: string) => void
-}) => {
-  const { t } = useI18n()
-  return (
-    <label>
-      {t('编辑角色')}
-      <select value={selected} onChange={(event) => select(event.target.value)}>
-        <option value="">{t('新建角色')}</option>
-        {roles.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.name} · v{item.version}
-          </option>
-        ))}
-      </select>
-    </label>
   )
 }

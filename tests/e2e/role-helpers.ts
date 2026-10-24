@@ -5,6 +5,16 @@ export const roleDialog = (page: Page) =>
     name: /^(创建角色|编辑角色配置|Create role|Edit role configuration)$/,
   })
 
+/** 用可见卡片的名称与版本等待真实回执投影，不再依赖已移除的快捷下拉。 */
+export const waitRoleCard = async (page: Page, name: string, version: number) => {
+  const card = page.getByRole('article', { name, exact: true })
+  await card
+    .locator('.role-card-identity .code')
+    .filter({ hasText: new RegExp(` · v${version}$`) })
+    .waitFor()
+  return card
+}
+
 export const openRoleManagement = async (page: Page, id?: string) => {
   const card = id ? page.locator(`[data-role-id="${id}"]`) : page.locator('.role-card').first()
   await card
@@ -39,16 +49,14 @@ export const activateSavedRole = async (page: Page, id?: string) => {
 
 /** 测试走正式六步入口，不从隐藏字段或旧版平铺表单绕过用户流程。 */
 export const openRoleEditor = async (page: Page, id?: string) => {
-  if (id)
+  if (id) {
     await page
-      .getByRole('combobox', { name: /^(编辑角色|Edit role)$/, exact: true })
-      .selectOption(id)
-  await page
-    .getByRole('button', {
-      name: id ? /^(编辑角色配置|Edit role configuration)$/ : /^(创建角色|Create role)$/,
-      exact: true,
-    })
-    .click()
+      .locator(`[data-role-id="${id}"]`)
+      .getByRole('button', {
+        name: /^(编辑角色配置|Edit role configuration) · /,
+      })
+      .click()
+  } else await page.getByRole('button', { name: /^(创建角色|Create role)$/, exact: true }).click()
   await roleDialog(page).waitFor()
 }
 

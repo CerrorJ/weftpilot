@@ -1,6 +1,12 @@
 import { confirmPreflight } from './preflight-helpers'
 import { openHumanPage } from './navigation-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
+import {
+  openRoleEditor,
+  goRoleStep,
+  saveRoleEditor,
+  activateSavedRole,
+  waitRoleCard,
+} from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -124,9 +130,7 @@ const configureClaude = async (page: Page) => {
   await goRoleStep(page, 1)
   await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption('claude')
   await saveRoleEditor(page)
-  await page
-    .getByRole('option', { name: '测试开发者 · v2', exact: true })
-    .waitFor({ state: 'attached' })
+  await waitRoleCard(page, '测试开发者', 2)
   await activateSavedRole(page)
 }
 

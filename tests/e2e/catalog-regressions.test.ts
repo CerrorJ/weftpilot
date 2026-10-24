@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createFixture, launch, configure, snapshot, createTask, quit } from './workflow-helpers'
 import { navigate, openSettingsPage } from './navigation-helpers'
-import { openRoleEditor, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, saveRoleEditor, waitRoleCard } from './role-helpers'
 
 test(
   '真实模型设置拒绝可见：输入校验、接口密钥绑定与中英错误；不调用提供方',
@@ -82,9 +82,7 @@ test('真实待执行任务负责人读取最新角色名称，旧版本配置�
     await openRoleEditor(page, original.id)
     await page.getByRole('textbox', { name: '角色名称', exact: true }).fill('新名称开发者')
     await saveRoleEditor(page)
-    await page
-      .getByRole('option', { name: '新名称开发者 · v2', exact: true })
-      .waitFor({ state: 'attached' })
+    await waitRoleCard(page, '新名称开发者', 2)
     await navigate(page, '任务管理')
     await row.locator('td').last().getByText('新名称开发者', { exact: true }).waitFor()
     const after = await snapshot(page)

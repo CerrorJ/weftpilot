@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+080客户端`fa30eb8f43514b80eb289acd30d7a20d895469ed`的[CI 40102151584](https://github.com/CerrorJ/weftpilot/actions/runs/40102151584)双平台成功，各36单元/6装配，开发及实际包31通过15跳过，NSIS及ARM64未签名DMG/ZIP装配通过。本次Keychain未复现，不是修复根因或正式旧密文升级验证；b2d隔离试验失败仍保留。没有新的干净正式身份本地安装器或Mac用户设备结论，当前未提交角色入口也不继承本CI。
+
 下一CLI客户端已固定080/`3b1c8b65fb93cb20e14a2b290f485ae91fecd3a2`/p1/schema8/126文件，两份干净重建tar为`12aa27705a8c114ceda7cd4e346711ce537c73fa6d50a3275ec64aec438b6d61`。Windows实际包31通过15跳过及只读四查询专项通过，独立UI Tester通过，独立Reviewer最终APPROVE；本增量无远端CI或新正式身份安装器结果，见[CLI范围](cli-checks.md)。
 
 角色卡片已提交`2cb75c12326ba740b50d943372e2b3c38500b487`；其[CI 40099809043](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)Windows全通过、macOS实际包备份密钥保存失败`CREDENTIAL_STORAGE_UNAVAILABLE`，其余开发与安装包装配通过。两平台当前未全通过，以下18465全绿是此前版本。CLI分项下一锁080/3b1/126文件已从两份干净检出重建相同，桌面尚开发中，不继承任何前序CI。

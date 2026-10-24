@@ -6,6 +6,12 @@
 
 ## 当前状态
 
+角色入口差异已完成Windows限定范围独立Tester/Reviewer：移除快捷下拉/全局Edit，卡片精确选择、取消焦点、市场/new草稿保护、外部更新CAS及双语明暗；36单元/6装配、实际包47项32通过15跳过，独立12证据断言及Reviewer9相关单元/126文件完整性通过。首轮旧role option等待导致21失败/5取消保留，修正测试助手后全量通过；详见[角色入口交接](role-entry-alignment.md)。内核仍080/3b1，未提交入口不继承fa30 CI，独立Continue草稿及fresh并存仍待补齐。
+
+已核对080客户端`fa30eb8f43514b80eb289acd30d7a20d895469ed`[双平台CI 40102151584](https://github.com/CerrorJ/weftpilot/actions/runs/40102151584)全部成功：各36单元/6装配、开发与实际包均31通过15跳过，NSIS及ARM64未签名DMG/ZIP装配成功。本次未复现Keychain错误，b2d隔离分支的三失败与正式Mac待办继续保留，不能宣称根因关闭。以下尚在运行是此前时点；当前角色入口对齐工作区尚未提交，不继承fa30 CI。
+
+CLI客户端已提交推送`fa30eb8f43514b80eb289acd30d7a20d895469ed`，关联固定080/3b1；独立Tester及Reviewer最终APPROVE，文档来源P3修正后关闭。[CI 40102151584](https://github.com/CerrorJ/weftpilot/actions/runs/40102151584)尚在运行，不继承070前序结果。独立Keychain测试身份隔离`b2d13e2`的[CI 40101800458](https://github.com/CerrorJ/weftpilot/actions/runs/40101800458)仍Mac实际包失败（26通过3失败14跳过），没有解决目标错误、没有合入080；具体两个密钥失败与一项超时分别保留，见[调查](macos-keychain-investigation.md)。当前继续角色页入口差异，不等待凭据。
+
 CLI分项检查桌面已完成Windows限定范围独立Tester：真实只读四类命令（另两项英文布局复查）、默认账户/模型连接边界、切换/关闭/市场不自动查询、隐私、坏输入和焦点。36单元/6装配、strict/lint/格式/构建通过，实际包默认46项31通过15跳过，专项两UI+一真实四查询用例3/3。锁定内核080/`3b1c8b65fb93cb20e14a2b290f485ae91fecd3a2`，两份干净重建126文件及tar相同；独立Reviewer最终APPROVE，未继承前序CI，详情见[CLI接入及限制](cli-checks.md)。
 
 角色卡片已提交推送`2cb75c12326ba740b50d943372e2b3c38500b487`，其[CI 40099809043](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)Windows通过，35单元/6装配、开发与实际包各29通过14跳过。macOS开发同样通过、DMG/ZIP装配成功，但实际包备份保存合成密钥再次出现`CREDENTIAL_STORAGE_UNAVAILABLE`（28通过1失败14跳过）。保留原失败与历史Keychain根因待查，当前不是双平台全绿。下一CLI分项检查已先形成内核`3b1c8b65fb93cb20e14a2b290f485ae91fecd3a2`/080/p1/schema8及126文件固定产物，桌面接入仍开发中，见[CLI接入](cli-checks.md)。

@@ -1,5 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, waitRoleCard } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createFixture, launch, quit, configure, snapshot } from './workflow-helpers'
@@ -28,9 +28,7 @@ test(
         .getByRole('combobox', { name: '模型配置', exact: true })
         .selectOption(`${modelId}@1`)
       await saveRoleEditor(page)
-      await page
-        .getByRole('option', { name: '测试开发者 · v2', exact: true })
-        .waitFor({ state: 'attached' })
+      await waitRoleCard(page, '测试开发者', 2)
       await openSettingsPage(page, 'models')
       await page.getByRole('combobox', { name: '编辑模型配置', exact: true }).selectOption(modelId)
       await page

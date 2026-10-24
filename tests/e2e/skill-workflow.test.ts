@@ -14,7 +14,13 @@ import {
   quit,
 } from './workflow-helpers'
 import { importFixtureSkill, skillProofV1 } from './skill-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
+import {
+  openRoleEditor,
+  goRoleStep,
+  saveRoleEditor,
+  activateSavedRole,
+  waitRoleCard,
+} from './role-helpers'
 
 test(
   '真实来源技能：预览、许可确认、升级文件变化、角色草稿、卸载与重启',
@@ -126,9 +132,7 @@ for (const cli of ['codex', 'claude'] as const)
         await goRoleStep(page, 2)
         await page.locator(`input[name="skills"][value="${skill.id}@${skill.digest}"]`).check()
         await saveRoleEditor(page)
-        await page
-          .getByRole('option', { name: '测试开发者 · v2', exact: true })
-          .waitFor({ state: 'attached' })
+        await waitRoleCard(page, '测试开发者', 2)
         await activateSavedRole(page)
         const taskId = await createSkillTask(page)
         await page.getByRole('button', { name: '开始真实执行', exact: true }).click()

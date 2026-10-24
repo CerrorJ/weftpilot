@@ -1,5 +1,11 @@
 import { openSettingsPage } from './navigation-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor, openRoleManagement } from './role-helpers'
+import {
+  openRoleEditor,
+  goRoleStep,
+  saveRoleEditor,
+  openRoleManagement,
+  waitRoleCard,
+} from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createServer } from 'node:http'
@@ -60,9 +66,7 @@ test(
         .getByRole('combobox', { name: '模型配置', exact: true })
         .selectOption(`${initial.id}@1`)
       await saveRoleEditor(page)
-      await page
-        .getByRole('option', { name: '测试开发者 · v2', exact: true })
-        .waitFor({ state: 'attached' })
+      await waitRoleCard(page, '测试开发者', 2)
       await openSettingsPage(page, 'models')
       await page
         .getByRole('combobox', { name: '编辑模型配置', exact: true })
@@ -85,9 +89,7 @@ test(
         `${initial.id}@1`,
       )
       await saveRoleEditor(page)
-      await page
-        .getByRole('option', { name: '测试开发者 · v3', exact: true })
-        .waitFor({ state: 'attached' })
+      await waitRoleCard(page, '测试开发者', 3)
       assert.equal((await snapshot(page)).roles.at(-1)?.modelProfileSnapshot?.version, 1)
       await openSettingsPage(page, 'models')
       await page
