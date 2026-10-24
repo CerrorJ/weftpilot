@@ -3,7 +3,13 @@ import { useI18n } from './preferences'
 import type { WorkspaceActions } from './use-workspace'
 import { HumanRequestCard } from './human-request-card'
 
-export const HumanPage = ({ actions }: { actions: WorkspaceActions }) => {
+export const HumanPage = ({
+  actions,
+  embedded = false,
+}: {
+  actions: WorkspaceActions
+  embedded?: boolean
+}) => {
   const { t } = useI18n()
   const [history, setHistory] = useState(false)
   const requests = (actions.state?.humanRequests ?? []).filter(
@@ -11,8 +17,8 @@ export const HumanPage = ({ actions }: { actions: WorkspaceActions }) => {
   )
   return (
     <>
-      <HumanPageHeader actions={actions} />
-      {actions.error && <p role="alert">{t(actions.error)}</p>}
+      {embedded ? <h2>{t('人工请求')}</h2> : <HumanPageHeader actions={actions} />}
+      {!embedded && actions.error && <p role="alert">{t(actions.error)}</p>}
       <label className="check-label">
         <input
           type="checkbox"

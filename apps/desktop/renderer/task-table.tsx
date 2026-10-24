@@ -44,14 +44,16 @@ const TaskRow = ({
   selectTask: (id: string) => void
 }) => {
   const { t } = useI18n()
-  const run = state.runs.filter((item) => item.taskId === task.id).at(-1)
+  const run = state.runs
+    .filter((item) => item.taskId === task.id)
+    .sort((a, b) => a.attempt - b.attempt)
+    .at(-1)
   const children = state.tasks.filter((item) => item.parentTaskId === task.id)
-  const completed = children.filter((item) => item.status === 'done').length
   const owner = taskOwnerName({ run, task, roles: state.roles })
   return (
     <tr>
       <td>
-        <button className="task-title" onClick={() => selectTask(task.id)}>
+        <button className="task-title" data-task-id={task.id} onClick={() => selectTask(task.id)}>
           <code>{task.id.slice(0, 8)}</code>
           <strong>{task.title}</strong>
         </button>
@@ -59,21 +61,33 @@ const TaskRow = ({
       </td>
       <td>{state.projects.find((item) => item.id === task.projectId)?.name}</td>
       <td>
-        <span className={`task-status ${task.status}`}>{t(taskLabels[task.status])}</span>
+        <span className={`task-status ${task.status}`}>
+          {t(
+            run && ['ready', 'in_progress'].includes(task.status)
+              ? runLabel(run)
+              : taskLabels[task.status],
+          )}
+        </span>
       </td>
       <td>
-        {children.length ? (
-          <div className="known-steps">
-            <progress aria-label={t('子任务验收')} max={children.length} value={completed} />
-            <span>
-              {completed}/{children.length}
-            </span>
-          </div>
-        ) : (
-          <span className="unknown-steps">—</span>
-        )}
+        <TaskProgress tasks={children} />
       </td>
       <td>{owner ?? '—'}</td>
     </tr>
+  )
+}
+
+/** 只有显式子任务总数才展示进度，不把事件数或CLI输出当作工作量。 */
+const TaskProgress = ({ tasks }: { tasks: Task[] }) => {
+  const { t } = useI18n()
+  if (!tasks.length) return <span className="unknown-steps">—</span>
+  const completed = tasks.filter((item) => item.status === 'done').length
+  return (
+    <div className="known-steps">
+      <progress aria-label={t('子任务验收')} max={tasks.length} value={completed} />
+      <span>
+        {completed}/{tasks.length}
+      </span>
+    </div>
   )
 }

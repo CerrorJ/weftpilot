@@ -11,6 +11,7 @@ import type {
   FeishuSubmission,
 } from '../../../packages/kernel-client/bridge-contract'
 import { useSubmission } from './use-submission'
+import { parseCommandResult } from '../../../packages/kernel-client/command-result'
 
 export const useWorkspace = () => {
   const [state, setState] = useState<WorkspaceSnapshot>()
@@ -38,7 +39,9 @@ export const useWorkspace = () => {
   }, [refresh])
   const { perform, busy } = useSubmission({ refresh, setError })
   const execute = (command: BusinessCommand) =>
-    perform(JSON.stringify(command), (key) => sendCommand(command, key))
+    perform(JSON.stringify(command), async (key) =>
+      parseCommandResult(await sendCommand(command, key)),
+    )
   const createProject = (input: { name: string; defaultBranch: string }) =>
     perform(JSON.stringify({ type: 'project.create', ...input }), (key) =>
       workflow().createProject({ key, input }),

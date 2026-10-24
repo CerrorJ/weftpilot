@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { WorkspaceActions } from './use-workspace'
+﻿import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { PageHeading } from './page-heading'
 import { TaskCreate } from './task-create'
@@ -8,41 +7,60 @@ import { TaskWorkspace } from './task-workspace'
 import { HumanPage } from './human-page'
 import { latestVersions } from './object-versions'
 import { TaskOverview } from './task-overview'
+import { useTaskBrowser, type TaskBrowser } from './use-task-browser'
 
 export const TasksPage = ({ actions, taskId }: { actions: WorkspaceActions; taskId: string }) => {
   const { t } = useI18n()
-  const [view, setView] = useState<'tasks' | 'human'>('tasks')
-  const pending = actions.state?.humanRequests.filter((item) => item.status === 'pending').length
+  const browser = useTaskBrowser(taskId)
   return (
     <>
-      <PageHeading title="任务管理" description="每一项工作，都有清晰的归属与进展。">
-        <button disabled={actions.busy} onClick={() => void actions.refresh()}>
-          {t('刷新状态')}
-        </button>
+      <PageHeading
+        title="任务管理"
+        description="每一项工作，都有清晰的归属与进展。"
+        eyebrow="TASKS / EXECUTION"
+      >
+        <div className="task-create-actions">
+          <button disabled={actions.busy} onClick={() => void actions.refresh()}>
+            {t('刷新状态')}
+          </button>
+          <TaskCreation actions={actions} created={browser.created} />
+        </div>
       </PageHeading>
       <TaskOverview state={actions.state} />
-      <div className="task-view-tabs">
-        <button aria-pressed={view === 'tasks'} onClick={() => setView('tasks')}>
-          {t('全部任务')}
-        </button>
-        <button
-          aria-label={t('待处理')}
-          aria-pressed={view === 'human'}
-          onClick={() => setView('human')}
-        >
-          {t('待处理')} {pending ?? '—'}
-        </button>
-      </div>
-      {view === 'human' ? (
-        <HumanPage actions={actions} />
-      ) : (
-        <TaskListContent actions={actions} taskId={taskId} />
-      )}
+      <TaskListContent actions={actions} browser={browser} />
     </>
   )
 }
 
-const TaskListContent = ({ actions, taskId }: { actions: WorkspaceActions; taskId: string }) => {
+const TaskCreation = ({
+  actions,
+  created,
+}: {
+  actions: WorkspaceActions
+  created: (id: string) => void
+}) => {
+  const state = actions.state
+  if (!state) return null
+  return (
+    <>
+      <TeamTaskCreate state={state} actions={actions} onCreated={created} />
+      <TaskCreate
+        projects={state.projects}
+        roles={latestVersions(state.roles)}
+        actions={actions}
+        onCreated={created}
+      />
+    </>
+  )
+}
+
+const TaskListContent = ({
+  actions,
+  browser,
+}: {
+  actions: WorkspaceActions
+  browser: TaskBrowser
+}) => {
   const { t } = useI18n()
   const state = actions.state
   return (
@@ -52,15 +70,12 @@ const TaskListContent = ({ actions, taskId }: { actions: WorkspaceActions; taskI
         <p role="status">{t('正在读取内核状态…')}</p>
       ) : (
         <>
-          <div className="task-create-actions">
-            <TaskCreate
-              projects={state.projects}
-              roles={latestVersions(state.roles)}
-              actions={actions}
-            />
-            <TeamTaskCreate state={state} actions={actions} />
-          </div>
-          <TaskWorkspace state={state} actions={actions} initialTaskId={taskId} />
+          <TaskWorkspace state={state} actions={actions} browser={browser} />
+          {browser.view === 'pending' && (
+            <section className="human-panel" hidden={!!browser.selected}>
+              <HumanPage actions={actions} embedded />
+            </section>
+          )}
         </>
       )}
     </>

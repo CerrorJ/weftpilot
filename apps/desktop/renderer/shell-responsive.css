@@ -53,6 +53,7 @@
   }
   .page-heading {
     align-items: flex-start;
+    flex-wrap: wrap;
   }
   .page-heading h1 {
     font-size: 24px;

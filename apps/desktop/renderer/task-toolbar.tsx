@@ -1,16 +1,17 @@
 import type { Project } from '@weftpilot/agent-team-kernel/protocol'
+import type { ReactNode } from 'react'
 import { useI18n } from './preferences'
 
 export const TaskToolbar = ({
   projects,
-  count,
+  tabs,
   project,
   search,
   setProject,
   setSearch,
 }: {
   projects: Project[]
-  count: number
+  tabs: ReactNode
   project: string
   search: string
   setProject: (id: string) => void
@@ -19,11 +20,9 @@ export const TaskToolbar = ({
   const { t } = useI18n()
   return (
     <div className="task-toolbar">
-      <span>
-        {t('全部任务')} · {count}
-      </span>
+      {tabs}
       <label>
-        {t('筛选项目')}
+        <span className="visually-hidden">{t('筛选项目')}</span>
         <select value={project} onChange={(event) => setProject(event.target.value)}>
           <option value="">{t('所有项目')}</option>
           {projects.map((item) => (
@@ -34,7 +33,7 @@ export const TaskToolbar = ({
         </select>
       </label>
       <label>
-        {t('搜索任务')}
+        <span className="visually-hidden">{t('搜索任务')}</span>
         <input
           type="search"
           value={search}

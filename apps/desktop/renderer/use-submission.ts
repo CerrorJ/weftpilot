@@ -7,7 +7,10 @@ export const useSubmission = (options: {
 }) => {
   const [busy, setBusy] = useState(false)
   const keys = useRef(new Map<string, string>())
-  const perform = async (fingerprint: string, action: (key: string) => Promise<unknown>) => {
+  const perform = async <T>(
+    fingerprint: string,
+    action: (key: string) => Promise<T>,
+  ): Promise<T | undefined> => {
     setBusy(true)
     options.setError('')
     const key = keys.current.get(fingerprint) ?? crypto.randomUUID()

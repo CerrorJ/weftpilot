@@ -1,9 +1,9 @@
 .task-view-tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 22px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 16px;
+  margin-right: auto;
+  max-width: 100%;
+  overflow: auto;
 }
 
 .task-view-tabs button {
@@ -11,6 +11,7 @@
   border-color: transparent;
   font-size: 12px;
   padding: 8px 14px;
+  white-space: nowrap;
 }
 
 .task-view-tabs button[aria-pressed='true'] {
@@ -21,9 +22,8 @@
 .task-create-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
   justify-content: flex-end;
 }
 
@@ -71,16 +71,22 @@
   flex-wrap: wrap;
 }
 
-.task-toolbar > span {
-  margin-right: auto;
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .task-toolbar label {
   font-size: 11px;
   gap: 5px;
   max-width: 210px;
+}
+
+.task-view-tabs span {
+  font-size: 10px;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.human-panel {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
 }
 
 .task-table-scroll {

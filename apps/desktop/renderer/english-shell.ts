@@ -1,4 +1,6 @@
 export const englishShell: Record<string, string> = {
+  任务状态筛选: 'Filter task status',
+  人工请求: 'Human requests',
   所属项目: 'Project',
   步骤进度: 'Steps',
   负责人: 'Owner',

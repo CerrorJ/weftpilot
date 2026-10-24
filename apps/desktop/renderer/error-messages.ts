@@ -45,6 +45,10 @@ const messages: Record<string, [string, string]> = {
     '请检查必填项、内容长度与选项；内容不能只包含空格。',
     'Check required fields, length and selected options. Content cannot contain only spaces.',
   ],
+  COMMAND_RESULT_UNCERTAIN: [
+    '命令回执无法核对，请刷新并核对对象，不要重复创建。',
+    'The command receipt could not be verified. Refresh and check the object before creating it again.',
+  ],
   NOT_FOUND: ['对象不存在', 'The requested object does not exist.'],
   RUN_ACTIVE: ['当前执行尚未结束', 'The current run has not ended.'],
   TASK_NOT_READY: [

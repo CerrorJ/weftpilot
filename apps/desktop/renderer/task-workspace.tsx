@@ -1,52 +1,52 @@
 ﻿import { useI18n } from './preferences'
-import { useState, useEffect, useRef } from 'react'
 import type { Task, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
+import type { TaskBrowser } from './use-task-browser'
 import { TaskDetail } from './task-detail'
 import { TaskTable } from './task-table'
 import { TaskToolbar } from './task-toolbar'
+import { TaskTabs } from './task-tabs'
+import { taskGroups } from './task-views'
+import { useDrawerFocus } from './use-drawer-focus'
+
 export const TaskWorkspace = ({
   state,
   actions,
-  initialTaskId = '',
+  browser,
 }: {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
-  initialTaskId?: string
+  browser: TaskBrowser
 }) => {
   const { t } = useI18n()
-  const [project, setProject] = useState('')
-  const [search, setSearch] = useState('')
-  const tasks = state.tasks.filter((item) => item.purpose !== 'role_trial')
-  const last = tasks.filter((item) => !item.parentTaskId).at(-1)?.id ?? ''
-  const [selected, setSelected] = useTaskSelection(last, initialTaskId)
-  const task = tasks.find((item) => item.id === selected)
-  const visible = tasks.filter((item) => matchesTask(item, state, { project, search }))
-  if (!tasks.length)
-    return (
-      <section className="empty-state">
-        <h2>{t('还没有任务')}</h2>
-        <p>{t('先添加项目和角色，再开始第一项真实任务。')}</p>
-      </section>
-    )
+  const groups = taskGroups(state)
+  const task = groups.all.find((item) => item.id === browser.selected)
+  const visible = groups[browser.view].filter((item) => matchesTask(item, state, browser))
   return (
     <section aria-label={t('任务列表')}>
       <TaskToolbar
         projects={state.projects}
-        count={tasks.length}
-        project={project}
-        search={search}
-        setProject={setProject}
-        setSearch={setSearch}
+        tabs={<TaskTabs view={browser.view} groups={groups} select={browser.setView} />}
+        project={browser.project}
+        search={browser.search}
+        setProject={browser.setProject}
+        setSearch={browser.setSearch}
       />
-      <TaskTable tasks={visible} state={state} selectTask={setSelected} />
+      {!groups.all.length ? (
+        <section className="empty-state">
+          <h2>{t('还没有任务')}</h2>
+          <p>{t('先添加项目和角色，再开始第一项真实任务。')}</p>
+        </section>
+      ) : (
+        <TaskTable tasks={visible} state={state} selectTask={browser.selectTask} />
+      )}
       {task && (
         <TaskDrawer
           task={task}
           state={state}
           actions={actions}
-          selectTask={setSelected}
-          close={() => setSelected('')}
+          selectTask={browser.selectTask}
+          close={() => browser.selectTask('')}
         />
       )}
     </section>
@@ -64,17 +64,6 @@ const matchesTask = (
   return text.includes(filters.search.toLocaleLowerCase())
 }
 
-/** 创建任务后打开其详情，普通快照轮询不会改变用户正在查看的任务。 */
-const useTaskSelection = (last: string, initialTaskId: string) => {
-  const [selected, setSelected] = useState(initialTaskId)
-  const previous = useRef(last)
-  useEffect(() => {
-    if (last && previous.current !== last) setSelected(last)
-    previous.current = last
-  }, [last])
-  return [selected, setSelected] as const
-}
-
 const TaskDrawer = ({
   task,
   state,
@@ -89,25 +78,19 @@ const TaskDrawer = ({
   close: () => void
 }) => {
   const { t } = useI18n()
-  const button = useRef<HTMLButtonElement>(null)
-  useEffect(() => {
-    const trigger = document.activeElement
-    button.current?.focus()
-    return () => {
-      if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus()
-    }
-  }, [task.id])
+  const focus = useDrawerFocus(task.id, close)
   return (
     <aside
+      ref={focus.panel}
       className="task-drawer"
       aria-label={t('任务详情')}
       onKeyDown={(event) => {
-        if (event.key === 'Escape') close()
+        if (event.key === 'Escape') focus.dismiss()
       }}
     >
       <div className="drawer-header">
         <strong>{t('任务详情')}</strong>
-        <button ref={button} onClick={close}>
+        <button ref={focus.button} onClick={focus.dismiss}>
           {t('关闭详情')}
         </button>
       </div>

@@ -8,7 +8,7 @@
 
 ## 当前阶段
 
-架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能、备份恢复、诊断及Windows验证安装器的真实闭环已验证，整体尚未封板。私有内核CI读取已解决，[Windows/macOS CI](https://github.com/CerrorJ/weftpilot/actions/runs/39915331008)全绿，含真实开发/打包Electron运行及本机安装包装配；macOS用户设备、真实CLI、实际安装升级等仍待验收。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
+架构基线为 v0.2，已按 2026-10-22 用户指令进入正式开发。开发分支已接入 Electron/React、真实 Agent-Team 内核、项目任务与交付验收、对象版本和双 CLI 团队闭环。M3人工处理与飞书本机连接经独立验证，真实租户待专用凭据；M4技能、备份恢复、诊断及Windows验证安装器的真实闭环已验证，整体尚未封板。私有内核CI读取已解决，原型首增量`6d3d288`的[Windows/macOS CI](https://github.com/CerrorJ/weftpilot/actions/runs/40077244639)全绿，含真实开发/打包Electron运行及本机安装包装配；macOS用户设备、真实CLI、实际安装升级等仍待验收。阶段进度、关联提交、证据和限制见 [开发交接](docs/development/progress.md)。
 
 **Agent-Team 是唯一内核；纬舟消费固定提交与摘要的产物。项目、角色、Run、调度、Git、CLI 和验收均在内核维护，桌面只消费协议。界面支持中英文、浅色/深色/跟随系统，并保存本机偏好。**
 

@@ -7,16 +7,18 @@ export const CreateDialog = ({
   title,
   error,
   children,
+  primary = true,
 }: {
   title: string
   error: string
   children: (close: () => void) => ReactNode
+  primary?: boolean
 }) => {
   const { t } = useI18n()
   const dialog = useCreateDialog()
   return (
     <>
-      <button className="primary" onClick={dialog.show}>
+      <button className={primary ? 'primary' : undefined} onClick={dialog.show}>
         {t(title)}
       </button>
       {dialog.open && (

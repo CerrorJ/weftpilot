@@ -13,14 +13,15 @@ import { CreateDialog } from './create-dialog'
 interface Context {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
+  onCreated?: (id: string) => void
 }
-export const TeamTaskCreate = ({ state, actions }: Context) => {
+export const TeamTaskCreate = ({ state, actions, onCreated }: Context) => {
   const { t } = useI18n()
   const teams = latestVersions(state.teams)
   const [selected, setSelected] = useState('')
   const team = teams.find((item) => item.id === selected) ?? teams[0]
   return (
-    <CreateDialog title="创建团队任务" error={actions.error}>
+    <CreateDialog title="创建团队任务" error={actions.error} primary={false}>
       {(close) => (
         <>
           <label>
@@ -41,7 +42,10 @@ export const TeamTaskCreate = ({ state, actions }: Context) => {
               roles={latestVersions(state.roles)}
               state={state}
               actions={actions}
-              saved={close}
+              saved={(id) => {
+                close()
+                onCreated?.(id)
+              }}
             />
           )}
         </>
@@ -55,7 +59,7 @@ const TeamPlanForm = ({
   state,
   actions,
   saved,
-}: Context & { team: TeamVersion; roles: RoleVersion[]; saved: () => void }) => {
+}: Context & { team: TeamVersion; roles: RoleVersion[]; saved: (id: string) => void }) => {
   const { t } = useI18n()
   const [steps, setSteps] = useState([`step${crypto.randomUUID().slice(0, 8)}`])
   return (
@@ -102,7 +106,7 @@ const TeamPlanForm = ({
 const submitPlan = (
   event: React.FormEvent<HTMLFormElement>,
   input: { team: TeamVersion; steps: string[]; actions: WorkspaceActions },
-  saved: () => void,
+  saved: (id: string) => void,
 ) => {
   event.preventDefault()
   const element = event.currentTarget
@@ -128,7 +132,7 @@ const submitPlan = (
     .then((result) => {
       if (result) {
         element.reset()
-        saved()
+        saved(result.id)
       }
     })
 }

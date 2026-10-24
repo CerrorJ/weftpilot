@@ -8,15 +8,23 @@ interface CreateContext {
   projects: Project[]
   roles: RoleVersion[]
   actions: WorkspaceActions
+  onCreated?: (id: string) => void
 }
-export const TaskCreate = ({ projects, roles, actions }: CreateContext) => {
+export const TaskCreate = ({ projects, roles, actions, onCreated }: CreateContext) => {
   const { t } = useI18n()
   const [project, setProject] = useState('')
   const projectId = project || projects[0]?.id || ''
   return (
     <CreateDialog title="创建任务" error={actions.error}>
       {(close) => (
-        <form onSubmit={(event) => submitTask(event, { actions, projectId }, close)}>
+        <form
+          onSubmit={(event) =>
+            submitTask(event, { actions, projectId }, (id) => {
+              close()
+              onCreated?.(id)
+            })
+          }
+        >
           <TaskAssignments
             projects={projects}
             roles={roles}
@@ -40,7 +48,10 @@ const TaskAssignments = ({
   roles,
   projectId,
   selectProject,
-}: Omit<CreateContext, 'actions'> & { projectId: string; selectProject: (id: string) => void }) => {
+}: Pick<CreateContext, 'projects' | 'roles'> & {
+  projectId: string
+  selectProject: (id: string) => void
+}) => {
   const { t } = useI18n()
   return (
     <div className="form-pair">
@@ -101,7 +112,7 @@ const RequirementReference = ({
 const submitTask = (
   event: React.FormEvent<HTMLFormElement>,
   { actions, projectId }: { actions: WorkspaceActions; projectId: string },
-  saved: () => void,
+  saved: (id: string) => void,
 ) => {
   event.preventDefault()
   const element = event.currentTarget
@@ -122,7 +133,7 @@ const submitTask = (
     .then((result) => {
       if (result) {
         element.reset()
-        saved()
+        saved(result.id)
       }
     })
 }
