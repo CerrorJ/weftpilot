@@ -1,5 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, openRoleManagement } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createServer } from 'node:http'
@@ -114,6 +114,7 @@ test(
       application = await launch(fixture.data)
       page = await application.firstWindow()
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
+      await openRoleManagement(page)
       await page.getByRole('button', { name: '真实试运行', exact: true }).click()
       await waitForSnapshot({
         page,

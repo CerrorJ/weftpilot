@@ -40,6 +40,7 @@ for (const words of variants)
         if (words.english) {
           await page.locator('.topbar .appearance-settings summary').click()
           await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
+          await page.locator('.topbar .appearance-settings summary').click()
         }
         await openRoleEditor(page)
         await page.getByLabel(words.role, { exact: true }).fill('保留的冲突角色')

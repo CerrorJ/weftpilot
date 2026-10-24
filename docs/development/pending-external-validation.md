@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+后续已核对`18465bd`/070的[CI 40096365165](https://github.com/CerrorJ/weftpilot/actions/runs/40096365165)：Windows/macOS均成功，各31单元/6装配、开发与实际包28通过13跳过，安装包装配成功；本次也未复现Keychain错误。历史根因、用户设备和真实Mac CLI仍保留待办，后续未提交角色卡片不继承本结果。
+
 最新已核对版本为`9b53992`/070的[桌面CI 40092321957](https://github.com/CerrorJ/weftpilot/actions/runs/40092321957)：Windows和macOS均全通过，每平台实际包26通过12跳过。macOS Keychain错误本次未复现，没有改加密或跳过断言；历史偶发失败根因仍待定位，不能宣称已永久修复。下方060失败为历史原始记录，后续仍需Mac用户设备、实际安装升级与稳定性验证。
 
 2026-10-24后续复核：角色六步`2c60652`的[CI 40088172558](https://github.com/CerrorJ/weftpilot/actions/runs/40088172558)Windows全部通过，实际包35项24通过11跳过；macOS实际包再次在模型密钥保存处返回`CREDENTIAL_STORAGE_UNAVAILABLE`。没有跳过该失败、回退明文存储或使用签名凭据；此项继续保留原生发行阻塞。

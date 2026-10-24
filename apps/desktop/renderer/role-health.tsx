@@ -9,6 +9,7 @@ import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { RunActivity } from './run-activity'
 import { runLabel } from './task-status'
+import { roleHasActiveTrial, roleTrialPassed } from './role-card-view'
 const labels: Record<RoleReadiness['state'], string> = {
   draft: '待试运行',
   trial_running: '试运行中',
@@ -77,7 +78,7 @@ const RoleTrialControls = ({ role, state, actions, readiness, run }: Context & H
   const { t } = useI18n()
   const [project, setProject] = useState('')
   const projectId = project || state.projects[0]?.id || ''
-  const active = run ? run.processState !== 'confirmed_ended' : false
+  const active = roleHasActiveTrial(state, role.id)
   return (
     <>
       <label>
@@ -105,7 +106,7 @@ const RoleTrialControls = ({ role, state, actions, readiness, run }: Context & H
         >
           {t('真实试运行')}
         </button>
-        {readiness && <RoleEnable role={role} readiness={readiness} actions={actions} />}
+        {readiness && <RoleEnable role={role} readiness={readiness} run={run} actions={actions} />}
         <TrialStop run={run} actions={actions} />
       </div>
     </>
@@ -113,7 +114,12 @@ const RoleTrialControls = ({ role, state, actions, readiness, run }: Context & H
 }
 const TrialStop = ({ run, actions }: { run: Run | undefined; actions: WorkspaceActions }) => {
   const { t } = useI18n()
-  if (!run || !['queued', 'preparing', 'running'].includes(run.status)) return null
+  if (
+    !run ||
+    run.processState === 'uncertain' ||
+    !['queued', 'preparing', 'running', 'waiting_input', 'waiting_approval'].includes(run.status)
+  )
+    return null
   return (
     <button
       disabled={actions.busy}
@@ -121,7 +127,9 @@ const TrialStop = ({ run, actions }: { run: Run | undefined; actions: WorkspaceA
         void actions.execute({ type: 'run.stop', runId: run.id, expectedVersion: run.version })
       }}
     >
-      {t('请求停止')}
+      {t(
+        ['waiting_input', 'waiting_approval'].includes(run.status) ? '结束等待并停止' : '请求停止',
+      )}
     </button>
   )
 }
@@ -129,15 +137,17 @@ const RoleEnable = ({
   role,
   readiness,
   actions,
+  run,
 }: {
   role: RoleVersion
   readiness: RoleReadiness
   actions: WorkspaceActions
+  run: Run | undefined
 }) => {
   const { t } = useI18n()
   return (
     <button
-      disabled={actions.busy || (!readiness.enabled && readiness.state !== 'ready')}
+      disabled={actions.busy || (!readiness.enabled && !roleTrialPassed(role, run))}
       onClick={() => {
         void actions.execute({
           type: 'role.setEnabled',

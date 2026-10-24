@@ -24,20 +24,32 @@ export const RunHistory = ({ task, runs, state, actions }: HistoryContext) => {
       {!runs.length && <p className="muted">{t('尚无执行记录')}</p>}
       {runs.map((run) => (
         <div className="run-history-row" key={run.id} data-run-id={run.id}>
-          <CreateDialog
-            title="执行记录快照"
-            trigger={`${t('第')}${run.attempt}${t('次 ·')}${t(runLabel(run))} · ${run.id.slice(0, 8)}`}
-            primary={false}
-            closeIcon
-            error=""
-          >
-            {(close) => (
-              <RunSnapshot task={task} run={run} state={state} actions={actions} close={close} />
-            )}
-          </CreateDialog>
+          <RunSnapshotButton task={task} run={run} state={state} actions={actions} />
         </div>
       ))}
     </section>
+  )
+}
+
+export const RunSnapshotButton = ({
+  task,
+  run,
+  state,
+  actions,
+}: Omit<HistoryContext, 'runs'> & { run: Run }) => {
+  const { t } = useI18n()
+  return (
+    <CreateDialog
+      title="执行记录快照"
+      trigger={`${t('第')}${run.attempt}${t('次 ·')}${t(runLabel(run))} · ${run.id.slice(0, 8)}`}
+      primary={false}
+      closeIcon
+      error=""
+    >
+      {(close) => (
+        <RunSnapshot task={task} run={run} state={state} actions={actions} close={close} />
+      )}
+    </CreateDialog>
   )
 }
 
@@ -70,7 +82,9 @@ const RunSnapshot = ({
       </div>
       <footer className="review-dialog-footer">
         <button onClick={close}>{t('关闭')}</button>
-        <DeliveryReview task={task} run={run} state={state} actions={actions} />
+        {run.purpose !== 'role_trial' && (
+          <DeliveryReview task={task} run={run} state={state} actions={actions} />
+        )}
       </footer>
     </div>
   )

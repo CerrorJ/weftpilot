@@ -8,11 +8,13 @@ import { englishShell } from './english-shell'
 import { englishRoleWizard } from './english-role-wizard'
 import { englishPreflight } from './english-preflight'
 import { englishReview } from './english-review'
+import { englishRoleCards } from './english-role-cards'
 export const english: Record<string, string> = {
   ...englishShell,
   ...englishRoleWizard,
   ...englishPreflight,
   ...englishReview,
+  ...englishRoleCards,
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,

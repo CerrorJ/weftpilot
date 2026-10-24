@@ -1,6 +1,6 @@
 import { confirmPreflight } from './preflight-helpers'
 import { openHumanPage } from './navigation-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -127,12 +127,7 @@ const configureClaude = async (page: Page) => {
   await page
     .getByRole('option', { name: '测试开发者 · v2', exact: true })
     .waitFor({ state: 'attached' })
-  await page.getByRole('button', { name: '真实试运行', exact: true }).click()
-  const enable = page
-    .getByRole('button', { name: '启用角色', exact: true })
-    .and(page.locator(':enabled'))
-  await enable.waitFor({ timeout: 120000 })
-  await enable.click()
+  await activateSavedRole(page)
 }
 
 const createHumanTask = async (page: Page, cli: 'codex' | 'claude'): Promise<string> => {

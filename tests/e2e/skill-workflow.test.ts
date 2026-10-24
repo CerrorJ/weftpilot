@@ -14,7 +14,7 @@ import {
   quit,
 } from './workflow-helpers'
 import { importFixtureSkill, skillProofV1 } from './skill-helpers'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
 
 test(
   '真实来源技能：预览、许可确认、升级文件变化、角色草稿、卸载与重启',
@@ -129,12 +129,7 @@ for (const cli of ['codex', 'claude'] as const)
         await page
           .getByRole('option', { name: '测试开发者 · v2', exact: true })
           .waitFor({ state: 'attached' })
-        await page.getByRole('button', { name: '真实试运行', exact: true }).click()
-        const enable = page
-          .getByRole('button', { name: '启用角色', exact: true })
-          .and(page.locator(':enabled'))
-        await enable.waitFor({ timeout: 120000 })
-        await enable.click()
+        await activateSavedRole(page)
         const taskId = await createSkillTask(page)
         await page.getByRole('button', { name: '开始真实执行', exact: true }).click()
         await confirmPreflight(page)

@@ -8,7 +8,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright'
 import type {} from '../../apps/desktop/renderer/desktop-api'
 import type { WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
 
 export const launch = (data: string) => {
   const executablePath = process.env.WEFTPILOT_PACKAGED_EXE
@@ -120,12 +120,7 @@ export const configure = async (
 }
 
 const activateRole = async (page: Page): Promise<void> => {
-  await page.getByRole('button', { name: '真实试运行', exact: true }).click()
-  const enable = page
-    .getByRole('button', { name: '启用角色', exact: true })
-    .and(page.locator(':enabled'))
-  await enable.waitFor({ timeout: 120_000 })
-  await enable.click()
+  await activateSavedRole(page)
 }
 
 const cleanupFixture = async (directory: string, parentDirectory: string): Promise<void> => {

@@ -7,7 +7,7 @@ import { execFileSync } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { Page } from 'playwright'
-import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor, activateSavedRole } from './role-helpers'
 import {
   createFixture,
   launch,
@@ -39,13 +39,10 @@ test(
         .getByRole('combobox', { name: '工具权限', exact: true })
         .selectOption('workspace-write')
       await saveRoleEditor(page)
-      const health = page.locator('.role-health').filter({ hasText: 'Claude 文件开发者' })
-      await health.getByRole('button', { name: '真实试运行', exact: true }).click()
-      await health
-        .getByRole('button', { name: '启用角色', exact: true })
-        .and(page.locator(':enabled'))
-        .waitFor({ timeout: 120000 })
-      await health.getByRole('button', { name: '启用角色', exact: true }).click()
+      await activateSavedRole(
+        page,
+        (await snapshot(page)).roles.find((role) => role.cli === 'claude')!.id,
+      )
       const configured = await waitForSnapshot({
         page,
         timeout: 10000,

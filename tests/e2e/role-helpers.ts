@@ -5,6 +5,38 @@ export const roleDialog = (page: Page) =>
     name: /^(创建角色|编辑角色配置|Create role|Edit role configuration)$/,
   })
 
+export const openRoleManagement = async (page: Page, id?: string) => {
+  const card = id ? page.locator(`[data-role-id="${id}"]`) : page.locator('.role-card').first()
+  await card
+    .getByRole('button', { name: /^(试运行与启停|Trial & activation)$/, exact: true })
+    .click()
+  return page.getByRole('dialog', { name: /^(角色运行设置|Role execution settings)$/, exact: true })
+}
+
+export const closeRoleManagement = async (page: Page) => {
+  const dialog = page.getByRole('dialog', {
+    name: /^(角色运行设置|Role execution settings)$/,
+    exact: true,
+  })
+  await dialog
+    .getByRole('button', { name: /^(关闭|Close)$/, exact: true })
+    .last()
+    .click()
+  await dialog.waitFor({ state: 'hidden' })
+}
+
+/** 从卡片的真实运行设置试运行并显式启用，不重新保存角色或增加配置版本。 */
+export const activateSavedRole = async (page: Page, id?: string) => {
+  const dialog = await openRoleManagement(page, id)
+  await dialog.getByRole('button', { name: /^(真实试运行|Run real trial)$/, exact: true }).click()
+  await dialog
+    .getByRole('button', { name: /^(启用角色|Enable role)$/, exact: true })
+    .and(page.locator(':enabled'))
+    .click({ timeout: 120000 })
+  await dialog.getByRole('button', { name: /^(停用角色|Disable role)$/, exact: true }).waitFor()
+  await closeRoleManagement(page)
+}
+
 /** 测试走正式六步入口，不从隐藏字段或旧版平铺表单绕过用户流程。 */
 export const openRoleEditor = async (page: Page, id?: string) => {
   if (id)

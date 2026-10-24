@@ -13,6 +13,7 @@ interface RoleContext {
   visitSkills?: () => void
   resume?: boolean
   resumed?: () => void
+  hideTrigger?: boolean
 }
 
 export const RoleForm = (props: RoleContext) => (
@@ -21,6 +22,7 @@ export const RoleForm = (props: RoleContext) => (
     error={props.actions.error}
     autoOpen={props.resume ?? false}
     onClosed={() => props.resumed?.()}
+    hideTrigger={props.hideTrigger ?? false}
   >
     {(close, resetError) => <RoleWizardForm {...props} close={close} resetError={resetError} />}
   </CreateDialog>

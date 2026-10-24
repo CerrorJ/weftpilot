@@ -2,6 +2,19 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useI18n } from './preferences'
 import { SubmissionError } from './submission-error'
 
+interface CreateDialogProps {
+  title: string
+  error: string
+  children: (close: () => void, resetError: () => void) => ReactNode
+  primary?: boolean
+  autoOpen?: boolean
+  onClosed?: () => void
+  trigger?: string
+  disabled?: boolean
+  closeIcon?: boolean
+  hideTrigger?: boolean
+}
+
 /** 原生模态框负责键盘焦点与Esc；表单提交仍由调用方等待真实内核回执。 */
 export const CreateDialog = ({
   title,
@@ -13,17 +26,8 @@ export const CreateDialog = ({
   trigger,
   disabled = false,
   closeIcon = false,
-}: {
-  title: string
-  error: string
-  children: (close: () => void, resetError: () => void) => ReactNode
-  primary?: boolean
-  autoOpen?: boolean
-  onClosed?: () => void
-  trigger?: string
-  disabled?: boolean
-  closeIcon?: boolean
-}) => {
+  hideTrigger = false,
+}: CreateDialogProps) => {
   const { t } = useI18n()
   const dialog = useCreateDialog()
   const dismiss = () => {
@@ -34,9 +38,15 @@ export const CreateDialog = ({
   }, [autoOpen, dialog.show])
   return (
     <>
-      <button className={primary ? 'primary' : undefined} onClick={dialog.show} disabled={disabled}>
-        {t(trigger ?? title)}
-      </button>
+      {!hideTrigger && (
+        <button
+          className={primary ? 'primary' : undefined}
+          onClick={dialog.show}
+          disabled={disabled}
+        >
+          {t(trigger ?? title)}
+        </button>
+      )}
       {dialog.open && (
         <CreateDialogSurface
           dialog={dialog}
