@@ -10,6 +10,7 @@ import { FeishuVault } from './feishu-vault'
 import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
 import { DiagnosticReports } from './diagnostic-reports'
+import { macOSTestName } from './test-identity'
 
 let window: BrowserWindow | undefined
 let host: KernelController | undefined
@@ -21,6 +22,12 @@ let feishuVault: FeishuVault | undefined
 const root = __dirname
 const rendererUrl = pathToFileURL(join(root, 'renderer/index.html')).href
 if (process.env.WEFTPILOT_TEST_DATA) app.setPath('userData', process.env.WEFTPILOT_TEST_DATA)
+const testName = macOSTestName({
+  platform: process.platform,
+  testData: process.env.WEFTPILOT_TEST_DATA,
+  executable: app.getPath('exe'),
+})
+if (testName) app.setName(testName)
 const ownsInstance = app.requestSingleInstanceLock()
 if (!ownsInstance) app.quit()
 
