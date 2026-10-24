@@ -1,4 +1,5 @@
 import { confirmPreflight } from './preflight-helpers'
+import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile, mkdir, writeFile } from 'node:fs/promises'
@@ -157,6 +158,7 @@ for (const cli of ['codex', 'claude'] as const)
         assert.match(delivery.diff, /weftpilot-skill-proof.txt/)
         assert.doesNotMatch(delivery.diff, /weftpilot-skills|SKILL.md|manifest.json/)
         assert.equal(finished.tasks.find((task) => task.id === taskId)?.status, 'in_review')
+        await checkAcceptanceCriteria(await openDeliveryReview(page))
         await page.getByRole('button', { name: '验收通过', exact: true }).click()
         await waitForSnapshot({
           page,

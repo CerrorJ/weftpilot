@@ -1,4 +1,5 @@
 import { confirmPreflight } from './preflight-helpers'
+import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -108,6 +109,7 @@ test(
       assert.deepEqual(sourceFile, Buffer.from(`${tag}\n`))
       const sourceDelivery = upstream.deliveries.find((item) => item.runId === firstRun.id)!
       await page.locator('.task-table button').filter({ hasText: '上游文件' }).click()
+      await checkAcceptanceCriteria(await openDeliveryReview(page))
       await page.getByRole('button', { name: '验收通过', exact: true }).click()
       const downstream = await waitForSnapshot({
         page,
@@ -123,6 +125,7 @@ test(
       assert.deepEqual(secondRun.inputDeliveryIds, [sourceDelivery.id])
       assert.equal(downstream.tasks.find((task) => task.id === parent.id)?.status, 'in_review')
       await page.locator('.task-table button').filter({ hasText: '下游文件' }).click()
+      await checkAcceptanceCriteria(await openDeliveryReview(page))
       await page.getByRole('button', { name: '验收通过', exact: true }).click()
       await waitForSnapshot({
         page,

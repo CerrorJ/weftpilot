@@ -14,7 +14,7 @@
 
 在界面“设置 / Settings”中切换“语言 / Language”和“外观 / Appearance”，立即生效并在重启后保留。当前本地候选、验证范围及后续入口见[发行交接](docs/development/release-readiness.md)。
 
-最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置和角色六步的真实保存/版本/受控试运行与显式启用。后续070内核的[执行前检查](docs/development/task-preflight.md)已接入，Windows实际包、真实Codex专项及独立Tester/Reviewer均通过。角色卡片、CLI分项检测、飞书角色路由及完整验收布局仍未齐备，[差异与验证记录](docs/development/prototype-alignment.md)单独维护。此前060 CI的macOS实际包Keychain检查仍有失败，见[外部待办](docs/development/pending-external-validation.md)；此前功能及一次CI全绿不代表当前全平台或最终设计已验收。
+最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置和角色六步的真实保存/版本/受控试运行与显式启用。070内核的[执行前检查](docs/development/task-preflight.md)及后续[Run历史与交付验收弹窗](docs/development/task-review.md)已接入，本机实际包、真实Codex专项及独立Tester/Reviewer按各自范围通过。角色卡片、CLI分项检测、飞书角色路由及其余页面细节仍在对齐，[差异与验证记录](docs/development/prototype-alignment.md)单独维护。预检`9b53992`的双平台桌面CI已全通过，此前macOS Keychain错误未复现但根因未定位，见[外部待办](docs/development/pending-external-validation.md)；不能据此把后续未跑CI的改动、用户设备或最终设计视为已验收。
 
 ## 分支职责
 

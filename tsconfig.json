@@ -12,7 +12,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@weftpilot/agent-team-kernel/protocol": [".kernel/package/types/kernel/protocol.d.ts"]
+      "@weftpilot/agent-team-kernel/protocol": [".kernel/package/types/kernel/protocol.d.ts"],
+      "@weftpilot/agent-team-kernel/kernel": [".kernel/package/types/kernel/kernel.d.ts"]
     }
   },
   "include": ["apps/desktop/main", "apps/desktop/preload", "packages", "tests"]

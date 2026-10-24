@@ -75,7 +75,11 @@ const CreateDialogSurface = ({
       ref={dialog.element}
       className="create-dialog"
       aria-label={t(title)}
-      onClose={dismiss}
+      onClose={(event) => {
+        // React会沿组件树传递close；关闭交付子弹窗不能顺带关闭历史快照。
+        event.stopPropagation()
+        dismiss()
+      }}
       onSubmitCapture={dialog.submitted}
       onKeyDown={(event) => {
         if (event.key === 'Escape') event.stopPropagation()

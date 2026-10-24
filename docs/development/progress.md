@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+Run历史/交付验收增量已完成本机独立Tester/Reviewer：固定Run快照、旧交付只读、明确核对及退回、新Run保留反馈、角色变更不改旧依据、失败保留与并发拒绝、嵌套弹窗/焦点和重启；31单元/6装配及strict/lint/格式/构建通过，修正版Windows实际包41项28通过13明确跳过。真实Codex两轮分别包含1trial+2业务Run，后轮补核对HEAD/空diff并保存证据，未当作旧扩展CLI失败已修复。独立窗口采用受控执行端口，和根真实CLI证据严格分开。详见[本增量及限制](task-review.md)。本增量CI尚无结论，不继承下述9b结果；下一步继续角色卡片、CLI分项检查与飞书角色路由。
+
+预检增量已推送纬舟`9b53992762e29bfab5842bef39ccd51afaa51112`，关联内核`e6c33e97e18859453b441fccaff63442cda07333`/070/p1/schema8。[桌面CI 40092321957](https://github.com/CerrorJ/weftpilot/actions/runs/40092321957)双平台全部通过：各28单元/6装配，开发和实际包均26通过12跳过，NSIS与ARM64 DMG/ZIP装配通过。本次未复现Keychain错误，历史根因仍未定位，不等于原生用户设备/安装升级/签名验收完成。以下结果保留各自提交归属。
+
 最新任务预检增量已装配070/`e6c33e97e18859453b441fccaff63442cda07333`/p1/schema8，122文件与tar经两份干净检出重建一致。内核127项及独立Tester/Reviewer通过；桌面28单元/6装配/strict/lint/构建通过，实际Windows新包38项26通过12跳过，单独真实Codex预检3/3通过。任务开始/重试/团队开始均先检查并显式确认，旧Git预览拒绝，新Run执行成功保持待验收。桌面独立Tester/Reviewer最终通过；关闭焦点P2与英文遗漏P3修复后已独立定向复验，等待/未知等未UI实测范围如实保留。070远端CI尚无核对结论，详见[预检交接](task-preflight.md)。以下060及更早结果保留原版本归属。
 
 最新六步源码`2c60652791cf7dfa9f073b738dc5dc33a78c2cc7`的[CI 40088172558](https://github.com/CerrorJ/weftpilot/actions/runs/40088172558)已结束：Windows全部通过（27单元、6装配、开发/实际包各24通过11跳过）；macOS在实际打包应用`workflow:saveModel`继续返回`CREDENTIAL_STORAGE_UNAVAILABLE`。当前双平台尚未全通过，不能以此前全绿记录代替。下一增量为内核只读任务预检，尚未更新060桌面锁。

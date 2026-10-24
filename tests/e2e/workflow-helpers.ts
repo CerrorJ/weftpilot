@@ -160,14 +160,17 @@ const cleanupFixture = async (directory: string, parentDirectory: string): Promi
   await rm(verified, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
 }
 
-export const createTask = async (page: Page, goal: string, title = '验证真实闭环') => {
+export const createTask = async (
+  page: Page,
+  goal: string,
+  title = '验证真实闭环',
+  criteria = 'hello.txt 内容恰好为 WEFTPILOT_M1_OK 和换行，不提交、不推送。',
+) => {
   await page.getByRole('button', { name: '任务管理', exact: true }).click()
   await page.getByRole('button', { name: '创建任务', exact: true }).click()
   await page.getByLabel('任务名称', { exact: true }).fill(title)
   await page.getByLabel('任务目标', { exact: true }).fill(goal)
-  await page
-    .getByLabel('验收条件', { exact: true })
-    .fill('hello.txt 内容恰好为 WEFTPILOT_M1_OK 和换行，不提交、不推送。')
+  await page.getByLabel('验收条件', { exact: true }).fill(criteria)
   await page.getByRole('button', { name: '创建待执行任务' }).click()
   await page.getByRole('button', { name: '开始真实执行' }).waitFor()
 }

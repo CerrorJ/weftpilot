@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@weftpilot/agent-team-kernel/protocol": [".kernel/package/protocol.js"]
+      "@weftpilot/agent-team-kernel/protocol": [".kernel/package/protocol.js"],
+      "@weftpilot/agent-team-kernel/kernel": [".kernel/package/kernel.js"]
     }
   }
 }

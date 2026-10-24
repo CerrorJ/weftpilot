@@ -1,4 +1,5 @@
 import { confirmPreflight } from './preflight-helpers'
+import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writeFile, readFile, mkdir } from 'node:fs/promises'
@@ -101,7 +102,7 @@ test(
       )
       await page.getByRole('button', { name: '开始真实执行' }).click()
       await confirmPreflight(page)
-      await page.getByRole('button', { name: '验收通过', exact: true }).waitFor({ timeout: 75000 })
+      await openDeliveryReview(page)
       let state = await snapshot(page)
       assert.equal(state.tasks[0]?.status, 'in_review')
       assert.equal(state.runs[0]?.status, 'succeeded')
@@ -115,12 +116,13 @@ test(
       await page.getByRole('button', { name: '退回并保留原因', exact: true }).click()
       await page.getByRole('button', { name: '创建新 Run 重试' }).click()
       await confirmPreflight(page)
-      await page.getByRole('button', { name: '验收通过', exact: true }).waitFor({ timeout: 75000 })
+      await openDeliveryReview(page)
       state = await snapshot(page)
       assert.equal(state.runs.length, 2)
       assert.notEqual(state.runs[0]?.id, state.runs[1]?.id)
       assert.equal(state.deliveries[1]?.version, 2)
       assert.equal(state.acceptances[0]?.reason, '重试验证，保留此前交付')
+      await checkAcceptanceCriteria(page.getByRole('dialog', { name: '交付与验收', exact: true }))
       await page.getByRole('button', { name: '验收通过', exact: true }).click()
       await page.locator('.task-detail .badge').filter({ hasText: '已验收' }).waitFor()
       await page.screenshot({ path: '.tmp/evidence/m1-real-cli-accepted.png' })

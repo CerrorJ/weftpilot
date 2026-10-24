@@ -1,88 +1,68 @@
-import { useI18n } from './preferences'
-import { useState } from 'react'
 import type { Run, Task, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
+import { useI18n } from './preferences'
 import { runLabel, taskLabels } from './task-status'
 import { DeliveryReview } from './delivery-review'
 import { RunControls } from './run-controls'
 import { RunActivity } from './run-activity'
 import { TaskRelations, RunInputs } from './task-relations'
 import { RunHumanRequests } from './human-request-card'
+import { RunHistory, RunFacts } from './run-snapshot'
+import { taskRuns } from './task-run-history'
+import './task-review.css'
+
 interface TaskContext {
   task: Task
   state: WorkspaceSnapshot
   actions: WorkspaceActions
   selectTask: (id: string) => void
 }
+
 export const TaskDetail = ({ task, state, actions, selectTask }: TaskContext) => {
   const { t } = useI18n()
-  const [selected, setSelected] = useState('')
-  const runs = state.runs
-    .filter((item) => item.taskId === task.id)
-    .sort((a, b) => a.attempt - b.attempt)
-  const latest = runs.at(-1)
-  const run = runs.find((item) => item.id === selected) ?? latest
+  const runs = taskRuns(state, task.id)
+  const run = runs.at(-1)
+  const project = state.projects.find((item) => item.id === task.projectId)
   return (
     <article className="task-detail">
-      <div className="section-heading">
-        <h2>{task.title}</h2>
-        <span className="badge">{t(taskLabels[task.status])}</span>
+      <div className="task-detail-content">
+        <p className="muted code">
+          {task.id.slice(0, 8)} · {project?.name}
+        </p>
+        <div className="section-heading">
+          <h2>{task.title}</h2>
+          <span className="badge">{t(taskLabels[task.status])}</span>
+        </div>
+        <TaskGoals task={task} />
+        <TaskRelations task={task} state={state} selectTask={selectTask} />
+        {run && (
+          <>
+            <CurrentRun run={run} />
+            <RunInputs run={run} state={state} />
+            <RunHumanRequests key={run.id} runId={run.id} actions={actions} />
+          </>
+        )}
+        <RunHistory task={task} runs={runs} state={state} actions={actions} />
+        {run && <RunActivity key={run.id} runId={run.id} cursor={state.cursor} />}
       </div>
-      <TaskGoals task={task} />
-      <RunControls
-        task={task}
-        run={latest}
-        actions={actions}
-        project={state.projects.find((project) => project.id === task.projectId)}
-      />
-      <TaskRelations task={task} state={state} selectTask={selectTask} />
-      {runs.length > 0 && (
-        <label>
-          {t('执行历史')}
-          <select value={run?.id} onChange={(event) => setSelected(event.target.value)}>
-            {runs.map((item) => (
-              <option key={item.id} value={item.id}>
-                {t('第')}
-                {item.attempt}
-                {t('次 ·')}
-                {t(runLabel(item))}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-      {run && (
-        <>
-          <RunDetails run={run} />
-          <RunInputs run={run} state={state} />
-          <RunActivity runId={run.id} cursor={state.cursor} />
-          <RunHumanRequests runId={run.id} actions={actions} />
-          <DeliveryReview task={task} run={run} state={state} actions={actions} />
-        </>
-      )}
+      <footer className="task-primary-actions">
+        <RunControls task={task} run={run} actions={actions} project={project} />
+        {run && (
+          <DeliveryReview key={run.id} task={task} run={run} state={state} actions={actions} />
+        )}
+      </footer>
     </article>
   )
 }
 
-const TaskGoals = ({ task }: { task: Task }) => {
+const CurrentRun = ({ run }: { run: Run }) => {
   const { t } = useI18n()
   return (
-    <>
-      <h3>{t('任务目标')}</h3>
-      <p className="preserve-text">{task.goal}</p>
-      <h3>{t('验收条件')}</h3>
-      <p className="preserve-text">{task.acceptanceCriteria}</p>
-    </>
-  )
-}
-const RunDetails = ({ run }: { run: Run }) => {
-  const { t } = useI18n()
-  return (
-    <section className="run-details">
+    <section className="current-run">
       <h3>
-        {t('第')}
+        {t('当前执行')} · {t('第')}
         {run.attempt}
-        {t('次执行 ·')}
+        {t('次 ·')}
         {t(runLabel(run))}
       </h3>
       {run.failureCode && (
@@ -91,31 +71,19 @@ const RunDetails = ({ run }: { run: Run }) => {
           {run.failureCode}
         </p>
       )}
-      <dl>
-        <div>
-          <dt>{t('角色快照')}</dt>
-          <dd>
-            {run.roleSnapshot.name} · v{run.roleSnapshot.version} · {run.roleSnapshot.cli} ·{' '}
-            {run.roleSnapshot.model || t('CLI 默认模型')}
-          </dd>
-        </div>
-        <div>
-          <dt>{t('执行分支')}</dt>
-          <dd className="code">{run.executionBranch}</dd>
-        </div>
-        <div>
-          <dt>{t('工作目录')}</dt>
-          <dd className="code">{run.workDirectory}</dd>
-        </div>
-        <div>
-          <dt>{t('基准提交')}</dt>
-          <dd className="code">{run.baselineCommit}</dd>
-        </div>
-        <div>
-          <dt>{t('进程状态')}</dt>
-          <dd>{run.processState}</dd>
-        </div>
-      </dl>
+      <RunFacts run={run} />
+    </section>
+  )
+}
+
+const TaskGoals = ({ task }: { task: Task }) => {
+  const { t } = useI18n()
+  return (
+    <section className="task-goals">
+      <h3>{t('任务目标')}</h3>
+      <p className="preserve-text">{task.goal}</p>
+      <h3>{t('验收条件')}</h3>
+      <p className="preserve-text">{task.acceptanceCriteria}</p>
     </section>
   )
 }

@@ -4,6 +4,8 @@
 
 ## 两仓与产物
 
+纬舟本增量已提交推送`9b53992762e29bfab5842bef39ccd51afaa51112`，对应下述Agent-Team固定提交。其[桌面CI 40092321957](https://github.com/CerrorJ/weftpilot/actions/runs/40092321957)Windows与macOS均通过：每平台28单元、6装配，开发及实际打包Electron各38项26通过/12显式跳过/0失败，NSIS与ARM64未签名DMG/ZIP装配成功。本次macOS没有复现此前060的Keychain错误；未修改凭据加密或跳过原失败断言，也没有证据认定历史根因已修复。用户设备安装升级、真实Mac CLI与签名仍未验收。
+
 - Agent-Team：`feat/task-preflight`，已提交推送`e6c33e97e18859453b441fccaff63442cda07333`，内核0.7.0/协议1/schema8，新增`task-preflight`能力。独立内核Tester/Reviewer均通过；完整默认127项通过。
 - 同一提交的两份干净检出重建：122文件逐一摘要一致，`weftpilot-agent-team-kernel-0.7.0.tgz` SHA-256均为`9d4bf5577f7a6e7c519e94ad43ad30ecc15bc3e7d28c290e84300d8acd29c911`。桌面`config/kernel-lock.json`显式更新，并由正常装配流程重新检出/构建/核对同一摘要。
 - 没有引用相邻目录的未提交业务源码，没有修改原独立飞书入口、凭据、生产服务或旧停止异常现场。
