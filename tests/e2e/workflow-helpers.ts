@@ -2,7 +2,7 @@
 import { mkdtemp, mkdir, rm, realpath } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, dirname, basename } from 'node:path'
 import { existsSync } from 'node:fs'
 import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright'
@@ -124,6 +124,12 @@ const activateRole = async (page: Page): Promise<void> => {
 }
 
 const cleanupFixture = async (directory: string): Promise<void> => {
+  const verified = await realpath(directory)
+  if (
+    dirname(verified) !== (await realpath(tmpdir())) ||
+    !basename(verified).startsWith('纬舟 workflow ')
+  )
+    throw new Error('拒绝清理非本测试拥有的Temp目录')
   const path = join(directory, 'app-data/kernel/kernel.sqlite')
   if (existsSync(path)) {
     const database = new DatabaseSync(path, { readOnly: true })
@@ -144,7 +150,8 @@ const cleanupFixture = async (directory: string): Promise<void> => {
       database.close()
     }
   }
-  await rm(directory, { recursive: true, force: true })
+  // Windows退出后的词典文件可能短时仍被占用；只有限重试文件清理，不杀进程或吞掉失败。
+  await rm(verified, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
 }
 
 export const createTask = async (page: Page, goal: string, title = '验证真实闭环') => {

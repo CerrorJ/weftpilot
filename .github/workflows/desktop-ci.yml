@@ -61,4 +61,6 @@ jobs:
         run: |
           export WEFTPILOT_PACKAGED_EXE="$(find "$PWD/release" -path '*/WeftPilot.app/Contents/MacOS/WeftPilot' -print -quit)"
           test -n "$WEFTPILOT_PACKAGED_EXE"
-          pnpm test:e2e
+          # 同名应用共享系统Keychain，独立userData不隔离它；先串行排除跨测试进程竞争。
+          # 仍使用真实safeStorage，任何不可用照常失败，不使用mock-keychain或明文回退。
+          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/*.test.ts
