@@ -31,7 +31,7 @@ test(
       )
       await page.locator('.appearance-settings summary').click()
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
-      await page.getByRole('heading', { name: 'Tasks & deliveries', exact: true }).waitFor()
+      await page.getByRole('heading', { name: 'Tasks', exact: true }).waitFor()
       await page.getByRole('combobox', { name: 'Appearance', exact: true }).selectOption('dark')
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
       assert.equal(await page.locator('html').getAttribute('lang'), 'en')
@@ -46,12 +46,14 @@ test(
       await mkdir('.tmp/evidence', { recursive: true })
       await page.screenshot({ path: '.tmp/evidence/m1-english-dark.png' })
       await page.reload()
-      await page.getByRole('heading', { name: 'Tasks & deliveries', exact: true }).waitFor()
+      await page.getByRole('button', { name: 'Tasks', exact: true }).click()
+      await page.getByRole('heading', { name: 'Tasks', exact: true }).waitFor()
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
       await quit(application)
       application = await launch(fixture.data)
       const restored = await application.firstWindow()
-      await restored.getByRole('heading', { name: 'Tasks & deliveries', exact: true }).waitFor()
+      await restored.getByRole('button', { name: 'Tasks', exact: true }).click()
+      await restored.getByRole('heading', { name: 'Tasks', exact: true }).waitFor()
       assert.equal((await snapshot(restored)).tasks.length, 1)
       assert.equal(await restored.locator('html').getAttribute('data-theme'), 'dark')
       await restored.locator('.appearance-settings summary').click()
@@ -59,7 +61,7 @@ test(
         .getByRole('combobox', { name: 'Appearance', exact: true })
         .selectOption('light')
       await restored.getByRole('combobox', { name: 'Language', exact: true }).selectOption('zh-CN')
-      await restored.getByRole('heading', { name: '任务与交付', exact: true }).waitFor()
+      await restored.getByRole('heading', { name: '任务管理', exact: true }).waitFor()
       await restored.getByRole('combobox', { name: '外观', exact: true }).selectOption('system')
       await restored.emulateMedia({ colorScheme: 'dark' })
       assert.equal(
@@ -69,7 +71,7 @@ test(
       await restored.emulateMedia({ colorScheme: 'light' })
       assert.equal(
         await restored.locator('body').evaluate((body) => getComputedStyle(body).color),
-        'rgb(35, 56, 43)',
+        'rgb(41, 51, 41)',
       )
       await quit(application)
     } finally {

@@ -6,6 +6,7 @@ import { TextField } from './form-fields'
 import { latestVersions } from './object-versions'
 import { ModelProviderFields } from './model-provider-fields'
 import { modelDraft } from './model-draft'
+import { SubmissionError } from './submission-error'
 
 export const ModelSetup = ({ actions }: { actions: WorkspaceActions }) => {
   const { t } = useI18n()
@@ -64,6 +65,7 @@ const ModelForm = ({
         </select>
       </label>
       <p className="field-note">{t('模型和推理强度是否可用，以本机真实试运行结果为准。')}</p>
+      <SubmissionError message={actions.error} />
       <button className="primary" disabled={actions.busy}>
         {profile ? t('保存新版本') : t('创建模型配置')}
       </button>

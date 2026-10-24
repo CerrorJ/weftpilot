@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { cp, mkdtemp, mkdir, readFile, rm } from 'node:fs/promises'
@@ -37,7 +38,7 @@ test(
       await rm(data, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 })
     })
     const page = await application.firstWindow()
-    await page.getByRole('button', { name: '内核信息', exact: true }).click()
+    await openSettingsPage(page, 'kernel')
     const pageErrors: string[] = []
     page.on('pageerror', (error) => {
       pageErrors.push(error.message)

@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises'
@@ -36,7 +37,7 @@ test(
         secret,
       )
       const before = await snapshot(page)
-      await page.getByRole('button', { name: '内核信息', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await page.getByRole('heading', { name: '环境检查', exact: true }).waitFor()
       await page.getByText('诊断报告预览', { exact: true }).click()
       const preview = diagnosticReportSchema.parse(
@@ -138,7 +139,7 @@ test(
     })
     try {
       const page = await application.firstWindow()
-      await page.getByRole('button', { name: '内核信息', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await page.getByRole('heading', { name: '环境检查', exact: true }).waitFor()
       const result = await page.evaluate(() => window.weftpilot!.diagnostics())
       const report = diagnosticReportSchema.strip().parse(result)
@@ -178,7 +179,7 @@ test(
       database.close()
       application = await launch(fixture.data)
       const page = await application.firstWindow()
-      await page.getByRole('button', { name: '内核信息', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await page.getByText('Agent-Team 内核已连接', { exact: true }).waitFor()
       await page.locator('[data-check="workspace-data"]').filter({ hasText: '检查失败' }).waitFor()
       await page.locator('[data-check="dependent-checks"]').filter({ hasText: '未检测' }).waitFor()

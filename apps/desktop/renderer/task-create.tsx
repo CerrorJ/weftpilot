@@ -3,6 +3,7 @@ import type { Project, RoleVersion } from '@weftpilot/agent-team-kernel/protocol
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
+import { CreateDialog } from './create-dialog'
 interface CreateContext {
   projects: Project[]
   roles: RoleVersion[]
@@ -13,24 +14,25 @@ export const TaskCreate = ({ projects, roles, actions }: CreateContext) => {
   const [project, setProject] = useState('')
   const projectId = project || projects[0]?.id || ''
   return (
-    <details className="task-create">
-      <summary>{t('创建任务')}</summary>
-      <form onSubmit={(event) => submitTask(event, { actions, projectId })}>
-        <TaskAssignments
-          projects={projects}
-          roles={roles}
-          projectId={projectId}
-          selectProject={setProject}
-        />
-        <RequirementReference key={projectId} projectId={projectId} actions={actions} />
-        <TextField label={t('任务名称')} name="title" />
-        <TextField label={t('任务目标')} name="goal" multiline />
-        <TextField label={t('验收条件')} name="criteria" multiline />
-        <button className="primary" disabled={actions.busy || !projects.length || !roles.length}>
-          {t('创建待执行任务')}
-        </button>
-      </form>
-    </details>
+    <CreateDialog title="创建任务" error={actions.error}>
+      {(close) => (
+        <form onSubmit={(event) => submitTask(event, { actions, projectId }, close)}>
+          <TaskAssignments
+            projects={projects}
+            roles={roles}
+            projectId={projectId}
+            selectProject={setProject}
+          />
+          <RequirementReference key={projectId} projectId={projectId} actions={actions} />
+          <TextField label={t('任务名称')} name="title" />
+          <TextField label={t('任务目标')} name="goal" multiline />
+          <TextField label={t('验收条件')} name="criteria" multiline />
+          <button className="primary" disabled={actions.busy || !projects.length || !roles.length}>
+            {t('创建待执行任务')}
+          </button>
+        </form>
+      )}
+    </CreateDialog>
   )
 }
 const TaskAssignments = ({
@@ -99,6 +101,7 @@ const RequirementReference = ({
 const submitTask = (
   event: React.FormEvent<HTMLFormElement>,
   { actions, projectId }: { actions: WorkspaceActions; projectId: string },
+  saved: () => void,
 ) => {
   event.preventDefault()
   const element = event.currentTarget
@@ -117,6 +120,9 @@ const submitTask = (
       requirementRef: requirement ? { id: requirement.id, version: requirement.version } : null,
     })
     .then((result) => {
-      if (result) element.reset()
+      if (result) {
+        element.reset()
+        saved()
+      }
     })
 }

@@ -113,7 +113,7 @@ test(
         second.manifest.version,
       )
       assert.deepEqual(await snapshot(page), before)
-      await page.getByRole('button', { name: 'Projects & roles', exact: true }).click()
+      await page.getByRole('button', { name: 'Roles', exact: true }).click()
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
       assert.deepEqual(
         await readFile(join(encryptedDirectory, encryptedNames[0]!)),

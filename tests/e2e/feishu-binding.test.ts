@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -14,7 +15,7 @@ test(
     const firstSecret = `synthetic-feishu-${randomUUID()}`
     try {
       let page = await application.firstWindow()
-      await page.getByRole('button', { name: '飞书连接', exact: true }).click()
+      await openSettingsPage(page, 'feishu')
       assert.equal(
         await page.getByRole('button', { name: '连接专用应用', exact: true }).isDisabled(),
         true,
@@ -63,7 +64,7 @@ test(
       await quit(application)
       application = await launch(fixture.data)
       page = await application.firstWindow()
-      await page.getByRole('button', { name: 'Feishu connection', exact: true }).click()
+      await openSettingsPage(page, 'feishu')
       assert.deepEqual((await snapshot(page)).feishuBinding, binding)
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
       await page.getByText('Disconnected', { exact: true }).waitFor()

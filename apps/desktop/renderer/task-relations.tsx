@@ -1,6 +1,6 @@
 import type { Task, Run, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import { useI18n } from './preferences'
-import { taskLabels } from './task-workspace'
+import { taskLabels } from './task-status'
 export const TaskRelations = ({
   task,
   state,

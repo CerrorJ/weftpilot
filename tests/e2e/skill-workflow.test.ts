@@ -42,7 +42,7 @@ test(
       const imports = (await snapshot(page)).skillImports
       assert.equal(imports.find((item) => item.id === second.id)?.comparisonPackageId, first.id)
       assert.equal(imports.find((item) => item.id === first.id)?.comparisonPackageId, null)
-      await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+      await page.getByRole('button', { name: '角色管理', exact: true }).click()
       assert.equal(
         await page.getByLabel('角色名称', { exact: true }).inputValue(),
         '保留的角色草稿',
@@ -109,7 +109,7 @@ for (const cli of ['codex', 'claude'] as const)
       try {
         const page = await configure(application, fixture.repository)
         const skill = await importFixtureSkill(page)
-        await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+        await page.getByRole('button', { name: '角色管理', exact: true }).click()
         await page
           .getByRole('combobox', { name: '编辑角色', exact: true })
           .selectOption({ label: '测试开发者 · v1' })
@@ -170,11 +170,8 @@ for (const cli of ['codex', 'claude'] as const)
   )
 
 const createSkillTask = async (page: Page): Promise<string> => {
-  await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-  await page
-    .locator('.task-create summary')
-    .filter({ hasText: /^创建任务$/ })
-    .click()
+  await page.getByRole('button', { name: '任务管理', exact: true }).click()
+  await page.getByRole('button', { name: '创建任务', exact: true }).click()
   await page.getByLabel('任务名称', { exact: true }).fill('真实技能资源验证')
   await page
     .getByLabel('任务目标', { exact: true })

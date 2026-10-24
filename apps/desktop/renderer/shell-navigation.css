@@ -1,0 +1,241 @@
+/* 布局继承product-design的工作台外壳；业务状态仍只读内核快照。 */
+:root {
+  --background: #f7f8f5;
+  --sidebar: #eff1eb;
+  --text: #293329;
+  --muted: #65715f;
+  --line: #e0e5dc;
+  --input-border: #cbd3c5;
+  --nav-active: #213e2c;
+  --nav-active-text: #fff;
+}
+
+.workspace {
+  grid-template-columns: 234px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 32px 18px 18px;
+}
+
+.brand {
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.brand strong {
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.brand span {
+  font-size: 10px;
+}
+
+.brand img {
+  flex-shrink: 0;
+}
+
+.workspace-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  margin: 32px 2px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--input-background);
+}
+
+.workspace-identity strong {
+  font-size: 12px;
+  display: block;
+}
+
+.workspace-identity small {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.owner-avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 32px;
+  background: var(--surface);
+  color: var(--forest);
+  border-radius: 5px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.primary-navigation {
+  margin-top: 28px;
+}
+
+.primary-navigation button {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 46px;
+  padding: 11px 13px;
+  margin: 3px 0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.primary-navigation button > span {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.primary-navigation button[aria-current='page'] {
+  background: var(--nav-active);
+  color: var(--nav-active-text);
+}
+
+.primary-navigation svg {
+  flex-shrink: 0;
+}
+
+.navigation-count {
+  margin-left: auto;
+  background: #ffffff1f;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.sidebar-bottom p {
+  font-size: 10px;
+  padding: 12px;
+}
+
+.runtime-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.local-owner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 12px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.local-owner small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+main.main-shell {
+  max-width: none;
+  padding: 0;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 72px;
+  border-bottom: 1px solid var(--line);
+  padding: 0 36px;
+}
+
+.breadcrumbs {
+  display: flex;
+  gap: 13px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.breadcrumbs strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.local-mode {
+  font-size: 10px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+}
+
+:root[data-theme='dark'] {
+  --nav-active: #c6dfb3;
+  --nav-active-text: #17221c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    --nav-active: #c6dfb3;
+    --nav-active-text: #17221c;
+  }
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar .appearance-settings {
+  margin: 0;
+  position: relative;
+  font-size: 11px;
+}
+
+.topbar .appearance-settings > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.topbar .appearance-settings[open] {
+  z-index: 35;
+}
+
+.topbar .appearance-settings[open] > label {
+  width: 180px;
+  background: var(--input-background);
+  padding: 12px;
+  margin-top: 0;
+  border: 1px solid var(--line);
+  position: absolute;
+  right: 0;
+  top: 30px;
+}
+
+.topbar .appearance-settings[open] > label:last-child {
+  top: 111px;
+  border-top: 0;
+  box-shadow: 0 12px 22px #1a3c2b12;
+}

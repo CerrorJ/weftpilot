@@ -1,3 +1,4 @@
+import { openHumanPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -43,7 +44,7 @@ for (const cli of ['codex', 'claude'] as const)
         await quit(application)
         application = await launch(fixture.data)
         page = await application.firstWindow()
-        await page.getByRole('button', { name: '待处理', exact: true }).click()
+        await openHumanPage(page)
         const restored = await snapshot(page)
         assert.equal(
           restored.humanRequests.find((item) => item.id === request.id)?.status,
@@ -85,7 +86,12 @@ for (const cli of ['codex', 'claude'] as const)
           'answered',
         )
         assert.equal(finished.tasks.find((item) => item.id === taskId)?.status, 'in_review')
-        await page.getByRole('button', { name: 'Tasks & deliveries', exact: true }).click()
+        await page.getByRole('button', { name: 'Tasks', exact: true }).click()
+        await page.getByRole('button', { name: 'All tasks', exact: true }).click()
+        await page
+          .locator('.task-table button')
+          .filter({ hasText: taskId.slice(0, 8) })
+          .click()
         await page.getByRole('button', { name: 'Accept delivery', exact: true }).click()
         await waitForSnapshot({
           page,
@@ -128,11 +134,8 @@ const configureClaude = async (page: Page) => {
 }
 
 const createHumanTask = async (page: Page, cli: 'codex' | 'claude'): Promise<string> => {
-  await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-  await page
-    .locator('summary')
-    .filter({ hasText: /^创建任务$/ })
-    .click()
+  await page.getByRole('button', { name: '任务管理', exact: true }).click()
+  await page.getByRole('button', { name: '创建任务', exact: true }).click()
   await page.getByRole('textbox', { name: '任务名称', exact: true }).fill('真实人工澄清')
   const first =
     cli === 'codex'

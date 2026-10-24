@@ -8,6 +8,7 @@ import type { FeishuVault } from './feishu-vault'
 import { registerFeishuBridge } from './feishu-bridge'
 import { registerMaintenanceBridge } from './maintenance-bridge'
 import type { KernelController } from './kernel-controller'
+import { parseInput } from './input-validation'
 
 const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
@@ -59,10 +60,10 @@ export const registerWorkflowBridge = (options: {
   for (const [method, type] of Object.entries(commandTypes)) {
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
       assertSender(event)
-      const input = submissionSchema.parse(raw)
+      const input = parseInput(submissionSchema, raw)
       return options
         .client()
-        .command(businessCommandSchema.parse({ ...input.input, type }), input.key)
+        .command(parseInput(businessCommandSchema, { ...input.input, type }), input.key)
     })
   }
   registerProjectPicker({ ...options, assertSender })
@@ -70,14 +71,14 @@ export const registerWorkflowBridge = (options: {
   registerFeishuBridge({ assertSender, client: options.client, vault: options.feishuVault })
   ipcMain.handle('workflow:saveModel', async (event, raw: unknown) => {
     assertSender(event)
-    const input = submissionSchema.parse(raw)
+    const input = parseInput(submissionSchema, raw)
     const command = await prepareModelSubmission({ ...input, vault: options.vault() })
     return options.client().command(command, input.key)
   })
   for (const method of ['delivery', 'run', 'activity'] as const)
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
       assertSender(event)
-      return options.client().detail(`workspace.${method}`, z.string().uuid().parse(raw))
+      return options.client().detail(`workspace.${method}`, parseInput(z.string().uuid(), raw))
     })
 }
 
@@ -87,14 +88,14 @@ const registerProjectPicker = (options: {
 }): void => {
   ipcMain.handle('workflow:createProject', async (event, raw: unknown) => {
     const window = options.assertSender(event)
-    const input = submissionSchema.parse(raw)
-    const fields = z
+    const input = parseInput(submissionSchema, raw)
+    const fieldsSchema = z
       .object({
         name: z.string().trim().min(1).max(200),
         defaultBranch: z.string().trim().min(1).max(200),
       })
       .strict()
-      .parse(input.input)
+    const fields = parseInput(fieldsSchema, input.input)
     const selected = await dialog.showOpenDialog(window, {
       title: '选择项目 Git 仓库根目录',
       properties: ['openDirectory'],
@@ -105,6 +106,6 @@ const registerProjectPicker = (options: {
       type: 'project.create',
       repositoryPath: selected.filePaths[0],
     }
-    return options.client().command(businessCommandSchema.parse(command), input.key)
+    return options.client().command(parseInput(businessCommandSchema, command), input.key)
   })
 }

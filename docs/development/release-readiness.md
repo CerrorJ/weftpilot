@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+后续开发入口已转至`feat/prototype-alignment`，锁定内核0.5.9/`1938441637e673744f0b95a60bcffc08f8509958`，协议1/schema7；两份干净重建及115文件摘要一致。Windows新应用目录的默认检查12通过/11显式跳过，独立打包进程边界1/1通过。当前正在完成八页原型对齐增量及审查修复，尚未据此生成新的干净源码安装器或宣称完整设计已验收。下方0.5.8旧安装器来源与摘要保留原归属，详见[当前设计差异与验证](prototype-alignment.md)及[新增真实集成失败](expanded-native-integration.md)。
+
 最新补充：桌面当前开发入口`fix/native-pnpm-launch`（包含原`feat/skills-release`全部功能），内核仍为`feat/skills-release / 0.5.8 / 2d347d1`。源码`34bfa29`的[Windows/macOS CI](https://github.com/CerrorJ/weftpilot/actions/runs/39915331008)已全绿，含原生runner实际开发/打包Electron测试及NSIS/DMG/ZIP装配；下面历史待验收列中的“桌面远端双平台CI”已完成。macOS用户设备、真实CLI、实际安装升级与公开发行未据此标为完成，详见[CI修复记录](ci-native-pnpm.md)。
 
 | 阶段 | 已实现并实际验证                                                                                                                                  | 尚未验收                                                                |

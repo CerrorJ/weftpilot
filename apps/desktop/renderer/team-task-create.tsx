@@ -9,6 +9,7 @@ import { latestVersions } from './object-versions'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
 import { TeamPlanSteps } from './team-plan-steps'
+import { CreateDialog } from './create-dialog'
 interface Context {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
@@ -19,29 +20,33 @@ export const TeamTaskCreate = ({ state, actions }: Context) => {
   const [selected, setSelected] = useState('')
   const team = teams.find((item) => item.id === selected) ?? teams[0]
   return (
-    <details className="task-create">
-      <summary>{t('创建团队任务')}</summary>
-      <label>
-        {t('执行团队')}
-        <select value={team?.id ?? ''} onChange={(event) => setSelected(event.target.value)}>
-          {!teams.length && <option value="">{t('请先创建团队')}</option>}
-          {teams.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name} · v{item.version}
-            </option>
-          ))}
-        </select>
-      </label>
-      {team && (
-        <TeamPlanForm
-          key={`${team.id}:${team.version}`}
-          team={team}
-          roles={latestVersions(state.roles)}
-          state={state}
-          actions={actions}
-        />
+    <CreateDialog title="创建团队任务" error={actions.error}>
+      {(close) => (
+        <>
+          <label>
+            {t('执行团队')}
+            <select value={team?.id ?? ''} onChange={(event) => setSelected(event.target.value)}>
+              {!teams.length && <option value="">{t('请先创建团队')}</option>}
+              {teams.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} · v{item.version}
+                </option>
+              ))}
+            </select>
+          </label>
+          {team && (
+            <TeamPlanForm
+              key={`${team.id}:${team.version}`}
+              team={team}
+              roles={latestVersions(state.roles)}
+              state={state}
+              actions={actions}
+              saved={close}
+            />
+          )}
+        </>
       )}
-    </details>
+    </CreateDialog>
   )
 }
 const TeamPlanForm = ({
@@ -49,11 +54,12 @@ const TeamPlanForm = ({
   roles,
   state,
   actions,
-}: Context & { team: TeamVersion; roles: RoleVersion[] }) => {
+  saved,
+}: Context & { team: TeamVersion; roles: RoleVersion[]; saved: () => void }) => {
   const { t } = useI18n()
   const [steps, setSteps] = useState([`step${crypto.randomUUID().slice(0, 8)}`])
   return (
-    <form onSubmit={(event) => submitPlan(event, { team, steps, actions })}>
+    <form onSubmit={(event) => submitPlan(event, { team, steps, actions }, saved)}>
       <label>
         {t('所属项目')}
         <select name="project" required>
@@ -96,6 +102,7 @@ const TeamPlanForm = ({
 const submitPlan = (
   event: React.FormEvent<HTMLFormElement>,
   input: { team: TeamVersion; steps: string[]; actions: WorkspaceActions },
+  saved: () => void,
 ) => {
   event.preventDefault()
   const element = event.currentTarget
@@ -119,6 +126,9 @@ const submitPlan = (
       })),
     })
     .then((result) => {
-      if (result) element.reset()
+      if (result) {
+        element.reset()
+        saved()
+      }
     })
 }

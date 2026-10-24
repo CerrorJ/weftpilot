@@ -98,10 +98,11 @@ export const configure = async (
   await application.evaluate(({ dialog }, path) => {
     dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] })
   }, repository)
-  await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+  await page.getByRole('button', { name: '项目管理', exact: true }).click()
   await page.getByLabel('项目名称', { exact: true }).fill('合成测试项目')
   await page.getByRole('button', { name: '选择仓库并添加' }).click()
   await page.getByText(repository, { exact: true }).waitFor()
+  await page.getByRole('button', { name: '角色管理', exact: true }).click()
   await page.getByLabel('角色名称', { exact: true }).fill('测试开发者')
   await page
     .getByLabel('职责', { exact: true })
@@ -146,13 +147,10 @@ const cleanupFixture = async (directory: string): Promise<void> => {
   await rm(directory, { recursive: true, force: true })
 }
 
-export const createTask = async (page: Page, goal: string) => {
-  await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-  await page
-    .locator('.task-create summary')
-    .filter({ hasText: /^创建任务$/ })
-    .click()
-  await page.getByLabel('任务名称', { exact: true }).fill('验证真实闭环')
+export const createTask = async (page: Page, goal: string, title = '验证真实闭环') => {
+  await page.getByRole('button', { name: '任务管理', exact: true }).click()
+  await page.getByRole('button', { name: '创建任务', exact: true }).click()
+  await page.getByLabel('任务名称', { exact: true }).fill(title)
   await page.getByLabel('任务目标', { exact: true }).fill(goal)
   await page
     .getByLabel('验收条件', { exact: true })

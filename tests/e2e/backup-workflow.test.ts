@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile, writeFile, mkdir, readdir, cp } from 'node:fs/promises'
@@ -44,7 +45,7 @@ test(
       }, secret)
       const original = await snapshot(page)
       assert.equal(original.models.length, 1)
-      await page.getByRole('button', { name: '内核信息', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await pickDirectory(application, fixture.directory)
       await page.getByRole('button', { name: '创建工作台备份', exact: true }).click()
       await page.getByText('备份已完成并核对摘要', { exact: true }).waitFor()
@@ -89,9 +90,7 @@ test(
       )
       await page.locator('.backup-consent input').check()
       await page.getByRole('button', { name: '恢复到新工作台', exact: true }).click()
-      await page
-        .getByRole('heading', { name: '任务与交付', exact: true })
-        .waitFor({ timeout: 20000 })
+      await page.getByRole('heading', { name: '工作台', exact: true }).waitFor({ timeout: 20000 })
       const restored = await waitForSnapshot({
         page,
         timeout: 20000,
@@ -124,7 +123,7 @@ test(
       // preload IPC可早于React首次渲染就绪；仍须精确验证重启后的主题值。
       await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
-      await page.getByRole('button', { name: 'Kernel', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await page
         .getByText('This workspace was restored from a backup. Previous data is retained.', {
           exact: true,
@@ -179,7 +178,7 @@ test(
     try {
       let page = await configure(application, fixture.repository)
       page.setDefaultTimeout(12000)
-      await page.getByRole('button', { name: '内核信息', exact: true }).click()
+      await openSettingsPage(page, 'kernel')
       await pickDirectory(application, fixture.directory)
       await page.getByRole('button', { name: '创建工作台备份', exact: true }).click()
       await page.getByText('备份已完成并核对摘要', { exact: true }).waitFor()

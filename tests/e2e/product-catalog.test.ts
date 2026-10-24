@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createFixture, launch, quit, configure, snapshot } from './workflow-helpers'
@@ -12,13 +13,13 @@ test(
       const page = await configure(application, fixture.repository)
       const pageErrors: string[] = []
       page.on('pageerror', (error) => pageErrors.push(error.message))
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await openSettingsPage(page, 'models')
       await page.getByRole('textbox', { name: '配置名称', exact: true }).fill('版本模型')
       await page.getByRole('button', { name: '创建模型配置', exact: true }).click()
       await page
         .getByRole('option', { name: '版本模型 · v1', exact: true })
         .waitFor({ state: 'attached' })
-      await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+      await page.getByRole('button', { name: '角色管理', exact: true }).click()
       await page
         .getByRole('combobox', { name: '编辑角色', exact: true })
         .selectOption({ label: '测试开发者 · v1' })
@@ -30,7 +31,7 @@ test(
       await page
         .getByRole('option', { name: '测试开发者 · v2', exact: true })
         .waitFor({ state: 'attached' })
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await openSettingsPage(page, 'models')
       await page.getByRole('combobox', { name: '编辑模型配置', exact: true }).selectOption(modelId)
       await page
         .getByRole('textbox', { name: '模型标识（可选）', exact: true })
@@ -44,6 +45,7 @@ test(
       assert.equal(state.roles.at(-1)?.model, '')
       assert.equal(state.models.at(-1)?.model, 'synthetic-model-v2')
 
+      await page.getByRole('button', { name: '需求管理', exact: true }).click()
       await page.getByRole('textbox', { name: '需求标题', exact: true }).fill('产品需求')
       await page.getByRole('textbox', { name: '需求内容', exact: true }).fill('原始需求内容')
       await page.getByRole('textbox', { name: '需求验收条件', exact: true }).fill('原始需求条件')
@@ -56,7 +58,7 @@ test(
         .getByRole('combobox', { name: '编辑需求', exact: true })
         .selectOption(requirementId)
       await page.getByRole('textbox', { name: '需求内容', exact: true }).fill('第二版需求内容')
-      // 当前同时有模型和需求两个保存按钮，按所属 section 选择。
+      // 按需求区域选择，避免后续新增其他版本操作时产生歧义。
       await page
         .locator('section')
         .filter({ has: page.getByRole('heading', { name: '需求版本', exact: true }) })
@@ -65,6 +67,7 @@ test(
       await page
         .getByRole('option', { name: '产品需求 · v2', exact: true })
         .waitFor({ state: 'attached' })
+      await page.getByRole('button', { name: '团队管理', exact: true }).click()
       await page.getByRole('textbox', { name: '团队名称', exact: true }).fill('产品团队')
       await page.getByRole('checkbox', { name: '测试开发者 · codex', exact: true }).check()
       await page.getByRole('button', { name: '创建团队', exact: true }).click()
@@ -72,12 +75,8 @@ test(
         .getByRole('option', { name: '产品团队 · v1', exact: true })
         .waitFor({ state: 'attached' })
 
-      await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-      await page
-        .locator('.task-create')
-        .filter({ has: page.locator('summary').filter({ hasText: /^创建任务$/ }) })
-        .locator('summary')
-        .click()
+      await page.getByRole('button', { name: '任务管理', exact: true }).click()
+      await page.getByRole('button', { name: '创建任务', exact: true }).click()
       await page.getByRole('textbox', { name: '任务名称', exact: true }).fill('固定旧需求')
       await page.getByRole('textbox', { name: '任务目标', exact: true }).fill('实现需求')
       await page.getByRole('textbox', { name: '验收条件', exact: true }).fill('人工检查')
@@ -88,11 +87,9 @@ test(
       await page.getByRole('heading', { name: '固定旧需求', exact: true }).waitFor()
       state = await snapshot(page)
       assert.equal(state.tasks.at(-1)?.requirementRef?.version, 1)
+      await page.getByRole('button', { name: '关闭详情', exact: true }).click()
 
-      await page
-        .locator('summary')
-        .filter({ hasText: /^创建团队任务$/ })
-        .click()
+      await page.getByRole('button', { name: '创建团队任务', exact: true }).click()
       await page.getByRole('textbox', { name: '团队任务名称', exact: true }).fill('依赖计划')
       await page.getByRole('textbox', { name: '团队目标', exact: true }).fill('两个角色步骤')
       await page.getByRole('textbox', { name: '团队验收条件', exact: true }).fill('全部子任务验收')
@@ -109,7 +106,11 @@ test(
         await step.getByRole('checkbox').check()
       }
       await page.getByRole('button', { name: '保存团队计划', exact: true }).click()
-      await page.getByRole('alert').filter({ hasText: 'TEAM_DEPENDENCY_CYCLE' }).waitFor()
+      await page
+        .getByRole('dialog', { name: '创建团队任务', exact: true })
+        .getByRole('alert')
+        .filter({ hasText: 'TEAM_DEPENDENCY_CYCLE' })
+        .waitFor()
       assert.equal(
         (await snapshot(page)).tasks.filter((task) => task.purpose === 'team_parent').length,
         0,
@@ -122,10 +123,8 @@ test(
       assert.equal((await snapshot(page)).runs.length, 0)
       await page.locator('.appearance-settings summary').click()
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
-      await page.getByRole('button', { name: 'Models, requirements & teams', exact: true }).click()
-      await page
-        .getByRole('heading', { name: 'Models, requirements & teams', exact: true })
-        .waitFor()
+      await page.getByRole('button', { name: 'Requirements', exact: true }).click()
+      await page.getByRole('heading', { name: 'Requirements', exact: true }).waitFor()
       await page.getByRole('combobox', { name: 'Edit requirement', exact: true }).waitFor()
       assert.deepEqual(pageErrors, [])
       await quit(application)

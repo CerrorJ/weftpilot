@@ -48,7 +48,7 @@ test(
       })
       const codex = configured.roles.find((role) => role.cli === 'codex')!
       const claude = configured.roles.find((role) => role.cli === 'claude')!
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await page.getByRole('button', { name: '团队管理', exact: true }).click()
       await page.getByRole('textbox', { name: '团队名称', exact: true }).fill('双 CLI 文件团队')
       await page.getByRole('checkbox', { name: '测试开发者 · codex', exact: true }).check()
       await page.getByRole('checkbox', { name: 'Claude 文件开发者 · claude', exact: true }).check()
@@ -56,11 +56,8 @@ test(
       await page
         .getByRole('option', { name: '双 CLI 文件团队 · v1', exact: true })
         .waitFor({ state: 'attached' })
-      await page.getByRole('button', { name: '任务与交付', exact: true }).click()
-      await page
-        .locator('summary')
-        .filter({ hasText: /^创建团队任务$/ })
-        .click()
+      await page.getByRole('button', { name: '任务管理', exact: true }).click()
+      await page.getByRole('button', { name: '创建团队任务', exact: true }).click()
       await page.getByRole('textbox', { name: '团队任务名称', exact: true }).fill('跨 CLI 文件交接')
       await page
         .getByRole('textbox', { name: '团队目标', exact: true })
@@ -104,7 +101,7 @@ test(
       const sourceFile = await readFile(join(firstRun.workDirectory, 'a.txt'))
       assert.deepEqual(sourceFile, Buffer.from(`${tag}\n`))
       const sourceDelivery = upstream.deliveries.find((item) => item.runId === firstRun.id)!
-      await page.locator('.task-list button').filter({ hasText: '上游文件' }).click()
+      await page.locator('.task-table button').filter({ hasText: '上游文件' }).click()
       await page.getByRole('button', { name: '验收通过', exact: true }).click()
       const downstream = await waitForSnapshot({
         page,
@@ -119,7 +116,7 @@ test(
       assert.deepEqual(actualOutput, sourceFile)
       assert.deepEqual(secondRun.inputDeliveryIds, [sourceDelivery.id])
       assert.equal(downstream.tasks.find((task) => task.id === parent.id)?.status, 'in_review')
-      await page.locator('.task-list button').filter({ hasText: '下游文件' }).click()
+      await page.locator('.task-table button').filter({ hasText: '下游文件' }).click()
       await page.getByRole('button', { name: '验收通过', exact: true }).click()
       await waitForSnapshot({
         page,

@@ -66,10 +66,10 @@ export const useI18n = () => {
   return context
 }
 
-export const AppearanceSettings = () => {
+export const AppearanceSettings = ({ expanded = false }: { expanded?: boolean }) => {
   const { language, theme, setLanguage, setTheme, t } = useI18n()
   return (
-    <details className="appearance-settings">
+    <details className="appearance-settings" open={expanded || undefined}>
       <summary>{t('设置')}</summary>
       <label>
         {t('语言')}

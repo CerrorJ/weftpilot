@@ -8,7 +8,7 @@ import type {
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { RunActivity } from './run-activity'
-import { runLabel } from './task-workspace'
+import { runLabel } from './task-status'
 const labels: Record<RoleReadiness['state'], string> = {
   draft: '待试运行',
   trial_running: '试运行中',

@@ -41,6 +41,10 @@ const messages: Record<string, [string, string]> = {
     'The same command key was reused with different content.',
   ],
   VALIDATION_FAILED: ['输入格式或协议版本不兼容', 'Input or protocol version is incompatible.'],
+  INPUT_INVALID: [
+    '请检查必填项、内容长度与选项；内容不能只包含空格。',
+    'Check required fields, length and selected options. Content cannot contain only spaces.',
+  ],
   NOT_FOUND: ['对象不存在', 'The requested object does not exist.'],
   RUN_ACTIVE: ['当前执行尚未结束', 'The current run has not ended.'],
   TASK_NOT_READY: [

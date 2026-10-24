@@ -5,6 +5,7 @@ import {
   type BusinessCommand,
 } from '@weftpilot/agent-team-kernel/protocol'
 import type { ModelVault } from './model-vault'
+import { parseInput } from './input-validation'
 
 const inputSchema = z.object({ secret: z.string().max(16384).optional() }).passthrough()
 
@@ -14,15 +15,15 @@ export const prepareModelSubmission = async (options: {
   key: string
   vault: ModelVault
 }): Promise<Extract<BusinessCommand, { type: 'model.save' }>> => {
-  const { secret, ...fields } = inputSchema.parse(options.input)
-  const command = businessCommandSchema.parse({ ...fields, type: 'model.save' })
+  const { secret, ...fields } = parseInput(inputSchema, options.input)
+  const command = parseInput(businessCommandSchema, { ...fields, type: 'model.save' })
   if (command.type !== 'model.save') throw new Error('MODEL_CONFIG_INVALID')
   if (command.provider === 'cli-managed') {
     if (secret || command.baseUrl || command.credentialRef) throw new Error('MODEL_CONFIG_INVALID')
     return command
   }
   validateProvider(command)
-  const binding = credentialBindingSchema.parse({
+  const binding = parseInput(credentialBindingSchema, {
     reference: secret ? `model-${options.key}` : command.credentialRef,
     provider: command.provider,
     baseUrl: command.baseUrl,

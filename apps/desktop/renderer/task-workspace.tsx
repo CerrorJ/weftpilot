@@ -1,74 +1,123 @@
-import { useI18n } from './preferences'
-import { useState } from 'react'
-import type { Run, Task, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
+﻿import { useI18n } from './preferences'
+import { useState, useEffect, useRef } from 'react'
+import type { Task, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { TaskDetail } from './task-detail'
-export const taskLabels: Record<Task['status'], string> = {
-  ready: '待执行',
-  in_progress: '执行中',
-  in_review: '待验收',
-  done: '已验收',
-}
-export const runLabel = (run: Run) => {
-  if (run.processState === 'uncertain') return '状态待确认'
-  const labels: Record<Run['status'], string> = {
-    queued: '排队中',
-    preparing: '准备目录',
-    running: '执行中',
-    waiting_input: '等待澄清',
-    waiting_approval: '等待确认',
-    stopping: '停止中',
-    stopped: '已停止',
-    succeeded: '执行成功',
-    failed: '执行失败',
-    cancelled: '已取消',
-    interrupted: '已中断',
-  }
-  return labels[run.status]
-}
+import { TaskTable } from './task-table'
+import { TaskToolbar } from './task-toolbar'
 export const TaskWorkspace = ({
   state,
   actions,
+  initialTaskId = '',
 }: {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
+  initialTaskId?: string
 }) => {
   const { t } = useI18n()
-  const [selected, setSelected] = useState('')
+  const [project, setProject] = useState('')
+  const [search, setSearch] = useState('')
   const tasks = state.tasks.filter((item) => item.purpose !== 'role_trial')
-  const task =
-    tasks.find((item) => item.id === selected) ?? tasks.filter((item) => !item.parentTaskId).at(-1)
-  if (!task)
+  const last = tasks.filter((item) => !item.parentTaskId).at(-1)?.id ?? ''
+  const [selected, setSelected] = useTaskSelection(last, initialTaskId)
+  const task = tasks.find((item) => item.id === selected)
+  const visible = tasks.filter((item) => matchesTask(item, state, { project, search }))
+  if (!tasks.length)
     return (
       <section className="empty-state">
         <h2>{t('还没有任务')}</h2>
-        <p>{t('先在“项目与角色”中完成配置，再创建一个目标明确、可验收的任务。')}</p>
+        <p>{t('先添加项目和角色，再开始第一项真实任务。')}</p>
       </section>
     )
   return (
-    <div className="task-workspace">
-      <section className="task-list" aria-label={t('任务列表')}>
-        {[...tasks].reverse().map((item) => (
-          <button
-            key={item.id}
-            aria-pressed={item.id === task.id}
-            onClick={() => setSelected(item.id)}
-          >
-            <strong>{item.title}</strong>
-            <span>
-              {state.projects.find((project) => project.id === item.projectId)?.name} ·{' '}
-              {t(taskLabels[item.status])}
-            </span>
-          </button>
-        ))}
-      </section>
+    <section aria-label={t('任务列表')}>
+      <TaskToolbar
+        projects={state.projects}
+        count={tasks.length}
+        project={project}
+        search={search}
+        setProject={setProject}
+        setSearch={setSearch}
+      />
+      <TaskTable tasks={visible} state={state} selectTask={setSelected} />
+      {task && (
+        <TaskDrawer
+          task={task}
+          state={state}
+          actions={actions}
+          selectTask={setSelected}
+          close={() => setSelected('')}
+        />
+      )}
+    </section>
+  )
+}
+
+const matchesTask = (
+  task: Task,
+  state: WorkspaceSnapshot,
+  filters: { project: string; search: string },
+): boolean => {
+  if (filters.project && task.projectId !== filters.project) return false
+  const project = state.projects.find((item) => item.id === task.projectId)
+  const text = `${task.id} ${task.title} ${project?.name ?? ''}`.toLocaleLowerCase()
+  return text.includes(filters.search.toLocaleLowerCase())
+}
+
+/** 创建任务后打开其详情，普通快照轮询不会改变用户正在查看的任务。 */
+const useTaskSelection = (last: string, initialTaskId: string) => {
+  const [selected, setSelected] = useState(initialTaskId)
+  const previous = useRef(last)
+  useEffect(() => {
+    if (last && previous.current !== last) setSelected(last)
+    previous.current = last
+  }, [last])
+  return [selected, setSelected] as const
+}
+
+const TaskDrawer = ({
+  task,
+  state,
+  actions,
+  selectTask,
+  close,
+}: {
+  task: Task
+  state: WorkspaceSnapshot
+  actions: WorkspaceActions
+  selectTask: (id: string) => void
+  close: () => void
+}) => {
+  const { t } = useI18n()
+  const button = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    const trigger = document.activeElement
+    button.current?.focus()
+    return () => {
+      if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus()
+    }
+  }, [task.id])
+  return (
+    <aside
+      className="task-drawer"
+      aria-label={t('任务详情')}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') close()
+      }}
+    >
+      <div className="drawer-header">
+        <strong>{t('任务详情')}</strong>
+        <button ref={button} onClick={close}>
+          {t('关闭详情')}
+        </button>
+      </div>
       <TaskDetail
         key={task.id}
         task={task}
         state={state}
         actions={actions}
-        selectTask={setSelected}
+        selectTask={selectTask}
       />
-    </div>
+    </aside>
   )
 }

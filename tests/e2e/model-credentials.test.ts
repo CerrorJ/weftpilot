@@ -1,3 +1,4 @@
+import { openSettingsPage } from './navigation-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createServer } from 'node:http'
@@ -37,7 +38,7 @@ test(
     const endpoint = `http://127.0.0.1:${address.port}/v1`
     try {
       let page = await configure(application, fixture.repository)
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await openSettingsPage(page, 'models')
       await page.getByRole('textbox', { name: '配置名称', exact: true }).fill('认证拒绝探针')
       await page.getByRole('combobox', { name: '认证方式', exact: true }).selectOption('custom')
       await page.getByRole('textbox', { name: '接口地址', exact: true }).fill(endpoint)
@@ -51,7 +52,7 @@ test(
         .waitFor({ state: 'attached' })
       assert.equal(await page.getByLabel('API 密钥', { exact: true }).inputValue(), '')
       const initial = (await snapshot(page)).models[0]!
-      await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+      await page.getByRole('button', { name: '角色管理', exact: true }).click()
       await page
         .getByRole('combobox', { name: '编辑角色', exact: true })
         .selectOption({ label: '测试开发者 · v1' })
@@ -62,7 +63,7 @@ test(
       await page
         .getByRole('option', { name: '测试开发者 · v2', exact: true })
         .waitFor({ state: 'attached' })
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await openSettingsPage(page, 'models')
       await page
         .getByRole('combobox', { name: '编辑模型配置', exact: true })
         .selectOption(initial.id)
@@ -76,7 +77,7 @@ test(
       assert.equal(state.roles.at(-1)?.modelProfileSnapshot?.credentialRef, initial.credentialRef)
       assert.equal(JSON.stringify(state).includes(firstKey), false)
       assert.equal(JSON.stringify(state).includes(secondKey), false)
-      await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+      await page.getByRole('button', { name: '角色管理', exact: true }).click()
       await page
         .getByRole('combobox', { name: '编辑角色', exact: true })
         .selectOption({ label: '测试开发者 · v2' })
@@ -89,7 +90,7 @@ test(
         .getByRole('option', { name: '测试开发者 · v3', exact: true })
         .waitFor({ state: 'attached' })
       assert.equal((await snapshot(page)).roles.at(-1)?.modelProfileSnapshot?.version, 1)
-      await page.getByRole('button', { name: '模型、需求与团队', exact: true }).click()
+      await openSettingsPage(page, 'models')
       await page
         .getByRole('combobox', { name: '编辑模型配置', exact: true })
         .selectOption(initial.id)
@@ -113,7 +114,7 @@ test(
       await quit(application)
       application = await launch(fixture.data)
       page = await application.firstWindow()
-      await page.getByRole('button', { name: '项目与角色', exact: true }).click()
+      await page.getByRole('button', { name: '角色管理', exact: true }).click()
       await page.getByRole('button', { name: '真实试运行', exact: true }).click()
       await waitForSnapshot({
         page,

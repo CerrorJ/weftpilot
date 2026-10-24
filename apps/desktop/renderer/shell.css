@@ -1,0 +1,5 @@
+/* 按外壳、内容、任务与响应式职责装配；响应式规则保持最后覆盖。 */
+@import './shell-navigation.css';
+@import './workspace-panels.css';
+@import './task-interface.css';
+@import './shell-responsive.css';

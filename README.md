@@ -14,6 +14,8 @@
 
 在界面“设置 / Settings”中切换“语言 / Language”和“外观 / Appearance”，立即生效并在重启后保留。当前本地候选、验证范围及后续入口见[发行交接](docs/development/release-readiness.md)。
 
+最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)正在接回八页导航、任务列表/创建弹窗/详情抽屉与设置；角色六步及其他细节尚未完成，[差异与验证记录](docs/development/prototype-alignment.md)单独维护。上面的功能及CI结果不代表最终设计已验收。
+
 ## 分支职责
 
 | 分支                                                                         | 维护内容                                                        |
@@ -38,7 +40,7 @@
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
-git switch fix/native-pnpm-launch
+git switch feat/prototype-alignment
 ```
 
 先阅读已确认决策与两仓边界。开发环境使用 Node 24.18.0、pnpm 12.3.4。应直接安装官方`pnpm@12.3.4`；旧pnpm 11启动器自动切到12时仍可能改写工具链锁。不要仅以仓库内`pnpm --version`判断启动器版本。CI相关说明见[原生pnpm修复记录](docs/development/ci-native-pnpm.md)。
