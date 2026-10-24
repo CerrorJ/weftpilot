@@ -1,14 +1,16 @@
 import { useI18n } from './preferences'
-import type { Run, Task } from '@weftpilot/agent-team-kernel/protocol'
+import type { Run, Task, Project } from '@weftpilot/agent-team-kernel/protocol'
+import { TaskPreflightButton } from './task-preflight'
 import type { WorkspaceActions } from './use-workspace'
 interface ControlsContext {
   task: Task
   run: Run | undefined
   actions: WorkspaceActions
+  project: Project | undefined
 }
-export const RunControls = ({ task, run, actions }: ControlsContext) => {
+export const RunControls = ({ task, run, actions, project }: ControlsContext) => {
   const { t } = useI18n()
-  if (!run) return <StartRun task={task} actions={actions} />
+  if (!run) return <StartRun task={task} actions={actions} project={project} />
   if (run.processState === 'uncertain')
     return (
       <p role="status">
@@ -34,14 +36,12 @@ export const RunControls = ({ task, run, actions }: ControlsContext) => {
         </button>
       )}
       {retry && (
-        <button
-          disabled={actions.busy}
-          onClick={() => {
-            void actions.execute({ type: 'run.retry', runId: run.id, expectedVersion: run.version })
-          }}
-        >
-          {t('创建新 Run 重试')}
-        </button>
+        <TaskPreflightButton
+          task={task}
+          project={project}
+          actions={actions}
+          input={{ operation: 'retry', id: run.id, expectedVersion: run.version }}
+        />
       )}
     </div>
   )
@@ -50,21 +50,17 @@ export const RunControls = ({ task, run, actions }: ControlsContext) => {
 const stopCaption = (status: Run['status']): string =>
   ['waiting_input', 'waiting_approval'].includes(status) ? '结束等待并停止' : '请求停止'
 
-const StartRun = ({ task, actions }: Omit<ControlsContext, 'run'>) => {
-  const { t } = useI18n()
+const StartRun = ({ task, actions, project }: Omit<ControlsContext, 'run'>) => {
   return task.status === 'ready' ? (
-    <button
-      className="primary"
-      disabled={actions.busy}
-      onClick={() => {
-        void actions.execute({
-          type: task.purpose === 'team_parent' ? 'team.start' : 'run.start',
-          taskId: task.id,
-          expectedVersion: task.version,
-        })
+    <TaskPreflightButton
+      task={task}
+      project={project}
+      actions={actions}
+      input={{
+        operation: task.purpose === 'team_parent' ? 'team' : 'start',
+        id: task.id,
+        expectedVersion: task.version,
       }}
-    >
-      {t('开始真实执行')}
-    </button>
+    />
   ) : null
 }

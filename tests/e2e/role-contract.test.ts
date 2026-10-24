@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { createFixture, launch, configure, snapshot, quit } from './workflow-helpers'
 
 test(
-  '实际内核060协议边界：新增角色字段经命名IPC往返，旧客户端继承、不可变标识和试运行守卫',
+  '实际锁定内核协议边界：新增角色字段经命名IPC往返，旧客户端继承、不可变标识和试运行守卫',
   { timeout: 45000 },
   async () => {
     const fixture = await createFixture()

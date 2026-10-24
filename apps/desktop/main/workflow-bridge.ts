@@ -1,6 +1,10 @@
 import { dialog, ipcMain, type BrowserWindow, type IpcMainInvokeEvent } from 'electron'
 import { z } from 'zod'
-import { businessCommandSchema, type BusinessCommand } from '@weftpilot/agent-team-kernel/protocol'
+import {
+  businessCommandSchema,
+  preflightInputSchema,
+  type BusinessCommand,
+} from '@weftpilot/agent-team-kernel/protocol'
 import type { KernelClient } from '../../../packages/kernel-client/client'
 import type { ModelVault } from './model-vault'
 import { prepareModelSubmission } from './model-submission'
@@ -53,10 +57,7 @@ export const registerWorkflowBridge = (options: {
       throw new Error('不允许的 IPC 来源')
     return window
   }
-  ipcMain.handle('workflow:snapshot', (event) => {
-    assertSender(event)
-    return options.client().request('workspace.snapshot')
-  })
+  registerQueries({ ...options, assertSender })
   for (const [method, type] of Object.entries(commandTypes)) {
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
       assertSender(event)
@@ -75,9 +76,23 @@ export const registerWorkflowBridge = (options: {
     const command = await prepareModelSubmission({ ...input, vault: options.vault() })
     return options.client().command(command, input.key)
   })
+}
+
+const registerQueries = (options: {
+  assertSender: (event: IpcMainInvokeEvent) => BrowserWindow
+  client: () => KernelClient
+}): void => {
+  ipcMain.handle('workflow:snapshot', (event) => {
+    options.assertSender(event)
+    return options.client().request('workspace.snapshot')
+  })
+  ipcMain.handle('workflow:preflight', (event, raw: unknown) => {
+    options.assertSender(event)
+    return options.client().preflight(parseInput(preflightInputSchema, raw))
+  })
   for (const method of ['delivery', 'run', 'activity'] as const)
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
-      assertSender(event)
+      options.assertSender(event)
       return options.client().detail(`workspace.${method}`, parseInput(z.string().uuid(), raw))
     })
 }

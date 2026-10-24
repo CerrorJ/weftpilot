@@ -7,6 +7,7 @@ const workflow: WorkflowBridge = {
   restoreBackup: (ticket) => ipcRenderer.invoke('workflow:restoreBackup', ticket),
   maintenanceStatus: () => ipcRenderer.invoke('workflow:maintenanceStatus'),
   snapshot: () => ipcRenderer.invoke('workflow:snapshot'),
+  preflight: (input) => ipcRenderer.invoke('workflow:preflight', input),
   createProject: (input) => ipcRenderer.invoke('workflow:createProject', input),
   saveRole: (input) => ipcRenderer.invoke('workflow:saveRole', input),
   saveSkillSource: (input) => ipcRenderer.invoke('workflow:saveSkillSource', input),

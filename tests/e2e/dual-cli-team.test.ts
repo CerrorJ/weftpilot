@@ -1,3 +1,4 @@
+import { confirmPreflight } from './preflight-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -88,6 +89,7 @@ test(
         .check()
       await page.getByRole('button', { name: '保存团队计划', exact: true }).click()
       await page.getByRole('button', { name: '开始真实执行', exact: true }).click()
+      await confirmPreflight(page)
       const upstream = await waitForSnapshot({
         page,
         timeout: 120000,

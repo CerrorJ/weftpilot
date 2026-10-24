@@ -1,3 +1,4 @@
+import { confirmPreflight } from './preflight-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { writeFile, readFile, mkdir } from 'node:fs/promises'
@@ -24,6 +25,11 @@ test(
       await writeFile(join(fixture.repository, 'user-uncommitted.txt'), '必须保留')
       await page.getByRole('button', { name: '开始真实执行' }).click()
       await page.getByRole('alert').filter({ hasText: 'GIT_DIRTY' }).waitFor()
+      await page
+        .getByRole('dialog', { name: '执行前检查', exact: true })
+        .getByRole('button', { name: '取消', exact: true })
+        .last()
+        .click()
       assert.equal((await snapshot(page)).runs.length, 0)
       assert.equal(
         await readFile(join(fixture.repository, 'user-uncommitted.txt'), 'utf8'),
@@ -94,6 +100,7 @@ test(
         'In this isolated repository create hello.txt containing exactly WEFTPILOT_M1_OK followed by a newline. Do not use network, install anything, touch other directories, commit or push. Reply briefly.',
       )
       await page.getByRole('button', { name: '开始真实执行' }).click()
+      await confirmPreflight(page)
       await page.getByRole('button', { name: '验收通过', exact: true }).waitFor({ timeout: 75000 })
       let state = await snapshot(page)
       assert.equal(state.tasks[0]?.status, 'in_review')
@@ -107,6 +114,7 @@ test(
       await page.getByLabel('验收备注 / 退回原因', { exact: true }).fill('重试验证，保留此前交付')
       await page.getByRole('button', { name: '退回并保留原因', exact: true }).click()
       await page.getByRole('button', { name: '创建新 Run 重试' }).click()
+      await confirmPreflight(page)
       await page.getByRole('button', { name: '验收通过', exact: true }).waitFor({ timeout: 75000 })
       state = await snapshot(page)
       assert.equal(state.runs.length, 2)
@@ -137,6 +145,7 @@ test(
         'For this isolated test, first run a shell command that waits 40 seconds (Start-Sleep on Windows or sleep elsewhere). After the wait write hello.txt containing WEFTPILOT_M1_OK. Do not use network, commit or push.',
       )
       await page.getByRole('button', { name: '开始真实执行' }).click()
+      await confirmPreflight(page)
       await waitForSnapshot({
         page,
         timeout: 60000,
@@ -156,6 +165,7 @@ test(
       assert.equal(state.runs[0]?.failureCode, null)
       assert.equal(state.tasks[0]?.status, 'ready')
       await page.getByRole('button', { name: '创建新 Run 重试' }).click()
+      await confirmPreflight(page)
       await page.getByRole('button', { name: '请求停止', exact: true }).waitFor()
       await quit(application)
       await assertEndedProcesses(fixture.data)
@@ -210,6 +220,7 @@ test(
       for (let attempt = 0; attempt < 3; attempt++) {
         const startName = attempt === 0 ? '开始真实执行' : '创建新 Run 重试'
         await page.getByRole('button', { name: startName, exact: true }).click()
+        await confirmPreflight(page)
         await page.getByRole('button', { name: '请求停止', exact: true }).click()
         await page
           .getByRole('button', { name: '创建新 Run 重试', exact: true })

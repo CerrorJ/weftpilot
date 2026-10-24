@@ -1,3 +1,4 @@
+import { confirmPreflight } from './preflight-helpers'
 import { openHumanPage } from './navigation-helpers'
 import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 import assert from 'node:assert/strict'
@@ -27,6 +28,7 @@ for (const cli of ['codex', 'claude'] as const)
         if (cli === 'claude') await configureClaude(page)
         const taskId = await createHumanTask(page, cli)
         await page.getByRole('button', { name: '开始真实执行', exact: true }).click()
+        await confirmPreflight(page)
         const paused = await waitForSnapshot({
           page,
           timeout: 90000,

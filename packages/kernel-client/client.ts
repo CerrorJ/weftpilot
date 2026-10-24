@@ -7,6 +7,7 @@ import {
   type KernelRequest,
   type KernelResponse,
   type BusinessCommand,
+  type PreflightInput,
 } from '@weftpilot/agent-team-kernel/protocol'
 
 export interface KernelTransport {
@@ -82,6 +83,15 @@ export class KernelClient {
       method: 'workspace.command',
       command,
       key,
+    })
+  }
+
+  preflight(input: PreflightInput): Promise<unknown> {
+    return this.sendRequest({
+      protocolVersion: 1,
+      requestId: randomUUID(),
+      method: 'workspace.preflight',
+      input,
     })
   }
 

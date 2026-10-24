@@ -5,6 +5,10 @@ import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
 import { diagnosticErrors } from './english-diagnostics'
 const messages: Record<string, [string, string]> = {
+  PREFLIGHT_CHANGED: [
+    '预检后配置或执行条件已变化，请重新检查并确认。',
+    'The configuration or execution conditions changed after the check. Check again and confirm.',
+  ],
   ROLE_IDENTIFIER_TAKEN: [
     '角色标识已被使用，请选择另一个标识。',
     'This role identifier is already used. Choose another one.',

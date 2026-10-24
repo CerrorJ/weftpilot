@@ -1,3 +1,4 @@
+import { confirmPreflight } from './preflight-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile, mkdir, writeFile } from 'node:fs/promises'
@@ -135,6 +136,7 @@ for (const cli of ['codex', 'claude'] as const)
         await enable.click()
         const taskId = await createSkillTask(page)
         await page.getByRole('button', { name: '开始真实执行', exact: true }).click()
+        await confirmPreflight(page)
         const finished = await waitForSnapshot({
           page,
           timeout: 90000,

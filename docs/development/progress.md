@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+最新任务预检增量已装配070/`e6c33e97e18859453b441fccaff63442cda07333`/p1/schema8，122文件与tar经两份干净检出重建一致。内核127项及独立Tester/Reviewer通过；桌面28单元/6装配/strict/lint/构建通过，实际Windows新包38项26通过12跳过，单独真实Codex预检3/3通过。任务开始/重试/团队开始均先检查并显式确认，旧Git预览拒绝，新Run执行成功保持待验收。桌面独立Tester/Reviewer最终通过；关闭焦点P2与英文遗漏P3修复后已独立定向复验，等待/未知等未UI实测范围如实保留。070远端CI尚无核对结论，详见[预检交接](task-preflight.md)。以下060及更早结果保留原版本归属。
+
+最新六步源码`2c60652791cf7dfa9f073b738dc5dc33a78c2cc7`的[CI 40088172558](https://github.com/CerrorJ/weftpilot/actions/runs/40088172558)已结束：Windows全部通过（27单元、6装配、开发/实际包各24通过11跳过）；macOS在实际打包应用`workflow:saveModel`继续返回`CREDENTIAL_STORAGE_UNAVAILABLE`。当前双平台尚未全通过，不能以此前全绿记录代替。下一增量为内核只读任务预检，尚未更新060桌面锁。
+
 角色六步首增量已完成本机独立Tester/Reviewer验收：真实字段/保存版本/试运行与显式启用、市场往返、草稿起始版本/CAS保护和明确放弃后重载、受控模型历史引用，以及双语/明暗/700px。27项单元、strict/lint/格式/构建通过；两项审查P2修复并独立复验4/4，最新Windows包35项24通过11跳过。一次主体真实Codex trial确认结束后显式启用，未将后续UI补验写成重复真实模型调用。详见[角色与限制](role-wizard.md)。角色卡片、CLI分项检测、飞书路由、任务执行前检查和完整验收布局仍待实施。
 
 最近CI：060接入`9f63b66`曾因测试清理误读恢复后的TEMP变量而双平台失败；隔离修复`2b98e9c`已验证两平台26单元通过。其[CI 40084065742](https://github.com/CerrorJ/weftpilot/actions/runs/40084065742)Windows全通过；macOS开发16通过11跳过、未签名DMG/ZIP装配成功，但实际包备份密钥写入仍Keychain不可用（15通过/1失败/11跳过）。串行未消除，当前macOS不全绿，见[范围修复](fixture-cleanup.md)及[外部待办](pending-external-validation.md)。本六步分支保留同源码修复，未自动合并开发分支。

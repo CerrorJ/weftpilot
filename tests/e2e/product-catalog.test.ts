@@ -120,6 +120,11 @@ test(
       await page.getByRole('heading', { name: '依赖计划', exact: true }).waitFor()
       await page.getByRole('button', { name: '开始真实执行', exact: true }).click()
       await page.getByRole('alert').filter({ hasText: 'ROLE_NOT_READY' }).waitFor()
+      await page
+        .getByRole('dialog', { name: '执行前检查', exact: true })
+        .getByRole('button', { name: '取消', exact: true })
+        .last()
+        .click()
       assert.equal((await snapshot(page)).runs.length, 0)
       await page.locator('.appearance-settings summary').click()
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')

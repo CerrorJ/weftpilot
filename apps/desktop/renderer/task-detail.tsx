@@ -28,11 +28,13 @@ export const TaskDetail = ({ task, state, actions, selectTask }: TaskContext) =>
         <h2>{task.title}</h2>
         <span className="badge">{t(taskLabels[task.status])}</span>
       </div>
-      <h3>{t('任务目标')}</h3>
-      <p className="preserve-text">{task.goal}</p>
-      <h3>{t('验收条件')}</h3>
-      <p className="preserve-text">{task.acceptanceCriteria}</p>
-      <RunControls task={task} run={latest} actions={actions} />
+      <TaskGoals task={task} />
+      <RunControls
+        task={task}
+        run={latest}
+        actions={actions}
+        project={state.projects.find((project) => project.id === task.projectId)}
+      />
       <TaskRelations task={task} state={state} selectTask={selectTask} />
       {runs.length > 0 && (
         <label>
@@ -59,6 +61,18 @@ export const TaskDetail = ({ task, state, actions, selectTask }: TaskContext) =>
         </>
       )}
     </article>
+  )
+}
+
+const TaskGoals = ({ task }: { task: Task }) => {
+  const { t } = useI18n()
+  return (
+    <>
+      <h3>{t('任务目标')}</h3>
+      <p className="preserve-text">{task.goal}</p>
+      <h3>{t('验收条件')}</h3>
+      <p className="preserve-text">{task.acceptanceCriteria}</p>
+    </>
   )
 }
 const RunDetails = ({ run }: { run: Run }) => {
