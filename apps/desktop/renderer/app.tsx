@@ -4,7 +4,7 @@ import './desktop-api'
 import { useWorkspace, type WorkspaceActions } from './use-workspace'
 import { navigation, type NavigationId } from './navigation'
 import { NavigationIcon } from './navigation-icon'
-import { CatalogPage, isCatalog } from './catalog-pages'
+import { CatalogPage, isCatalog, type RoleNavigation } from './catalog-pages'
 import { WorkspaceHome } from './workspace-home'
 import { SettingsPage } from './settings-page'
 import { SkillPage } from './skill-page'
@@ -17,13 +17,15 @@ export const App = () => (
 )
 
 const AppShell = () => {
-  const { t } = useI18n()
   const [page, setPage] = useState<NavigationId>('home')
   const [taskId, setTaskId] = useState('')
+  const [roleReturn, setRoleReturn] = useState(false)
+  const [roleResume, setRoleResume] = useState(false)
   const actions = useWorkspace()
   const navigate = (id: NavigationId) => {
     setTaskId('')
     setPage(id)
+    setRoleResume(false)
   }
   const openTask = (id: string) => {
     setTaskId(id)
@@ -33,17 +35,7 @@ const AppShell = () => {
     <div className="workspace">
       <Sidebar page={page} navigate={navigate} actions={actions} />
       <main className="main-shell">
-        <div className="topbar">
-          <div className="breadcrumbs">
-            <span>{t('工作空间')}</span>
-            <span>/</span>
-            <strong>{t(navigation.find((item) => item.id === page)!.label)}</strong>
-          </div>
-          <div className="topbar-actions">
-            <span className="local-mode">{t('本机执行')}</span>
-            <AppearanceSettings />
-          </div>
-        </div>
+        <WorkspaceHeader page={page} />
         <div className="page-content">
           <PageContent
             page={page}
@@ -51,9 +43,40 @@ const AppShell = () => {
             actions={actions}
             navigate={navigate}
             openTask={openTask}
+            roleReturn={roleReturn}
+            returnRole={() => {
+              setRoleReturn(false)
+              setPage('roles')
+              setRoleResume(true)
+            }}
+            roleNavigation={{
+              resume: roleResume,
+              resumed: () => setRoleResume(false),
+              visitSkills: () => {
+                navigate('skills')
+                setRoleReturn(true)
+              },
+            }}
           />
         </div>
       </main>
+    </div>
+  )
+}
+
+const WorkspaceHeader = ({ page }: { page: NavigationId }) => {
+  const { t } = useI18n()
+  return (
+    <div className="topbar">
+      <div className="breadcrumbs">
+        <span>{t('工作空间')}</span>
+        <span>/</span>
+        <strong>{t(navigation.find((item) => item.id === page)!.label)}</strong>
+      </div>
+      <div className="topbar-actions">
+        <span className="local-mode">{t('本机执行')}</span>
+        <AppearanceSettings />
+      </div>
     </div>
   )
 }
@@ -129,17 +152,35 @@ const PageContent = ({
   actions,
   navigate,
   openTask,
+  roleReturn,
+  returnRole,
+  roleNavigation,
 }: {
   page: NavigationId
   taskId: string
   actions: WorkspaceActions
   navigate: (page: NavigationId) => void
   openTask: (id: string) => void
+  roleReturn: boolean
+  returnRole: () => void
+  roleNavigation: RoleNavigation
 }) => {
   if (page === 'home')
     return <WorkspaceHome actions={actions} navigate={navigate} openTask={openTask} />
-  if (isCatalog(page)) return <CatalogPage page={page} actions={actions} />
+  if (isCatalog(page))
+    return <CatalogPage page={page} actions={actions} roleNavigation={roleNavigation} />
   if (page === 'settings') return <SettingsPage actions={actions} />
-  if (page === 'skills') return <SkillPage actions={actions} />
+  if (page === 'skills')
+    return (
+      <>
+        {roleReturn && <ReturnToRole onReturn={returnRole} />}
+        <SkillPage actions={actions} />
+      </>
+    )
   return <TasksPage actions={actions} taskId={taskId} />
+}
+
+const ReturnToRole = ({ onReturn }: { onReturn: () => void }) => {
+  const { t } = useI18n()
+  return <button onClick={onReturn}>{t('返回角色配置')}</button>
 }

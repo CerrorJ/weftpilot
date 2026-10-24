@@ -1,4 +1,5 @@
 import { openHumanPage } from './navigation-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { randomUUID } from 'node:crypto'
@@ -117,11 +118,10 @@ for (const cli of ['codex', 'claude'] as const)
   )
 
 const configureClaude = async (page: Page) => {
-  await page
-    .getByRole('combobox', { name: '编辑角色', exact: true })
-    .selectOption({ label: '测试开发者 · v1' })
+  await openRoleEditor(page, (await snapshot(page)).roles[0]!.id)
+  await goRoleStep(page, 1)
   await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption('claude')
-  await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+  await saveRoleEditor(page)
   await page
     .getByRole('option', { name: '测试开发者 · v2', exact: true })
     .waitFor({ state: 'attached' })

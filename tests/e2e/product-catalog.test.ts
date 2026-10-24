@@ -1,4 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createFixture, launch, quit, configure, snapshot } from './workflow-helpers'
@@ -20,14 +21,13 @@ test(
         .getByRole('option', { name: '版本模型 · v1', exact: true })
         .waitFor({ state: 'attached' })
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
-      await page
-        .getByRole('combobox', { name: '编辑角色', exact: true })
-        .selectOption({ label: '测试开发者 · v1' })
+      await openRoleEditor(page, (await snapshot(page)).roles[0]!.id)
+      await goRoleStep(page, 1)
       const modelId = (await snapshot(page)).models[0]!.id
       await page
         .getByRole('combobox', { name: '模型配置', exact: true })
         .selectOption(`${modelId}@1`)
-      await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+      await saveRoleEditor(page)
       await page
         .getByRole('option', { name: '测试开发者 · v2', exact: true })
         .waitFor({ state: 'attached' })

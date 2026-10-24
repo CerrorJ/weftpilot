@@ -16,7 +16,20 @@ const titles = {
 type CatalogId = keyof typeof titles
 export const isCatalog = (page: NavigationId): page is CatalogId => page in titles
 
-export const CatalogPage = ({ page, actions }: { page: CatalogId; actions: WorkspaceActions }) => {
+export interface RoleNavigation {
+  visitSkills: () => void
+  resume: boolean
+  resumed: () => void
+}
+export const CatalogPage = ({
+  page,
+  actions,
+  roleNavigation,
+}: {
+  page: CatalogId
+  actions: WorkspaceActions
+  roleNavigation: RoleNavigation
+}) => {
   const { t } = useI18n()
   const [title, description] = titles[page]
   return (
@@ -30,7 +43,9 @@ export const CatalogPage = ({ page, actions }: { page: CatalogId; actions: Works
           {page === 'projects' && (
             <ProjectSetup projects={actions.state.projects} actions={actions} />
           )}
-          {page === 'roles' && <RoleSetup state={actions.state} actions={actions} />}
+          {page === 'roles' && (
+            <RoleSetup state={actions.state} actions={actions} {...roleNavigation} />
+          )}
           {page === 'requirements' && <RequirementSetup actions={actions} />}
           {page === 'teams' && <TeamSetup actions={actions} />}
         </div>

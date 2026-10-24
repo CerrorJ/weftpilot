@@ -1,4 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createServer } from 'node:http'
@@ -53,13 +54,12 @@ test(
       assert.equal(await page.getByLabel('API 密钥', { exact: true }).inputValue(), '')
       const initial = (await snapshot(page)).models[0]!
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
-      await page
-        .getByRole('combobox', { name: '编辑角色', exact: true })
-        .selectOption({ label: '测试开发者 · v1' })
+      await openRoleEditor(page, (await snapshot(page)).roles[0]!.id)
+      await goRoleStep(page, 1)
       await page
         .getByRole('combobox', { name: '模型配置', exact: true })
         .selectOption(`${initial.id}@1`)
-      await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+      await saveRoleEditor(page)
       await page
         .getByRole('option', { name: '测试开发者 · v2', exact: true })
         .waitFor({ state: 'attached' })
@@ -78,14 +78,13 @@ test(
       assert.equal(JSON.stringify(state).includes(firstKey), false)
       assert.equal(JSON.stringify(state).includes(secondKey), false)
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
-      await page
-        .getByRole('combobox', { name: '编辑角色', exact: true })
-        .selectOption({ label: '测试开发者 · v2' })
+      await openRoleEditor(page, (await snapshot(page)).roles[0]!.id)
+      await goRoleStep(page, 1)
       assert.equal(
         await page.getByRole('combobox', { name: '模型配置', exact: true }).inputValue(),
         `${initial.id}@1`,
       )
-      await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+      await saveRoleEditor(page)
       await page
         .getByRole('option', { name: '测试开发者 · v3', exact: true })
         .waitFor({ state: 'attached' })

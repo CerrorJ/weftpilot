@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+后续角色六步首增量已独立Tester/Reviewer通过，含模型历史引用与新建后编辑身份的两项P2修复。27项单元、6项装配检查通过，最新Windows新目录包完整35项为24通过/11显式跳过/0失败；一次主体真实Codex trial及显式启用、真实Skill来源草稿/绑定专项分别有证据，未将补审UI用例称作重新执行CLI。当前仍060/c736/p1/schema8，角色卡片/CLI分项检测/角色飞书路由和任务检查/完整验收布局未封板；本增量尚未生成干净提交安装器。详见[角色交接](role-wizard.md)。
+
 开发入口为`feat/prototype-alignment`。任务页`520130b`固定059/193，后续锁定接入增量更新为内核0.6.0/`c7366baff2ef9de2fbeefb4e4c07fb625c2e861c`，协议1/schema8；两份干净重建及116文件、tar摘要一致。最新060 Windows新目录包默认27项为16通过/11显式跳过/0失败，独立包边界2/2、文件摘要、真实握手及退出通过。首次词典文件清理EBUSY和有限清理重试后的复验分别保留。当前增量未生成新的干净提交安装器，完整八页设计也未验收。下方058旧安装器来源与摘要保留原归属，详见[设计记录](prototype-alignment.md)、[新增真实集成失败](expanded-native-integration.md)及[角色接入](role-wizard.md)。
 
 最近已通过CI的确切源码为原型首增量`6d3d288`，锁定059/193；[Windows/macOS CI](https://github.com/CerrorJ/weftpilot/actions/runs/40077244639)含两平台实际开发/打包Electron各14通过11跳过、23单元、6装配检查及NSIS/DMG/ZIP装配。后续任务筛选工作区不冒充该CI已验收的范围。此前原生pnpm与跨仓权限修复记录仍见[CI修复记录](ci-native-pnpm.md)。macOS用户设备、真实CLI、实际安装升级与公开发行未据此标为完成。

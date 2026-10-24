@@ -1,95 +1,185 @@
-import { useMemo, useState } from 'react'
-import type { ModelProfile, RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
+﻿import type { ModelProfile, RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
-import { TextField, formText } from './form-fields'
-import { RoleSkills, selectedSkills } from './role-skills'
-import {
-  readRoleDraft,
-  writeRoleDraft,
-  clearRoleDraft,
-  roleDraftKey,
-  initialRoleDraft,
-} from './role-draft'
-import { RoleRuntime } from './role-runtime'
+import { CreateDialog } from './create-dialog'
+import { useRoleWizard, type RoleWizard } from './use-role-wizard'
+import { RoleWizardFields, roleSteps } from './role-wizard-fields'
+import './role-wizard.css'
+
 interface RoleContext {
   role: RoleVersion | undefined
   models: ModelProfile[]
   actions: WorkspaceActions
+  visitSkills?: () => void
+  resume?: boolean
+  resumed?: () => void
 }
 
-export const RoleForm = ({ role, models, actions }: RoleContext) => {
-  const { t } = useI18n()
-  const [revision, setRevision] = useState(0)
-  const key = roleDraftKey(role)
-  const draft = useMemo(() => readRoleDraft(key) ?? initialRoleDraft(role), [key, revision, role])
+export const RoleForm = (props: RoleContext) => (
+  <CreateDialog
+    title={props.role ? '编辑角色配置' : '创建角色'}
+    error={props.actions.error}
+    autoOpen={props.resume ?? false}
+    onClosed={() => props.resumed?.()}
+  >
+    {(close, resetError) => <RoleWizardForm {...props} close={close} resetError={resetError} />}
+  </CreateDialog>
+)
+
+const RoleWizardForm = ({
+  role,
+  models,
+  actions,
+  close,
+  visitSkills,
+  resetError,
+}: RoleContext & { close: () => void; resetError: () => void }) => {
+  const wizard = useRoleWizard(role, actions)
   return (
     <form
-      key={revision}
-      onChange={(event) => writeRoleDraft(key, event.currentTarget)}
-      onSubmit={(event) =>
-        submitRole(event, { role, models, actions }, () => {
-          clearRoleDraft(key)
-          setRevision((value) => value + 1)
-        })
-      }
+      ref={wizard.form}
+      className="role-wizard"
+      onChange={() => wizard.persist()}
+      onSubmit={(event) => submitRoleStep(event, wizard)}
     >
-      <TextField name="name" label={t('角色名称')} value={draft.name} />
-      <TextField name="responsibility" label={t('职责')} value={draft.responsibility} multiline />
-      <RoleRuntime role={role} models={models} draft={draft} />
-      <RolePermission value={draft.permission} />
-      <RoleSkills skills={actions.state?.skills ?? []} selected={draft.skills} />
-      <p className="field-note">
-        {t('Codex 使用受控沙箱；Claude 当前仅开放受限文件工具。试运行失败或状态待确认时不能启用。')}
-      </p>
-      <button className="primary" disabled={actions.busy}>
-        {role ? t('保存新版本') : t('创建角色')}
-      </button>
+      <input type="hidden" name="step" value={wizard.step} />
+      <input
+        type="hidden"
+        name="baseVersion"
+        value={wizard.base?.version ?? wizard.initial.baseVersion}
+      />
+      <RoleStepIndicator step={wizard.step} />
+      <RoleDraftStatus
+        wizard={wizard}
+        currentVersion={wizard.currentRole?.version ?? 0}
+        resetDraft={() => {
+          wizard.reload()
+          resetError()
+        }}
+      />
+      <RoleWizardFields
+        key={wizard.revision}
+        wizard={wizard}
+        models={models}
+        actions={actions}
+        visitSkills={() => {
+          wizard.persist()
+          close()
+          visitSkills?.()
+        }}
+      />
+      <RoleWizardFooter wizard={wizard} busy={actions.busy} close={close} />
     </form>
   )
 }
 
-const submitRole = (
-  event: React.FormEvent<HTMLFormElement>,
-  { role, actions }: RoleContext,
-  saved: () => void,
-) => {
+/** 原生表单的隐式提交也不能绕过最后一步的明确保存。 */
+const submitRoleStep = (event: React.FormEvent<HTMLFormElement>, wizard: RoleWizard) => {
   event.preventDefault()
-  const element = event.currentTarget
-  const form = new FormData(element)
-  void actions
-    .execute({
-      type: 'role.save',
-      ...(role ? { id: role.id } : {}),
-      expectedVersion: role?.version ?? 0,
-      name: formText(form, 'name'),
-      responsibility: formText(form, 'responsibility'),
-      cli: formText(form, 'cli') === 'claude' ? 'claude' : 'codex',
-      modelProfileRef: selectedModel(formText(form, 'profile')),
-      model: formText(form, 'model'),
-      permission: form.get('permission') === 'workspace-write' ? 'workspace-write' : 'read-only',
-      skills: selectedSkills(form),
-    })
-    .then((result) => {
-      if (result) saved()
-    })
+  if (wizard.step === 5) void wizard.save(event)
 }
 
-const selectedModel = (value: string) => {
-  if (!value) return null
-  const [id, version] = value.split('@')
-  return { id: id!, version: Number(version) }
-}
-
-const RolePermission = ({ value }: { value: string }) => {
+const RoleStepIndicator = ({ step }: { step: number }) => {
   const { t } = useI18n()
   return (
-    <label>
-      {t('工具权限')}
-      <select name="permission" defaultValue={value}>
-        <option value="read-only">{t('只读建议')}</option>
-        <option value="workspace-write">{t('隔离工作目录内写入')}</option>
-      </select>
-    </label>
+    <ol className="role-steps" aria-label={t('角色配置步骤')}>
+      {roleSteps.map((label, index) => (
+        <li key={label} aria-current={step === index ? 'step' : undefined}>
+          <span>{index + 1}</span>
+          {t(label)}
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+const RoleDraftStatus = ({
+  wizard,
+  currentVersion,
+  resetDraft,
+}: {
+  wizard: RoleWizard
+  currentVersion: number
+  resetDraft: () => void
+}) => {
+  const { t } = useI18n()
+  const version = wizard.saved?.version ?? wizard.base?.version ?? 0
+  return (
+    <div className="role-draft-status">
+      <p className="field-note">
+        {t('配置版本')} · {version || t('待保存')}
+      </p>
+      {wizard.baseMissing && (
+        <p role="alert">{t('草稿对应的角色版本不可用，不能保存或试运行；表单仍保留。')}</p>
+      )}
+      {(wizard.baseMissing || currentVersion > version) && (
+        <>
+          <p>{t('共享配置已经更新。保留当前表单不会覆盖新版本；可明确放弃表单并重新载入。')}</p>
+          <button type="button" onClick={resetDraft}>
+            {t('放弃表单草稿并读取当前版本')}
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
+const RoleWizardFooter = ({
+  wizard,
+  busy,
+  close,
+}: {
+  wizard: RoleWizard
+  busy: boolean
+  close: () => void
+}) => {
+  const { t } = useI18n()
+  return (
+    <footer className="role-wizard-footer">
+      <button
+        type="button"
+        disabled={busy || wizard.step === 0}
+        onClick={() => wizard.changeStep(wizard.step - 1)}
+      >
+        {t('上一步')}
+      </button>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => {
+          wizard.persist()
+          close()
+        }}
+      >
+        {t(wizard.saved ? '关闭配置' : '保存表单草稿')}
+      </button>
+      <span />
+      <RoleWizardForward wizard={wizard} busy={busy || wizard.baseMissing} />
+    </footer>
+  )
+}
+
+const RoleWizardForward = ({ wizard, busy }: { wizard: RoleWizard; busy: boolean }) => {
+  const { t } = useI18n()
+  return wizard.step < 5 ? (
+    <button
+      key="next"
+      type="button"
+      className="primary"
+      disabled={busy}
+      onClick={(event) => {
+        // 最后一次“下一步”会换成提交按钮；阻止当前click沿用新DOM的提交默认动作。
+        event.preventDefault()
+        wizard.changeStep(wizard.step + 1)
+      }}
+    >
+      {t('下一步')}
+    </button>
+  ) : (
+    !wizard.saved && (
+      <button key="save" className="primary" disabled={busy}>
+        {t(wizard.base ? '保存新版本' : '保存角色配置')}
+      </button>
+    )
   )
 }

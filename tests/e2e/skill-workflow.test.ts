@@ -12,6 +12,7 @@ import {
   quit,
 } from './workflow-helpers'
 import { importFixtureSkill, skillProofV1 } from './skill-helpers'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 
 test(
   '真实来源技能：预览、许可确认、升级文件变化、角色草稿、卸载与重启',
@@ -24,11 +25,14 @@ test(
     let application = await launch(fixture.data)
     try {
       let page = await configure(application, fixture.repository)
+      await openRoleEditor(page)
       await page.getByRole('textbox', { name: '角色名称', exact: true }).fill('保留的角色草稿')
       await page
         .getByRole('textbox', { name: '职责', exact: true })
         .fill('从技能中心回来后保留这段职责。')
+      await goRoleStep(page, 1)
       await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption('claude')
+      await page.getByRole('button', { name: '保存表单草稿', exact: true }).click()
       const first = await importFixtureSkill(page)
       const second = await importFixtureSkill(page, 2)
       assert.notEqual(first.digest, second.digest)
@@ -43,6 +47,8 @@ test(
       assert.equal(imports.find((item) => item.id === second.id)?.comparisonPackageId, first.id)
       assert.equal(imports.find((item) => item.id === first.id)?.comparisonPackageId, null)
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
+      await openRoleEditor(page)
+      await goRoleStep(page, 0)
       assert.equal(
         await page.getByLabel('角色名称', { exact: true }).inputValue(),
         '保留的角色草稿',
@@ -51,12 +57,14 @@ test(
         await page.getByLabel('职责', { exact: true }).inputValue(),
         '从技能中心回来后保留这段职责。',
       )
+      await goRoleStep(page, 1)
       assert.equal(
         await page.getByRole('combobox', { name: 'CLI', exact: true }).inputValue(),
         'claude',
       )
+      await goRoleStep(page, 2)
       await page.locator(`input[name="skills"][value="${first.id}@${first.digest}"]`).check()
-      await page.getByRole('button', { name: '创建角色', exact: true }).click()
+      await saveRoleEditor(page)
       const saved = await waitForSnapshot({
         page,
         timeout: 10000,
@@ -110,12 +118,12 @@ for (const cli of ['codex', 'claude'] as const)
         const page = await configure(application, fixture.repository)
         const skill = await importFixtureSkill(page)
         await page.getByRole('button', { name: '角色管理', exact: true }).click()
-        await page
-          .getByRole('combobox', { name: '编辑角色', exact: true })
-          .selectOption({ label: '测试开发者 · v1' })
+        await openRoleEditor(page, (await snapshot(page)).roles[0]!.id)
+        await goRoleStep(page, 1)
         await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption(cli)
+        await goRoleStep(page, 2)
         await page.locator(`input[name="skills"][value="${skill.id}@${skill.digest}"]`).check()
-        await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+        await saveRoleEditor(page)
         await page
           .getByRole('option', { name: '测试开发者 · v2', exact: true })
           .waitFor({ state: 'attached' })

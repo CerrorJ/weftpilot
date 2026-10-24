@@ -5,8 +5,10 @@ import { englishSkills } from './english-skills'
 import { englishBackup } from './english-backup'
 import { englishDiagnostics } from './english-diagnostics'
 import { englishShell } from './english-shell'
+import { englishRoleWizard } from './english-role-wizard'
 export const english: Record<string, string> = {
   ...englishShell,
+  ...englishRoleWizard,
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,

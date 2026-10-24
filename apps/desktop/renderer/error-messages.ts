@@ -5,6 +5,14 @@ import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
 import { diagnosticErrors } from './english-diagnostics'
 const messages: Record<string, [string, string]> = {
+  ROLE_IDENTIFIER_TAKEN: [
+    '角色标识已被使用，请选择另一个标识。',
+    'This role identifier is already used. Choose another one.',
+  ],
+  ROLE_IDENTIFIER_IMMUTABLE: [
+    '已保存的角色标识不能修改；可修改展示名称。',
+    'A saved role identifier cannot change. You can edit its display name.',
+  ],
   ...productErrors,
   ...humanErrors,
   ...feishuErrors,

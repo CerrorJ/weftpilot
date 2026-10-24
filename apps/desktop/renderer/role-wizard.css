@@ -1,0 +1,144 @@
+.create-dialog:has(.role-wizard) {
+  width: min(920px, calc(100vw - 48px));
+  height: min(760px, calc(100vh - 64px));
+  padding: 0;
+  overflow: hidden;
+}
+
+.create-dialog[open]:has(.role-wizard) {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-dialog:has(.role-wizard) > .dialog-heading {
+  padding: 24px 28px;
+  flex-shrink: 0;
+}
+
+.create-dialog:has(.role-wizard) > [role='alert'] {
+  margin: 8px 28px;
+  flex-shrink: 0;
+}
+
+.role-wizard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  gap: 0;
+}
+
+.role-draft-status {
+  padding: 12px 28px 0;
+  flex-shrink: 0;
+}
+
+.role-draft-status > p {
+  margin: 0 0 8px;
+}
+
+.role-draft-status > button {
+  margin-bottom: 12px;
+}
+
+.role-steps {
+  display: flex;
+  list-style: none;
+  padding: 18px 28px;
+  margin: 0;
+  gap: 20px;
+  overflow: auto;
+  border-block: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.role-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.role-steps li[aria-current] {
+  color: var(--forest);
+  font-weight: 600;
+}
+
+.role-steps span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.role-steps li[aria-current] span {
+  background: var(--forest);
+  color: var(--input-background);
+}
+
+.role-wizard section[data-role-step] {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 24px 28px;
+}
+
+.role-wizard h3 {
+  margin: 0 0 22px;
+}
+
+.role-wizard [data-role-step] > label,
+.role-wizard [data-role-step] > .form-pair,
+.role-wizard [data-role-step] > fieldset {
+  margin-bottom: 16px;
+}
+
+.role-environment {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.role-environment h4 {
+  margin-top: 0;
+}
+
+.role-wizard-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  margin: 0;
+  padding: 20px 28px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.role-wizard-footer > span {
+  flex: 1;
+}
+
+.role-review {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px 20px;
+  margin-bottom: 28px;
+}
+
+.role-review dt {
+  color: var(--muted);
+}
+
+.role-review dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}

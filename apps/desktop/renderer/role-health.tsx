@@ -27,8 +27,21 @@ interface Health {
 
 export const RoleHealth = ({ role, state, actions }: Context) => {
   const { t } = useI18n()
-  const readiness = state.roleReadiness.find((item) => item.roleId === role.id)
+  const readiness = state.roleReadiness.find(
+    (item) => item.roleId === role.id && item.roleVersion === role.version,
+  )
   const run = state.runs.find((item) => item.id === readiness?.latestTrialRunId)
+  if (state.roles.some((item) => item.id === role.id && item.version > role.version))
+    return (
+      <article className="role-health">
+        <strong>
+          {role.name} · v{role.version}
+        </strong>
+        <p role="status">
+          {t('此配置已有新版本，请关闭并选择当前配置；旧版本不能用于新的试运行或启用。')}
+        </p>
+      </article>
+    )
   return (
     <article className="role-health">
       <div className="section-heading">

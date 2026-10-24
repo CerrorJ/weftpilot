@@ -39,9 +39,3 @@ export const RoleSkills = ({
     </fieldset>
   )
 }
-
-export const selectedSkills = (form: FormData): SkillReference[] =>
-  form.getAll('skills').map((value) => {
-    const [id, digest] = String(value).split('@')
-    return { id: id!, digest: digest! }
-  })

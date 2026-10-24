@@ -8,6 +8,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright'
 import type {} from '../../apps/desktop/renderer/desktop-api'
 import type { WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 
 export const launch = (data: string) => {
   const executablePath = process.env.WEFTPILOT_PACKAGED_EXE
@@ -63,6 +64,8 @@ export const businessSnapshot = async (page: Page): Promise<WorkspaceSnapshot> =
 export const createFixture = async () => {
   // runner的TEMP可能是Windows短路径或macOS /var别名；内核持久化的是真实路径。
   const directory = await realpath(await mkdtemp(join(tmpdir(), '纬舟 workflow ')))
+  // TEMP别名回归会在创建后恢复环境变量；清理范围必须固定为本次实际创建的父目录。
+  const parentDirectory = dirname(directory)
   const repository = join(directory, '测试 repository #')
   await mkdir(repository)
   execFileSync('git', ['init', '-b', 'main'], { cwd: repository, stdio: 'ignore' })
@@ -84,7 +87,7 @@ export const createFixture = async () => {
     directory,
     repository,
     data: join(directory, 'app-data'),
-    cleanup: () => cleanupFixture(directory),
+    cleanup: () => cleanupFixture(directory, parentDirectory),
   }
 }
 
@@ -103,12 +106,14 @@ export const configure = async (
   await page.getByRole('button', { name: '选择仓库并添加' }).click()
   await page.getByText(repository, { exact: true }).waitFor()
   await page.getByRole('button', { name: '角色管理', exact: true }).click()
+  await openRoleEditor(page)
   await page.getByLabel('角色名称', { exact: true }).fill('测试开发者')
   await page
     .getByLabel('职责', { exact: true })
     .fill('仅操作本任务的隔离工作目录；不访问网络或其他目录。')
+  await goRoleStep(page, 3)
   await page.getByLabel('工具权限').selectOption('workspace-write')
-  await page.getByRole('button', { name: '创建角色', exact: true }).click()
+  await saveRoleEditor(page)
   await page.getByRole('option', { name: '测试开发者 · v1' }).waitFor({ state: 'attached' })
   if (options.activate) await activateRole(page)
   return page
@@ -123,10 +128,11 @@ const activateRole = async (page: Page): Promise<void> => {
   await enable.click()
 }
 
-const cleanupFixture = async (directory: string): Promise<void> => {
+const cleanupFixture = async (directory: string, parentDirectory: string): Promise<void> => {
   const verified = await realpath(directory)
   if (
-    dirname(verified) !== (await realpath(tmpdir())) ||
+    verified !== directory ||
+    dirname(verified) !== parentDirectory ||
     !basename(verified).startsWith('纬舟 workflow ')
   )
     throw new Error('拒绝清理非本测试拥有的Temp目录')

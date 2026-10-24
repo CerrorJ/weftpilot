@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createFixture, launch, configure, snapshot, createTask, quit } from './workflow-helpers'
 import { navigate, openSettingsPage } from './navigation-helpers'
+import { openRoleEditor, saveRoleEditor } from './role-helpers'
 
 test(
   '真实模型设置拒绝可见：输入校验、接口密钥绑定与中英错误；不调用提供方',
@@ -78,9 +79,9 @@ test('真实待执行任务负责人读取最新角色名称，旧版本配置�
     const row = page.locator('.task-table tbody tr').filter({ hasText: '负责人版本验证' })
     assert.equal(await row.locator('td').last().innerText(), original.name)
     await navigate(page, '角色管理')
-    await page.getByRole('combobox', { name: '编辑角色', exact: true }).selectOption(original.id)
+    await openRoleEditor(page, original.id)
     await page.getByRole('textbox', { name: '角色名称', exact: true }).fill('新名称开发者')
-    await page.getByRole('button', { name: '保存新版本', exact: true }).click()
+    await saveRoleEditor(page)
     await page
       .getByRole('option', { name: '新名称开发者 · v2', exact: true })
       .waitFor({ state: 'attached' })

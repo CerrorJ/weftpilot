@@ -10,9 +10,15 @@ import { readSelectedRole, rememberSelectedRole } from './role-draft'
 export const RoleSetup = ({
   state,
   actions,
+  visitSkills,
+  resume,
+  resumed,
 }: {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
+  visitSkills: () => void
+  resume: boolean
+  resumed: () => void
 }) => {
   const { t } = useI18n()
   const [selected, setSelected] = useState(readSelectedRole)
@@ -26,10 +32,13 @@ export const RoleSetup = ({
       </p>
       <RoleSelector selected={selected} roles={roles} select={setSelected} />
       <RoleForm
-        key={`${selected}:${role?.version ?? 0}`}
+        key={selected}
         role={role}
-        models={latestVersions(state.models)}
+        models={state.models}
         actions={actions}
+        visitSkills={visitSkills}
+        resume={resume}
+        resumed={resumed}
       />
       <div className="object-list">
         {roles.map((item) => (

@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { Page } from 'playwright'
+import { openRoleEditor, goRoleStep, saveRoleEditor } from './role-helpers'
 import {
   createFixture,
   launch,
@@ -24,15 +25,18 @@ test(
     let application = await launch(fixture.data)
     try {
       let page = await configure(application, fixture.repository, { activate: true })
+      await openRoleEditor(page)
       await page.getByRole('textbox', { name: '角色名称', exact: true }).fill('Claude 文件开发者')
       await page
         .getByRole('textbox', { name: '职责', exact: true })
         .fill('仅操作本次隔离目录，按提示读写文件，不使用网络、不提交或推送，完成后结束。')
+      await goRoleStep(page, 1)
       await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption('claude')
+      await goRoleStep(page, 3)
       await page
         .getByRole('combobox', { name: '工具权限', exact: true })
         .selectOption('workspace-write')
-      await page.getByRole('button', { name: '创建角色', exact: true }).click()
+      await saveRoleEditor(page)
       const health = page.locator('.role-health').filter({ hasText: 'Claude 文件开发者' })
       await health.getByRole('button', { name: '真实试运行', exact: true }).click()
       await health
