@@ -63,6 +63,8 @@ export const businessSnapshot = async (page: Page): Promise<WorkspaceSnapshot> =
 export const createFixture = async () => {
   // runner的TEMP可能是Windows短路径或macOS /var别名；内核持久化的是真实路径。
   const directory = await realpath(await mkdtemp(join(tmpdir(), '纬舟 workflow ')))
+  // TEMP别名回归会在创建后恢复环境变量；清理范围必须固定为本次实际创建的父目录。
+  const parentDirectory = dirname(directory)
   const repository = join(directory, '测试 repository #')
   await mkdir(repository)
   execFileSync('git', ['init', '-b', 'main'], { cwd: repository, stdio: 'ignore' })
@@ -84,7 +86,7 @@ export const createFixture = async () => {
     directory,
     repository,
     data: join(directory, 'app-data'),
-    cleanup: () => cleanupFixture(directory),
+    cleanup: () => cleanupFixture(directory, parentDirectory),
   }
 }
 
@@ -123,10 +125,11 @@ const activateRole = async (page: Page): Promise<void> => {
   await enable.click()
 }
 
-const cleanupFixture = async (directory: string): Promise<void> => {
+const cleanupFixture = async (directory: string, parentDirectory: string): Promise<void> => {
   const verified = await realpath(directory)
   if (
-    dirname(verified) !== (await realpath(tmpdir())) ||
+    verified !== directory ||
+    dirname(verified) !== parentDirectory ||
     !basename(verified).startsWith('纬舟 workflow ')
   )
     throw new Error('拒绝清理非本测试拥有的Temp目录')

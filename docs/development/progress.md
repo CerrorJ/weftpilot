@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+`9f63b66`/060锁定接入的[CI 40082231339](https://github.com/CerrorJ/weftpilot/actions/runs/40082231339)已结束，两平台在TEMP别名单元测试的清理范围校验失败。修复在隔离`fix/fixture-cleanup-scope`推进：捕获创建时canonical父目录而非清理时重读可变TEMP，完整26单元及独立7边界探针通过，后续CI待确认。详情见[清理范围修复](fixture-cleanup.md)。此CI未到macOS实际包步骤，不能将Keychain串行隔离假设记为已验证；没有混入尚未完成的角色六步源码。
+
 最近确认双平台全通过的源码仍为`6d3d288`/059/193，[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40077244639)每平台23单元、6装配、开发/实际包各14通过11跳过，NSIS及macOS26 ARM64未签名DMG/ZIP装配成功。后续任务页`520130b`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40081253452)已结束：Windows全通过（26单元/6装配，开发/实际包各15通过11跳过）；macOS开发15通过11跳过、安装包装配成功，但实际059包保存合成密钥时Keychain不可用，14通过/1失败/11跳过。没有将该失败写成双平台通过；串行隔离测试措施仍待新CI验证。完整原型仍未验收，详见[原型对齐](prototype-alignment.md)。
 
 任务页`520130b`完成本机独立验收/审查：四状态及紧凑工具栏、确切回执选择、外部新任务不抢详情、焦点、原型字体、团队父任务投影修复；26单元/6装配通过，对应Windows包默认15通过11跳过。内核角色字段/并发与迁移增量已在`feat/role-configuration`提交推送`c7366ba`，0.6.0/p1/schema8，120项全通过且独立Tester/Reviewer通过，两份干净检出116文件与tar摘要一致。后续桌面已显式更新060锁并重装配；实际新字段IPC回归通过，最新Windows包27项16通过11跳过，独立包边界2/2及116文件完整性/真实页面握手/退出通过。首次词典文件清理EBUSY及修复后复验分别保留。角色六步界面仍未完成，详见[角色六步接入](role-wizard.md)。
