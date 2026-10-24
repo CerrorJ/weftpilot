@@ -8,6 +8,7 @@ const workflow: WorkflowBridge = {
   maintenanceStatus: () => ipcRenderer.invoke('workflow:maintenanceStatus'),
   snapshot: () => ipcRenderer.invoke('workflow:snapshot'),
   preflight: (input) => ipcRenderer.invoke('workflow:preflight', input),
+  checkCli: (input) => ipcRenderer.invoke('workflow:checkCli', input),
   createProject: (input) => ipcRenderer.invoke('workflow:createProject', input),
   saveRole: (input) => ipcRenderer.invoke('workflow:saveRole', input),
   saveSkillSource: (input) => ipcRenderer.invoke('workflow:saveSkillSource', input),

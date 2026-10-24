@@ -3,6 +3,10 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+Keychain后续已核对固定Electron42源码与官方说明，区分已知的应用名命名空间事实和仍未确认的系统失败根因，见[原生调查](macos-keychain-investigation.md)。未修改加密实现或签名设置。
+
+当前后续角色卡片`2cb75c1`的[CI 40099809043](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)为Windows成功、macOS实际包失败：35单元/6装配与两平台开发应用通过，macOS实际包备份保存合成密钥再次`CREDENTIAL_STORAGE_UNAVAILABLE`（28通过1失败14跳过），安装包装配成功。18465此前全绿保留原归属，本次不能写成未复现或当前全通过。根因仍待定位，继续独立CLI检查开发，不跳过加密断言或回退明文。
+
 后续已核对`18465bd`/070的[CI 40096365165](https://github.com/CerrorJ/weftpilot/actions/runs/40096365165)：Windows/macOS均成功，各31单元/6装配、开发与实际包28通过13跳过，安装包装配成功；本次也未复现Keychain错误。历史根因、用户设备和真实Mac CLI仍保留待办，后续未提交角色卡片不继承本结果。
 
 最新已核对版本为`9b53992`/070的[桌面CI 40092321957](https://github.com/CerrorJ/weftpilot/actions/runs/40092321957)：Windows和macOS均全通过，每平台实际包26通过12跳过。macOS Keychain错误本次未复现，没有改加密或跳过断言；历史偶发失败根因仍待定位，不能宣称已永久修复。下方060失败为历史原始记录，后续仍需Mac用户设备、实际安装升级与稳定性验证。

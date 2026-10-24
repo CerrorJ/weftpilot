@@ -19,6 +19,6 @@ export const englishRoleCards: Record<string, string> = {
   待启用: 'Ready to enable',
   试运行未通过: 'Trial did not pass',
   不可用: 'Unavailable',
-  'CLI 版本、登录与模型分项检测及飞书角色路由仍待完善；卡片不代表这些能力已在线。':
-    'Separate CLI version, sign-in and model checks, and role-specific Feishu routing, are still being completed. Cards do not claim these capabilities are online.',
+  '版本与登录请在CLI步骤分别检查，模型需真实试运行；飞书角色路由仍待完善。':
+    'Check version and sign-in separately in the CLI step. Models need a real trial. Role-specific Feishu routing is still being completed.',
 }

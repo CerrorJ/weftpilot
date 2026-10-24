@@ -2,9 +2,8 @@ import type { ModelProfile } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import type { RoleWizard } from './use-role-wizard'
 import { RoleBasics, RolePermission } from './role-configuration-fields'
-import { RoleRuntime } from './role-runtime'
+import { RoleRuntimeStep } from './role-runtime-step'
 import { RoleSkills } from './role-skills'
-import { RoleEnvironment } from './role-environment'
 import { RoleWizardTrial } from './role-wizard-trial'
 import { useI18n } from './preferences'
 
@@ -31,10 +30,7 @@ export const RoleWizardFields = ({
   const { t } = useI18n()
   const sections = [
     <RoleBasics draft={wizard.initial} existing={!!wizard.base} />,
-    <>
-      <RoleRuntime role={wizard.base} models={models} draft={wizard.initial} />
-      <RoleEnvironment />
-    </>,
+    <RoleRuntimeStep role={wizard.base} models={models} draft={wizard.initial} />,
     <>
       <button type="button" onClick={visitSkills}>
         {t('去技能市场')}

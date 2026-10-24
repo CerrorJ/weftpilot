@@ -48,6 +48,26 @@ test('不兼容响应关闭连接，挂起请求失败且不自动重发', async
   assert.equal(channel.sent.length, 1)
 })
 
+test('固定CLI检查走独立版本化查询，拒绝结果保持拒绝且不变成业务命令或自动重发', async () => {
+  const channel = transport()
+  const client = new KernelClient(channel.bridge)
+  const checking = client.checkCli({ cli: 'claude', check: 'sign-in' })
+  const request = channel.sent[0]
+  assert.ok(request && request.method === 'kernel.cliCheck')
+  assert.deepEqual(request.input, { cli: 'claude', check: 'sign-in' })
+  channel.receive({
+    kind: 'response',
+    response: {
+      protocolVersion: 1,
+      requestId: request.requestId,
+      status: 'rejected',
+      error: { code: 'CLI_CHECK_BUSY', message: 'busy', retryable: false },
+    },
+  })
+  await assert.rejects(checking, /CLI_CHECK_BUSY/)
+  assert.equal(channel.sent.length, 1)
+})
+
 test('停机收讫绑定请求ID；未收到或被拒绝的停机不能发送ACK', async () => {
   const channel = transport()
   const acknowledgements: string[] = []

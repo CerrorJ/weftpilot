@@ -3,6 +3,7 @@ import { z } from 'zod'
 import {
   businessCommandSchema,
   preflightInputSchema,
+  cliCheckInputSchema,
   type BusinessCommand,
 } from '@weftpilot/agent-team-kernel/protocol'
 import type { KernelClient } from '../../../packages/kernel-client/client'
@@ -89,6 +90,10 @@ const registerQueries = (options: {
   ipcMain.handle('workflow:preflight', (event, raw: unknown) => {
     options.assertSender(event)
     return options.client().preflight(parseInput(preflightInputSchema, raw))
+  })
+  ipcMain.handle('workflow:checkCli', (event, raw: unknown) => {
+    options.assertSender(event)
+    return options.client().checkCli(parseInput(cliCheckInputSchema, raw))
   })
   for (const method of ['delivery', 'run', 'activity'] as const)
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {

@@ -19,8 +19,11 @@ test(
       await page.getByLabel('交付要求', { exact: true }).fill('可追踪交付')
       await goRoleStep(page, 1)
       await page.getByRole('combobox', { name: 'CLI', exact: true }).selectOption('claude')
-      await page.getByRole('button', { name: '检查工具入口', exact: true }).click()
-      await roleDialog(page).getByText(/git ·/).waitFor()
+      const environment = roleDialog(page).getByRole('region', { name: 'CLI分项检查', exact: true })
+      await environment.getByRole('button', { name: '读取版本', exact: true }).click()
+      // CI可没有CLI：检查结果有时间即可，不能将“不可用”冒充成功，也不能以版本读取启用角色。
+      await environment.locator('time').waitFor()
+      await environment.getByText('尚未验证；保存后在最后一步真实试运行', { exact: true }).waitFor()
       await goRoleStep(page, 2)
       await page.getByRole('button', { name: '去技能市场', exact: true }).click()
       await page.getByRole('heading', { name: '技能中心', exact: true }).waitFor()

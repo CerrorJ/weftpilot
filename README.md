@@ -14,11 +14,13 @@
 
 在界面“设置 / Settings”中切换“语言 / Language”和“外观 / Appearance”，立即生效并在重启后保留。当前本地候选、验证范围及后续入口见[发行交接](docs/development/release-readiness.md)。
 
-最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置和角色六步的真实保存/版本/受控试运行与显式启用。070内核的[执行前检查](docs/development/task-preflight.md)及后续[Run历史与交付验收弹窗](docs/development/task-review.md)已接入，本机实际包、真实Codex专项及独立Tester/Reviewer按各自范围通过。角色卡片、CLI分项检测、飞书角色路由及其余页面细节仍在对齐，[差异与验证记录](docs/development/prototype-alignment.md)单独维护。Run历史源码`18465bd`的[双平台桌面CI](https://github.com/CerrorJ/weftpilot/actions/runs/40096365165)已全通过，此前macOS Keychain错误未复现但根因未定位，见[外部待办](docs/development/pending-external-validation.md)；不能据此把后续未跑CI的改动、用户设备或最终设计视为已验收。
+最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置、角色六步/卡片与独立运行设置。[执行前检查](docs/development/task-preflight.md)、[Run历史与交付验收](docs/development/task-review.md)及080固定内核的[CLI分项检查](docs/development/cli-checks.md)已按各自限定范围通过Windows独立Tester/Reviewer。版本读取、默认CLI登录报告与真实模型试运行分开，不把查询结果当作角色就绪。飞书角色路由及[其余原型差异](docs/development/prototype-alignment.md)继续推进，整体设计尚未封板。
+
+最新已核对的角色卡片`2cb75c1`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)为Windows成功、macOS实际包备份密钥保存再次Keychain不可用；此前`18465bd`全绿保留原版本归属。080客户端尚无CI结论，[Keychain调查](docs/development/macos-keychain-investigation.md)及独立隔离分支另记，不能替代用户设备、正式旧密文升级或签名验收。外部凭据与设备待办见[清单](docs/development/pending-external-validation.md)。
 
 ## 分支职责
 
-后续[角色卡片与运行设置](docs/development/role-cards.md)已完成Windows限定范围的独立验收：编辑、试运行历史、固定版本启停及草稿往返；CLI分项检查、角色飞书路由和整体设计差异仍按原型继续推进。
+后续[角色卡片与运行设置](docs/development/role-cards.md)已完成Windows限定范围的独立验收：编辑、试运行历史、固定版本启停及草稿往返；角色飞书路由和整体设计差异仍按原型继续推进。
 
 | 分支                                                                         | 维护内容                                                        |
 | ---------------------------------------------------------------------------- | --------------------------------------------------------------- |

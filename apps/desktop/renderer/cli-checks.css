@@ -1,0 +1,38 @@
+.cli-check-list {
+  display: grid;
+  gap: 14px;
+}
+
+.cli-check-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 7px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.cli-check-row > strong,
+.cli-check-row > span,
+.cli-check-row > time {
+  grid-column: 1;
+  overflow-wrap: anywhere;
+}
+
+.cli-check-row > button {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  font-size: 12px;
+}
+
+.cli-check-row > time {
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cli-check-row:last-child {
+  padding-bottom: 0;
+  border: 0;
+}

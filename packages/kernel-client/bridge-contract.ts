@@ -1,4 +1,8 @@
-import type { BusinessCommand, PreflightInput } from '@weftpilot/agent-team-kernel/protocol'
+import type {
+  BusinessCommand,
+  PreflightInput,
+  CliCheckInput,
+} from '@weftpilot/agent-team-kernel/protocol'
 
 type Input<T extends BusinessCommand['type']> = Omit<Extract<BusinessCommand, { type: T }>, 'type'>
 export type ModelSubmission = Input<'model.save'> & { secret?: string }
@@ -16,6 +20,7 @@ export interface WorkflowBridge {
   maintenanceStatus(): Promise<unknown>
   snapshot(): Promise<unknown>
   preflight(input: PreflightInput): Promise<unknown>
+  checkCli(input: CliCheckInput): Promise<unknown>
   createProject(
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,
   ): Promise<unknown>

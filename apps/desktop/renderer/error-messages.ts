@@ -5,6 +5,10 @@ import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
 import { diagnosticErrors } from './english-diagnostics'
 const messages: Record<string, [string, string]> = {
+  CLI_CHECK_BUSY: [
+    '该CLI已有检查或尚未确认结束的检查进程，请稍后重试并核对诊断。',
+    'This CLI has an active check or an uncertain check process. Retry later and inspect diagnostics.',
+  ],
   PREFLIGHT_CHANGED: [
     '预检后配置或执行条件已变化，请重新检查并确认。',
     'The configuration or execution conditions changed after the check. Check again and confirm.',

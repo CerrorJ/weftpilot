@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+CLI分项检查桌面已完成Windows限定范围独立Tester：真实只读四类命令（另两项英文布局复查）、默认账户/模型连接边界、切换/关闭/市场不自动查询、隐私、坏输入和焦点。36单元/6装配、strict/lint/格式/构建通过，实际包默认46项31通过15跳过，专项两UI+一真实四查询用例3/3。锁定内核080/`3b1c8b65fb93cb20e14a2b290f485ae91fecd3a2`，两份干净重建126文件及tar相同；独立Reviewer最终APPROVE，未继承前序CI，详情见[CLI接入及限制](cli-checks.md)。
+
+角色卡片已提交推送`2cb75c12326ba740b50d943372e2b3c38500b487`，其[CI 40099809043](https://github.com/CerrorJ/weftpilot/actions/runs/40099809043)Windows通过，35单元/6装配、开发与实际包各29通过14跳过。macOS开发同样通过、DMG/ZIP装配成功，但实际包备份保存合成密钥再次出现`CREDENTIAL_STORAGE_UNAVAILABLE`（28通过1失败14跳过）。保留原失败与历史Keychain根因待查，当前不是双平台全绿。下一CLI分项检查已先形成内核`3b1c8b65fb93cb20e14a2b290f485ae91fecd3a2`/080/p1/schema8及126文件固定产物，桌面接入仍开发中，见[CLI接入](cli-checks.md)。
+
 角色卡片/独立运行设置增量已完成Windows限定范围独立Tester与Reviewer：三列/窄屏、六步编辑和市场草稿、冻结版本、确切本版本证明重新启用、trial历史及业务验收隔离；35单元/6装配/strict/lint/格式/构建通过，实际包43项29通过14明确跳过。专项2/2为1受控用例及1真实Codex用例，后者实际两次trial且旧v1不启用v2，未点击真实停止。122文件/锁/tar独立核对一致，内核仍070/e6c。本增量未继承18465的CI，整体角色设计/CLI分项/飞书路由仍继续推进，详见[角色卡片记录](role-cards.md)。
 
 已核对Run历史增量`18465bdeb7d29c92caeed6d014613a0e2e5c7e63`的[双平台CI 40096365165](https://github.com/CerrorJ/weftpilot/actions/runs/40096365165)：Windows和macOS均成功，各31单元、6装配，开发及实际打包应用均41项28通过13明确跳过，NSIS及ARM64未签名DMG/ZIP装配成功。本次Keychain失败未复现，历史根因仍未定位；用户Mac安装升级、真实CLI和签名未据此验收。下段“尚无结论”为提交前记录。角色卡片后续工作区尚未提交，不继承该CI结果，见[当前角色卡片工作](role-cards.md)。

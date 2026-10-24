@@ -8,6 +8,7 @@ import {
   type KernelResponse,
   type BusinessCommand,
   type PreflightInput,
+  type CliCheckInput,
 } from '@weftpilot/agent-team-kernel/protocol'
 
 export interface KernelTransport {
@@ -91,6 +92,15 @@ export class KernelClient {
       protocolVersion: 1,
       requestId: randomUUID(),
       method: 'workspace.preflight',
+      input,
+    })
+  }
+
+  checkCli(input: CliCheckInput): Promise<unknown> {
+    return this.sendRequest({
+      protocolVersion: 1,
+      requestId: randomUUID(),
+      method: 'kernel.cliCheck',
       input,
     })
   }

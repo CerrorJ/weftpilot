@@ -9,6 +9,7 @@ interface RuntimeProps {
   role: RoleVersion | undefined
   models: ModelProfile[]
   draft: RoleDraft
+  onCliChange?: (cli: 'codex' | 'claude') => void
 }
 
 export const RoleRuntime = (props: RuntimeProps) => {
@@ -20,7 +21,11 @@ export const RoleRuntime = (props: RuntimeProps) => {
         <select
           name="cli"
           value={cli}
-          onChange={(event) => setCli(event.target.value as 'codex' | 'claude')}
+          onChange={(event) => {
+            const selected = event.target.value as 'codex' | 'claude'
+            setCli(selected)
+            props.onCliChange?.(selected)
+          }}
         >
           <option value="codex">Codex</option>
           <option value="claude">Claude Code</option>
