@@ -20,6 +20,7 @@ import {
   saveRoleEditor,
   activateSavedRole,
   waitRoleCard,
+  resumeRoleDraft,
 } from './role-helpers'
 
 test(
@@ -55,7 +56,7 @@ test(
       assert.equal(imports.find((item) => item.id === second.id)?.comparisonPackageId, first.id)
       assert.equal(imports.find((item) => item.id === first.id)?.comparisonPackageId, null)
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
-      await openRoleEditor(page)
+      await resumeRoleDraft(page)
       await goRoleStep(page, 0)
       assert.equal(
         await page.getByLabel('角色名称', { exact: true }).inputValue(),

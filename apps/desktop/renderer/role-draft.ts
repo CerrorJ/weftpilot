@@ -54,8 +54,8 @@ export const initialRoleDraft = (role: RoleVersion | undefined): RoleDraft => {
     baseVersion: role.version,
   }
 }
-export const roleDraftKey = (role: RoleVersion | undefined): string =>
-  `weftpilot.role-draft.${role?.id ?? 'new'}`
+export const roleDraftKey = (role: RoleVersion | undefined, newDraftId = 'new'): string =>
+  `weftpilot.role-draft.${role?.id ?? newDraftId}`
 
 /** 这里只保存表单草稿，无凭据或权威业务状态；跨技能中心导航保留正在编写的职责和配置。 */
 export const readRoleDraft = (key: string, fallback?: RoleDraft): RoleDraft | undefined => {

@@ -8,6 +8,9 @@ import { RoleCard } from './role-card'
 import { PageHeading } from './page-heading'
 import { readSelectedRole, rememberSelectedRole } from './role-draft'
 import { useCreatedRoleFocus } from './use-created-role-focus'
+import { newRoleDraftTarget, readRoleDraftEntries, type RoleDraftEntry } from './role-draft-entries'
+import { RoleDraftPicker } from './role-draft-picker'
+import { restoreRoleCatalogFocus } from './role-catalog-focus'
 import './role-cards.css'
 
 export const roleCatalogDescription = '从职责、能力到权限，让每位成员都具备明确的工作边界。'
@@ -33,12 +36,18 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
   }
   return (
     <>
-      <RoleCatalogHeading busy={actions.busy} create={() => edit('')} />
+      <RoleCatalogHeading
+        busy={actions.busy}
+        create={() => edit(newRoleDraftTarget())}
+        drafts={readRoleDraftEntries(roles)}
+        select={edit}
+      />
       {actions.error && <p role="alert">{t(actions.error)}</p>}
       <section className="role-catalog" aria-label={t('角色列表')}>
         <RoleForm
           key={selected}
           role={role}
+          newDraftId={selected.startsWith('new.') ? selected : 'new'}
           models={state.models}
           actions={actions}
           visitSkills={visitSkills}
@@ -46,6 +55,7 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
           resumed={() => {
             setOpening(false)
             resumed()
+            restoreRoleCatalogFocus()
           }}
           hideTrigger
         />
@@ -55,7 +65,17 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
   )
 }
 
-const RoleCatalogHeading = ({ busy, create }: { busy: boolean; create: () => void }) => {
+const RoleCatalogHeading = ({
+  busy,
+  create,
+  drafts,
+  select,
+}: {
+  busy: boolean
+  create: () => void
+  drafts: RoleDraftEntry[]
+  select: (target: string) => void
+}) => {
   const { t } = useI18n()
   return (
     <PageHeading
@@ -63,20 +83,23 @@ const RoleCatalogHeading = ({ busy, create }: { busy: boolean; create: () => voi
       description={roleCatalogDescription}
       eyebrow="ROLES / CAPABILITIES"
     >
-      <button className="primary role-create-action" onClick={create} disabled={busy}>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          aria-hidden="true"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        {t('创建角色')}
-      </button>
+      <div className="role-catalog-actions">
+        <RoleDraftPicker entries={drafts} busy={busy} select={select} />
+        <button className="primary role-create-action" onClick={create} disabled={busy}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          {t('创建角色')}
+        </button>
+      </div>
     </PageHeading>
   )
 }

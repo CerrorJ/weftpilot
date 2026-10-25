@@ -11,6 +11,7 @@ import { englishReview } from './english-review'
 import { englishRoleCards } from './english-role-cards'
 import { englishCliChecks } from './english-cli-checks'
 import { englishRoleCopy } from './english-role-copy'
+import { englishRoleDrafts } from './english-role-drafts'
 export const english: Record<string, string> = {
   ...englishShell,
   ...englishRoleWizard,
@@ -19,6 +20,7 @@ export const english: Record<string, string> = {
   ...englishRoleCards,
   ...englishCliChecks,
   ...englishRoleCopy,
+  ...englishRoleDrafts,
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,

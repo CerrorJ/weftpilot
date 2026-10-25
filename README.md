@@ -16,7 +16,7 @@
 
 最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置、角色六步/卡片与独立运行设置。[执行前检查](docs/development/task-preflight.md)、[Run历史与交付验收](docs/development/task-review.md)及080固定内核的[CLI分项检查](docs/development/cli-checks.md)已按各自限定范围通过Windows独立Tester/Reviewer。版本读取、默认CLI登录报告与真实模型试运行分开，不把查询结果当作角色就绪。飞书角色路由及[其余原型差异](docs/development/prototype-alignment.md)继续推进，整体设计尚未封板。
 
-最新已核对的角色入口`7420a2d`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40104044202)双平台通过，各36单元/6装配、开发及实际包32通过15跳过，未签名NSIS与ARM64 DMG/ZIP装配通过。本次未复现Keychain失败，历史根因与隔离试验失败仍保留在[调查](docs/development/macos-keychain-investigation.md)。后续[角色复制](docs/development/role-copy.md)消费固定090内核，当前验收中，不继承080的CI结果；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)。
+最新角色复制`4fdd9fe`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台通过，各36单元/6装配、开发及实际包34通过16跳过，未签名NSIS与ARM64 DMG/ZIP装配通过；固定090内核和[角色复制](docs/development/role-copy.md)已完成Windows独立验收/审查。本次未复现Keychain失败，历史根因与隔离试验失败仍保留在[调查](docs/development/macos-keychain-investigation.md)。后续[草稿入口](docs/development/role-draft-entry.md)已通过Windows独立验收/审查，当前待提交，不继承已提交版本的CI；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)。
 
 ## 分支职责
 

@@ -60,6 +60,16 @@ export const openRoleEditor = async (page: Page, id?: string) => {
   await roleDialog(page).waitFor()
 }
 
+/** 单份草稿直接继续；多份时按用户看到的确切名称显式选择。 */
+export const resumeRoleDraft = async (page: Page, name?: string) => {
+  await page.getByRole('button', { name: /^(继续角色草稿|Continue role draft)$/ }).click()
+  if (name) {
+    const picker = page.getByRole('dialog', { name: /^(继续角色草稿|Continue role draft)$/ })
+    await picker.getByRole('button').filter({ hasText: name }).click()
+  }
+  await roleDialog(page).waitFor()
+}
+
 export const goRoleStep = async (page: Page, step: number) => {
   const dialog = roleDialog(page)
   let current = Number(await dialog.locator('.role-steps li[aria-current] span').innerText()) - 1

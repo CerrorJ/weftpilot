@@ -14,6 +14,7 @@ interface RoleContext {
   resume?: boolean
   resumed?: () => void
   hideTrigger?: boolean
+  newDraftId?: string
 }
 
 export const RoleForm = (props: RoleContext) => (
@@ -35,8 +36,9 @@ const RoleWizardForm = ({
   close,
   visitSkills,
   resetError,
+  newDraftId,
 }: RoleContext & { close: () => void; resetError: () => void }) => {
-  const wizard = useRoleWizard(role, actions)
+  const wizard = useRoleWizard(role, actions, newDraftId)
   return (
     <form
       ref={wizard.form}

@@ -6,8 +6,12 @@ import { useRoleSave } from './use-role-save'
 import { useRoleFormDraft } from './use-role-form-draft'
 
 /** 只持有表单和确切版本引用；试运行与就绪状态始终读取共享内核。 */
-export const useRoleWizard = (role: RoleVersion | undefined, actions: WorkspaceActions) => {
-  const draft = useRoleFormDraft(role, actions.state?.roles ?? [])
+export const useRoleWizard = (
+  role: RoleVersion | undefined,
+  actions: WorkspaceActions,
+  newDraftId?: string,
+) => {
+  const draft = useRoleFormDraft(role, actions.state?.roles ?? [], newDraftId)
   const { saved, savedRole, save, edited } = useRoleSave({
     base: draft.base,
     baseMissing: draft.baseMissing,

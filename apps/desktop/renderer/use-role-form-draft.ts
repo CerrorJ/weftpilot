@@ -10,10 +10,14 @@ import {
 } from './role-draft'
 
 /** 本地只保存未提交表单及其起始版本；角色身份在保存后转入编辑时明确切换。 */
-export const useRoleFormDraft = (role: RoleVersion | undefined, roles: RoleVersion[]) => {
-  const key = useRef(roleDraftKey(role))
+export const useRoleFormDraft = (
+  role: RoleVersion | undefined,
+  roles: RoleVersion[],
+  newDraftId = 'new',
+) => {
+  const key = useRef(roleDraftKey(role, newDraftId))
   const form = useRef<HTMLFormElement>(null)
-  const [state, setState] = useState(() => initialState(role, roles))
+  const [state, setState] = useState(() => initialState(role, roles, key.current))
   const persist = (step = state.step) => {
     if (!form.current) return
     const draft = writeRoleDraft(key.current, form.current, step)
@@ -26,8 +30,8 @@ export const useRoleFormDraft = (role: RoleVersion | undefined, roles: RoleVersi
   }
   const reload = (currentRole: RoleVersion | undefined) => {
     clearRoleDraft(key.current)
-    key.current = roleDraftKey(currentRole)
-    rememberSelectedRole(currentRole?.id ?? '')
+    key.current = roleDraftKey(currentRole, newDraftId)
+    rememberSelectedRole(currentRole?.id ?? newDraftId)
     const initial = initialRoleDraft(currentRole)
     setState((current) => ({
       initial,
@@ -38,8 +42,8 @@ export const useRoleFormDraft = (role: RoleVersion | undefined, roles: RoleVersi
     }))
   }
   useEffect(() => {
-    rememberSelectedRole(role?.id ?? '')
-  }, [role?.id])
+    rememberSelectedRole(role?.id ?? newDraftId)
+  }, [role?.id, newDraftId])
   return {
     ...state,
     key,
@@ -52,9 +56,9 @@ export const useRoleFormDraft = (role: RoleVersion | undefined, roles: RoleVersi
   }
 }
 
-const initialState = (role: RoleVersion | undefined, roles: RoleVersion[]) => {
+const initialState = (role: RoleVersion | undefined, roles: RoleVersion[], key: string) => {
   const fallback = initialRoleDraft(role)
-  const initial = readRoleDraft(roleDraftKey(role), fallback) ?? fallback
+  const initial = readRoleDraft(key, fallback) ?? fallback
   const base =
     role && roles.find((item) => item.id === role.id && item.version === initial.baseVersion)
   return { initial, preview: initial, base, step: initial.step, revision: 0 }

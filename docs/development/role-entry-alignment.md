@@ -1,5 +1,7 @@
 # 角色页入口对齐
 
+后续[草稿入口](role-draft-entry.md)已补回原型Continue与空白Create并存，分别保护多份表单；本机独立Tester/Reviewer通过。本文件下方缺口为7420当时归属，持久跨应用草稿、角色飞书路由与整体设计仍未封板。
+
 提交后核对：桌面`7420a2d1c84e604f5efece845b85fe7b7613a54d`固定080/3b1。[CI 40104044202](https://github.com/CerrorJ/weftpilot/actions/runs/40104044202)由独立Tester只读核对，双平台成功；各36单元/6装配、开发和实际包均47项32通过15跳过，NSIS及ARM64未签名DMG/ZIP装配通过。本次Keychain未复现，历史及b2隔离失败仍未关闭，不等于正式Mac用户设备、旧密文升级、签名或真实CLI/模型验收。
 
 从已提交推送的`fa30eb8f43514b80eb289acd30d7a20d895469ed`继续对齐固定`product-design/c29c2f5`的`renderRoles`。保留真实角色卡片和运行设置；移除原型没有的快捷角色下拉及重复全局编辑按钮，直接点击目标卡片进入其确切配置，页头保留新建入口，并补回原型的`ROLES / CAPABILITIES`和原创加号笔画。该页头来自用户指定原型，不另行改造视觉体系。
