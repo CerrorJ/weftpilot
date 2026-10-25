@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+091桌面实现已本地提交`b75660ba6043de96812442ba200ed8cd9dd3e833`，固定内核aaee已先前推送；本次桌面推送遇真实网络阻塞（Git HTTPS/SSH未连通，系统代理未解决），备用GitHub连接器上传403无写权限。只读确认远端仍26f，未创建新分支或改变远端；091 CI未触发。保留本地提交与验收证据，不等待凭据而继续本地后续开发，具体见[接入记录](cli-input-lifecycle.md)。下段“待提交”为提交前验收时点。
+
 当前接入091：内核`aaeeeb41990920f3223f32a94b2c6e86ef7719a4`已推送，153项、原服务/内核构建及独立Tester/Reviewer通过；桌面已锁定0.9.1/p1/schema8/128文件并独立重建相同tar摘要，补充输入失败双语提示、装配Git根目录保护和锁定内核CI回归。桌面strict/lint/格式、43单元/7装配、实际Windows包36通过16跳过及真实Codex文件闭环1/1通过；独立Tester9断言及唯一真实Claude trial通过，正常退出且自有树为空，独立Reviewer最终APPROVE。当前待提交，尚无091远端CI，不继承26f结果。见[输入生命周期接入](cli-input-lifecycle.md)。
 
 此前测试维护`26f2f309bbc11eed74b45e18db7b99a561c08d5c`[CI 40174133079](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功，各43单元/6装配、开发及实际包36通过16跳过及NSIS/ARM64未签名DMG/ZIP装配通过；c303恢复退出原失败仍保留，Keychain/旧停止根因未关闭。
