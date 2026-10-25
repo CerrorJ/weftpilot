@@ -7,6 +7,7 @@ type ConfigurationOrDecisionCommand = Extract<
   {
     type:
       | 'role.save'
+      | 'role.copy'
       | 'model.save'
       | 'requirement.save'
       | 'team.save'
@@ -25,6 +26,8 @@ export const sendCommand = (command: BusinessCommand, key: string): Promise<unkn
   switch (command.type) {
     case 'role.save':
       return api.saveRole({ key, input: command })
+    case 'role.copy':
+      return api.copyRole({ key, input: command })
     case 'model.save':
       return api.saveModel({ key, input: command })
     case 'human.resolve':

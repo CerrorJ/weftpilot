@@ -20,6 +20,7 @@ const submissionSchema = z
   .strict()
 const commandTypes = {
   saveRole: 'role.save',
+  copyRole: 'role.copy',
   saveSkillSource: 'skill.source.save',
   importSkill: 'skill.import',
   activateSkill: 'skill.activate',

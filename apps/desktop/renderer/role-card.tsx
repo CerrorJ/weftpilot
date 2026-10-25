@@ -2,6 +2,7 @@ import type { RoleVersion, WorkspaceSnapshot } from '@weftpilot/agent-team-kerne
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { RoleManagement } from './role-management'
+import { RoleCopy } from './role-copy'
 import { roleCardStatus, roleCardSkills, roleHasActiveTrial } from './role-card-view'
 
 interface Context {
@@ -9,11 +10,11 @@ interface Context {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
   edit: () => void
+  copied: (id: string) => void
 }
 
-export const RoleCard = ({ role, state, actions, edit }: Context) => {
+export const RoleCard = ({ role, state, actions, edit, copied }: Context) => {
   const { t } = useI18n()
-  const status = roleCardStatus(state, role)
   const profile = role.modelProfileSnapshot
   const modelLabel = profile
     ? `${profile.name} · v${profile.version}`
@@ -44,8 +45,17 @@ export const RoleCard = ({ role, state, actions, edit }: Context) => {
         </span>
         <RoleSkillTags state={state} role={role} />
       </button>
+      <RoleCardLifecycle role={role} state={state} actions={actions} copied={copied} />
+    </article>
+  )
+}
+
+const RoleCardLifecycle = ({ role, state, actions, copied }: Omit<Context, 'edit'>) => {
+  const { t } = useI18n()
+  return (
+    <>
       <div className="role-card-footer">
-        <span className="badge">{t(status)}</span>
+        <span className="badge">{t(roleCardStatus(state, role))}</span>
         <span className="muted">{t('飞书角色路由未配置')}</span>
       </div>
       <p className="role-card-permission">
@@ -57,8 +67,9 @@ export const RoleCard = ({ role, state, actions, edit }: Context) => {
       )}
       <div className="role-card-actions">
         <RoleManagement role={role} state={state} actions={actions} />
+        <RoleCopy role={role} actions={actions} copied={copied} />
       </div>
-    </article>
+    </>
   )
 }
 

@@ -150,6 +150,24 @@
 
 .role-card-actions {
   padding: 0 22px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.role-copy-form {
+  display: grid;
+  gap: 14px;
+}
+
+.role-copy-form > p {
+  overflow-wrap: anywhere;
+}
+
+.role-copy-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .role-card-actions > button {

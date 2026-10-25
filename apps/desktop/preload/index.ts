@@ -11,6 +11,7 @@ const workflow: WorkflowBridge = {
   checkCli: (input) => ipcRenderer.invoke('workflow:checkCli', input),
   createProject: (input) => ipcRenderer.invoke('workflow:createProject', input),
   saveRole: (input) => ipcRenderer.invoke('workflow:saveRole', input),
+  copyRole: (input) => ipcRenderer.invoke('workflow:copyRole', input),
   saveSkillSource: (input) => ipcRenderer.invoke('workflow:saveSkillSource', input),
   importSkill: (input) => ipcRenderer.invoke('workflow:importSkill', input),
   activateSkill: (input) => ipcRenderer.invoke('workflow:activateSkill', input),

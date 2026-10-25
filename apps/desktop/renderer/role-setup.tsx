@@ -7,6 +7,7 @@ import { RoleForm } from './role-form'
 import { RoleCard } from './role-card'
 import { PageHeading } from './page-heading'
 import { readSelectedRole, rememberSelectedRole } from './role-draft'
+import { useCreatedRoleFocus } from './use-created-role-focus'
 import './role-cards.css'
 
 export const roleCatalogDescription = '从职责、能力到权限，让每位成员都具备明确的工作边界。'
@@ -23,6 +24,7 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
   const [selected, setSelected] = useState(readSelectedRole)
   const [opening, setOpening] = useState(false)
   const roles = latestVersions(state.roles)
+  const copied = useCreatedRoleFocus(roles)
   const role = roles.find((item) => item.id === selected)
   const edit = (id: string) => {
     setSelected(id)
@@ -47,7 +49,7 @@ export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Cont
           }}
           hideTrigger
         />
-        <RoleCardList roles={roles} state={state} actions={actions} edit={edit} />
+        <RoleCardList roles={roles} state={state} actions={actions} edit={edit} copied={copied} />
       </section>
     </>
   )
@@ -84,11 +86,13 @@ const RoleCardList = ({
   state,
   actions,
   edit,
+  copied,
 }: {
   roles: WorkspaceSnapshot['roles']
   state: WorkspaceSnapshot
   actions: WorkspaceActions
   edit: (id: string) => void
+  copied: (id: string) => void
 }) => {
   const { t } = useI18n()
   return (
@@ -101,6 +105,7 @@ const RoleCardList = ({
             state={state}
             actions={actions}
             edit={() => edit(item.id)}
+            copied={copied}
           />
         ))}
       </div>
