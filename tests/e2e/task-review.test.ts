@@ -84,8 +84,7 @@ test(
       await page.getByRole('combobox', { name: 'Appearance', exact: true }).selectOption('dark')
       await page.getByRole('button', { name: 'Tasks', exact: true }).click()
       await page.locator(`[data-task-id="${fixture.taskId}"]`).click()
-      await page.getByRole('button', { name: 'Review delivery', exact: true }).click()
-      const dialog = page.getByRole('dialog', { name: 'Delivery & acceptance', exact: true })
+      const dialog = await openDeliveryReview(page)
       await dialog
         .getByText('CONTROLLED_DELIVERY_ONLY · 不代表真实CLI执行。', { exact: true })
         .waitFor()

@@ -1,4 +1,5 @@
 import { confirmPreflight } from './preflight-helpers'
+import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import { openHumanPage } from './navigation-helpers'
 import {
   openRoleEditor,
@@ -101,7 +102,13 @@ for (const cli of ['codex', 'claude'] as const)
           .locator('.task-table button')
           .filter({ hasText: taskId.slice(0, 8) })
           .click()
-        await page.getByRole('button', { name: 'Accept delivery', exact: true }).click()
+        const review = await openDeliveryReview(page)
+        assert.equal(
+          await review.getByRole('button', { name: 'Accept delivery', exact: true }).isDisabled(),
+          true,
+        )
+        await checkAcceptanceCriteria(review)
+        await review.getByRole('button', { name: 'Accept delivery', exact: true }).click()
         await waitForSnapshot({
           page,
           timeout: 10000,

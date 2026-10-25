@@ -18,6 +18,8 @@
 
 最新角色复制`4fdd9fe`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台通过，各36单元/6装配、开发及实际包34通过16跳过，未签名NSIS与ARM64 DMG/ZIP装配通过；固定090内核和[角色复制](docs/development/role-copy.md)已完成Windows独立验收/审查。本次未复现Keychain失败，历史根因与隔离试验失败仍保留在[调查](docs/development/macos-keychain-investigation.md)。后续[草稿入口](docs/development/role-draft-entry.md)已通过Windows独立验收/审查，当前待提交，不继承已提交版本的CI；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)。
 
+草稿入口后续已推送`c3030fb`，[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows成功、macOS开发在恢复退出测试收到上下文销毁，未进入实际包/安装器；当前不是双平台通过。[退出响应验证](docs/development/native-quit-response.md)继续核对实际exit0与内核停止/恢复证据，不继承4fdd结果。
+
 ## 分支职责
 
 后续[角色卡片与运行设置](docs/development/role-cards.md)已完成Windows限定范围的独立验收：编辑、试运行历史、固定版本启停及草稿往返；角色飞书路由和整体设计差异仍按原型继续推进。

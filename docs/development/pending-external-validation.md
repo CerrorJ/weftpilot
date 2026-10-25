@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+c303草稿[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows成功、macOS开发恢复退出evaluate上下文销毁失败，实际包/安装器未执行。本项先按可自行修正的测试响应边界继续验证，见[退出记录](native-quit-response.md)；不向用户索取凭据、不归因为Keychain、不把Mac失败写成已通过，正式平台待办仍保留。
+
 090复制`4fdd9fe`的[CI 40171628155](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台成功，实际包各34通过16跳过。Mac本次合成密文/备份/诊断通过，没有跳过加密断言；不将这一轮未复现写成Keychain根因关闭，正式旧密文升级、用户设备和真实Mac CLI仍待验收。
 
 角色入口7420[CI 40104044202](https://github.com/CerrorJ/weftpilot/actions/runs/40104044202)双平台成功，各实际包32通过15跳过，Mac本次加密/备份/诊断原断言均通过。仅本次未复现；b2测试隔离的失败与正式旧密文、用户设备、稳定签名验收仍保留，不把结果扩写为根因关闭。

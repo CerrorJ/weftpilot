@@ -187,12 +187,8 @@ test(
       await page.getByRole('button', { name: '选择并检查备份', exact: true }).click()
       await page.getByRole('heading', { name: '已核对的恢复预览', exact: true }).waitFor()
       await page.locator('.backup-consent input').check()
-      const closed = new Promise<void>((resolve) => application.once('close', resolve))
       await page.getByRole('button', { name: '恢复到新工作台', exact: true }).click()
-      await application.evaluate(({ Menu }) =>
-        Menu.getApplicationMenu()?.items[0]?.submenu?.items[0]?.click(),
-      )
-      await closed
+      await quit(application)
       const status = JSON.parse(
         await readFile(join(fixture.data, 'active-kernel.json'), 'utf8'),
       ) as { slot: string }

@@ -6,6 +6,12 @@
 
 ## 当前状态
 
+真实人工处理与退出响应测试维护已完成独立Tester/Reviewer：真实Codex人工1/1、真实文件M1退回新Run1/1，独立Claude完整同Run续接及英文显式验收PASS/13断言；退出实际备份2/2、受控防误报6/6和原生菜单丢响应探针1/1通过。strict/lint/格式、43单元/6装配、实际包36通过16跳过。仅测试/文档变化，产品与固定090/fb313df未变；当前待提交，Mac修正后CI尚无结果，不追溯关闭c303失败或旧停止/Keychain根因。详见[人工补验](human-review-regression.md)和[退出响应](native-quit-response.md)。
+
+草稿入口已提交推送`c3030fb98ab40f5719f26fc06e0988845bb0f7b9`，Windows独立Tester/Reviewer通过；[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows全部成功，macOS开发35通过1失败16跳过，在恢复退出菜单evaluate上下文销毁，实际包/安装器未执行。当前不宣称双平台成功。后续仅测试维护：严格核对真实exit0与恢复证据的[退出helper](native-quit-response.md)，以及真实人工处理显式核对交付的[回归补验](human-review-regression.md)；Windows定向备份2/2、真实Codex人工1/1和真实文件M1退回新Run1/1通过，独立Claude与退出边界验证继续中。内核不变090/fb313df/p1/schema8，未改产品状态机或原未知停止现场。
+
+下面两段是c303提交前的本机验收及4fdd提交的CI原范围，当前源码/CI状态以上段为准。
+
 “继续角色草稿”和空白新建增量已完成Windows独立Tester/Reviewer，17证据断言、37单元/6装配，修复实际包36通过16跳过，归焦P2与新增按钮分组已关闭。内核不变090/fb313df/p1/schema8/127文件，草稿仅本窗口sessionStorage；当前待提交，完整角色飞书路由、其余页面原型及真实平台/停止历史问题继续推进。复现和准确验证范围见[草稿入口](role-draft-entry.md)。
 
 角色复制已提交推送`4fdd9fe607e2943fd9360f110e0bef9e050ae1b5`，关联固定090/fb313df。[CI 40171628155](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)两平台均成功，各36单元/6装配、开发与实际包34通过16跳过和未签名原生安装包装配通过。Mac本次未复现Keychain，历史根因/用户设备/真实CLI限制继续保留。下一草稿入口与空白新建正在实际独立验收，37单元/6装配、Windows包36通过16跳过；真实公共技能来源预览/安装/升级/卸载与显式Continue往返1通过、2个CLI用例明确跳过，不冒认本轮模型执行，见[草稿入口](role-draft-entry.md)。

@@ -25,11 +25,26 @@ export const launch = (data: string) => {
 }
 
 export const quit = async (application: ElectronApplication) => {
+  const child = application.process()
   const closed = new Promise<void>((resolve) => application.once('close', resolve))
-  await application.evaluate(({ Menu }) => {
-    Menu.getApplicationMenu()?.items[0]?.submenu?.items[0]?.click()
-  })
+  const exited =
+    child.exitCode !== null || child.signalCode !== null
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => child.once('exit', () => resolve()))
+  try {
+    await application.evaluate(({ Menu }) => {
+      const item = Menu.getApplicationMenu()?.items[0]?.submenu?.items[0]
+      if (!item) throw new Error('TEST_QUIT_MENU_UNAVAILABLE')
+      item.click()
+    })
+  } catch (error) {
+    // macOS可能先退出主进程、后丢失evaluate响应；只有实际关闭及exit 0才接受这种传输竞态。
+    if (!(error instanceof Error) || !error.message.includes('Execution context was destroyed'))
+      throw error
+  }
   await closed
+  await exited
+  assert.equal(child.exitCode, 0, '原生退出必须等待实际进程exit 0；传输断开不能当作成功')
 }
 
 export const snapshot = async (page: Page): Promise<WorkspaceSnapshot> => {
