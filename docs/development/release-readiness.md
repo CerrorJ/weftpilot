@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+最新本地项目页增量固定092/3910834/p1/schema8/131文件，内核157全量及独立Tester/Reviewer通过；桌面44单元/7装配、功能修复包38通过16跳过，最终仅字典补正的i18n包独立定向确认P3关闭。项目页独立Tester19断言PASS、Reviewer APPROVE，两实例菜单退出0/内核停止/自有树空；受控历史和门控回执与真实CLI分别记录。当前两仓网络推送、标准Electron下载及备用连接器上传权限仍阻塞，离线归档官方SHA核验后仅本机装配验证，没有新CI/Mac/正式身份安装器或发行结论。见[项目页交接](project-overview.md)，下方091为此前版本时点。
+
 当前接入固定内核091/`aaeeeb4`/p1/schema8/128文件，两份干净重建tar摘要一致；内核153项及独立Tester/Reviewer通过，桌面43单元/7装配和strict/lint/格式、实际Windows包36通过16跳过、真实Codex文件闭环及独立Claude试运行通过，桌面独立Tester/Reviewer最终PASS/APPROVE。本增量无远端CI或新正式身份安装器，不继承前版结果，见[接入记录](cli-input-lifecycle.md)。此前测试维护`26f2f309`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功，各43单元/6装配、开发与实际包36通过16跳过及未签名原生安装包装配通过。下方为各版本当时记录，未验收事项不自动关闭。
 
 后续仅测试维护已Windows独立验收/审查：退出菜单响应丢失必须等待实际exit0/close并保留恢复后置证明，人工处理两CLI实际同Run与英文逐项验收有独立证据。43单元/6装配、实际包36通过16跳过；产品仍是c303/固定090产物，无新正式身份本地安装器或修正后Mac CI结论。具体真实/受控范围见[退出记录](native-quit-response.md)及[人工补验](human-review-regression.md)。

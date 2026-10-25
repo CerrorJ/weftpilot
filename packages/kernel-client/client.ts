@@ -112,6 +112,15 @@ export class KernelClient {
     return this.sendRequest({ protocolVersion: 1, requestId: randomUUID(), method, id })
   }
 
+  inspectProject(projectId: string): Promise<unknown> {
+    return this.sendRequest({
+      protocolVersion: 1,
+      requestId: randomUUID(),
+      method: 'workspace.project.inspect',
+      input: { projectId },
+    })
+  }
+
   maintenance(input: MaintenanceInput): Promise<unknown> {
     return this.sendRequest({ ...input, protocolVersion: 1, requestId: randomUUID() }, 180_000)
   }

@@ -4,18 +4,25 @@ import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
 import { CreateDialog } from './create-dialog'
+import { CreationMark } from './creation-mark'
 interface CreateContext {
   projects: Project[]
   roles: RoleVersion[]
   actions: WorkspaceActions
   onCreated?: (id: string) => void
+  trigger?: string
 }
-export const TaskCreate = ({ projects, roles, actions, onCreated }: CreateContext) => {
+export const TaskCreate = ({ projects, roles, actions, onCreated, trigger }: CreateContext) => {
   const { t } = useI18n()
   const [project, setProject] = useState('')
   const projectId = project || projects[0]?.id || ''
   return (
-    <CreateDialog title="创建任务" error={actions.error}>
+    <CreateDialog
+      title="创建任务"
+      trigger={trigger ?? '创建任务'}
+      triggerIcon={trigger ? <CreationMark /> : undefined}
+      error={actions.error}
+    >
       {(close) => (
         <form
           onSubmit={(event) =>
@@ -58,6 +65,7 @@ const TaskAssignments = ({
       <label>
         {t('所属项目')}
         <select
+          aria-label={t('所属项目')}
           required
           name="project"
           value={projectId}
@@ -73,7 +81,7 @@ const TaskAssignments = ({
       </label>
       <label>
         {t('执行角色')}
-        <select required name="role">
+        <select required name="role" aria-label={t('执行角色')}>
           {!roles.length && <option value="">{t('请先创建角色')}</option>}
           {roles.map((item) => (
             <option key={item.id} value={item.id}>
@@ -131,7 +139,7 @@ const submitTask = (
       requirementRef: requirement ? { id: requirement.id, version: requirement.version } : null,
     })
     .then((result) => {
-      if (result) {
+      if (result && element.isConnected) {
         element.reset()
         saved(result.id)
       }

@@ -25,15 +25,19 @@ export const CatalogPage = ({
   page,
   actions,
   roleNavigation,
+  openTask,
 }: {
   page: CatalogId
   actions: WorkspaceActions
   roleNavigation: RoleNavigation
+  openTask: (id: string) => void
 }) => {
   const { t } = useI18n()
   const [title, description] = titles[page]
   if (page === 'roles' && actions.state)
     return <RoleSetup state={actions.state} actions={actions} {...roleNavigation} />
+  if (page === 'projects' && actions.state)
+    return <ProjectSetup state={actions.state} actions={actions} openTask={openTask} />
   return (
     <>
       <PageHeading title={title} description={description} />
@@ -42,9 +46,6 @@ export const CatalogPage = ({
         <p role="status">{t('正在读取内核状态…')}</p>
       ) : (
         <div className="catalog-surface">
-          {page === 'projects' && (
-            <ProjectSetup projects={actions.state.projects} actions={actions} />
-          )}
           {page === 'requirements' && <RequirementSetup actions={actions} />}
           {page === 'teams' && <TeamSetup actions={actions} />}
         </div>

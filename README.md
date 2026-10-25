@@ -18,7 +18,9 @@
 
 角色复制`4fdd9fe`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台通过，各36单元/6装配、开发及实际包34通过16跳过，未签名NSIS与ARM64 DMG/ZIP装配通过；固定090内核和[角色复制](docs/development/role-copy.md)已完成Windows独立验收/审查。[草稿入口](docs/development/role-draft-entry.md)后续已提交c303；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)，Keychain历史及隔离试验失败保留在[调查](docs/development/macos-keychain-investigation.md)。
 
-后续测试维护`26f2f309`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功：各43单元/6装配，开发与实际包36通过16跳过，未签名原生安装包装配通过；c303退出响应失败与历史Keychain/旧停止根因分别保留。当前固定内核0.9.1接入已通过Windows独立Tester/Reviewer、实际包36通过16跳过、真实Codex文件闭环和独立Claude试运行；内核153项及桌面43单元/7装配通过，尚无本增量远端CI或新正式身份安装器结论，见[接入记录](docs/development/cli-input-lifecycle.md)。
+后续测试维护`26f2f309`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功：各43单元/6装配，开发与实际包36通过16跳过，未签名原生安装包装配通过；c303退出响应失败与历史Keychain/旧停止根因分别保留。随后固定内核0.9.1接入已通过Windows独立Tester/Reviewer、实际包36通过16跳过、真实Codex文件闭环和独立Claude试运行；内核153项及桌面43单元/7装配通过，见[接入记录](docs/development/cli-input-lifecycle.md)。
+
+本地`feat/project-overview`进一步固定0.9.2内核并接入[项目卡片、创建与真实仓库详情](docs/development/project-overview.md)，Windows独立Tester19断言及Reviewer通过。内核157项、桌面44单元/7装配、实际功能修复包38通过16跳过；后续仅英文字典修正已在最终包定向复验。两仓推送/标准下载受本机网络阻塞，备用GitHub连接器上传403；新提交尚未远端分发，无本增量CI或新正式身份安装器结果，不继承旧CI。已核验官方Electron归档的离线实际包仅作为本机验证，详细范围和后续步骤见交接。
 
 ## 分支职责
 

@@ -4,6 +4,7 @@ import {
   businessCommandSchema,
   preflightInputSchema,
   cliCheckInputSchema,
+  projectInspectionInputSchema,
   type BusinessCommand,
 } from '@weftpilot/agent-team-kernel/protocol'
 import type { KernelClient } from '../../../packages/kernel-client/client'
@@ -91,6 +92,11 @@ const registerQueries = (options: {
   ipcMain.handle('workflow:preflight', (event, raw: unknown) => {
     options.assertSender(event)
     return options.client().preflight(parseInput(preflightInputSchema, raw))
+  })
+  ipcMain.handle('workflow:inspectProject', (event, raw: unknown) => {
+    options.assertSender(event)
+    const input = parseInput(projectInspectionInputSchema, raw)
+    return options.client().inspectProject(input.projectId)
   })
   ipcMain.handle('workflow:checkCli', (event, raw: unknown) => {
     options.assertSender(event)

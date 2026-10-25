@@ -19,6 +19,7 @@ export interface WorkflowBridge {
   restoreBackup(ticket: string): Promise<unknown>
   maintenanceStatus(): Promise<unknown>
   snapshot(): Promise<unknown>
+  inspectProject(input: { projectId: string }): Promise<unknown>
   preflight(input: PreflightInput): Promise<unknown>
   checkCli(input: CliCheckInput): Promise<unknown>
   createProject(

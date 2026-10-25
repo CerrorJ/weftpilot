@@ -11,7 +11,10 @@ import type {
   FeishuSubmission,
 } from '../../../packages/kernel-client/bridge-contract'
 import { useSubmission } from './use-submission'
-import { parseCommandResult } from '../../../packages/kernel-client/command-result'
+import {
+  parseCommandResult,
+  parseProjectCreationResult,
+} from '../../../packages/kernel-client/command-result'
 
 export const useWorkspace = () => {
   const [state, setState] = useState<WorkspaceSnapshot>()
@@ -44,7 +47,7 @@ export const useWorkspace = () => {
     )
   const createProject = (input: { name: string; defaultBranch: string }) =>
     perform(JSON.stringify({ type: 'project.create', ...input }), (key) =>
-      workflow().createProject({ key, input }),
+      workflow().createProject({ key, input }).then(parseProjectCreationResult),
     )
   const saveModel = async (input: ModelSubmission) => {
     return perform(await secretFingerprint(input, 'model'), (key) =>

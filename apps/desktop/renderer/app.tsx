@@ -168,7 +168,14 @@ const PageContent = ({
   if (page === 'home')
     return <WorkspaceHome actions={actions} navigate={navigate} openTask={openTask} />
   if (isCatalog(page))
-    return <CatalogPage page={page} actions={actions} roleNavigation={roleNavigation} />
+    return (
+      <CatalogPage
+        page={page}
+        actions={actions}
+        roleNavigation={roleNavigation}
+        openTask={openTask}
+      />
+    )
   if (page === 'settings') return <SettingsPage actions={actions} />
   if (page === 'skills')
     return (

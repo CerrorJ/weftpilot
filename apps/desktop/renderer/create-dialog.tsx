@@ -12,6 +12,7 @@ interface CreateDialogProps {
   trigger?: string
   disabled?: boolean
   closeIcon?: boolean
+  triggerIcon?: ReactNode
   hideTrigger?: boolean
 }
 
@@ -27,6 +28,7 @@ export const CreateDialog = ({
   disabled = false,
   closeIcon = false,
   hideTrigger = false,
+  triggerIcon,
 }: CreateDialogProps) => {
   const { t } = useI18n()
   const dialog = useCreateDialog()
@@ -44,6 +46,7 @@ export const CreateDialog = ({
           onClick={dialog.show}
           disabled={disabled}
         >
+          {triggerIcon}
           {t(trigger ?? title)}
         </button>
       )}

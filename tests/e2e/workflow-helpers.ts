@@ -115,7 +115,7 @@ export const createFixture = async () => {
 export const configure = async (
   application: ElectronApplication,
   repository: string,
-  options: { activate?: boolean } = {},
+  options: { activate?: boolean; projectName?: string } = {},
 ) => {
   const page = await application.firstWindow()
   // 仅替代系统目录选择；业务创建、协议、数据库、Git 与执行器全部使用真实实现。
@@ -123,7 +123,8 @@ export const configure = async (
     dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] })
   }, repository)
   await page.getByRole('button', { name: '项目管理', exact: true }).click()
-  await page.getByLabel('项目名称', { exact: true }).fill('合成测试项目')
+  await page.getByRole('button', { name: '新建项目', exact: true }).click()
+  await page.getByLabel('项目名称', { exact: true }).fill(options.projectName ?? '合成测试项目')
   await page.getByRole('button', { name: '选择仓库并添加' }).click()
   await page.getByText(repository, { exact: true }).waitFor()
   await page.getByRole('button', { name: '角色管理', exact: true }).click()
