@@ -1,5 +1,7 @@
 # 原生菜单退出与测试响应竞态
 
+修正已推送`26f2f309bbc11eed74b45e18db7b99a561c08d5c`。[CI 40174133079](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)Windows/macOS全部成功，各43单元/6装配，开发及实际包36通过16明确跳过，恢复期间退出均通过完整后置检查，NSIS及ARM64未签名DMG/ZIP装配通过。本次Keychain未复现；原c303失败与历史根因保留，不能扩大为用户设备/签名发行或旧停止故障已解决。下文未有Mac结论为提交前归属。
+
 草稿客户端`c3030fb98ab40f5719f26fc06e0988845bb0f7b9`的[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)macOS开发应用失败：37单元/6装配通过，52个Electron用例为35通过、1失败、16跳过。失败位于恢复期间完全退出用例的`application.evaluate(MenuQuit)`，错误为`Execution context was destroyed, most likely because of a navigation.`。该次没有运行后续实际包/安装器步骤，不继承4fdd双平台成功或将本轮记为Keychain失败。
 
 栈位置支持“主进程先退出、evaluate响应未送达”的测试传输竞态假设；该次未执行后续恢复证据，不能仅凭错误字符串宣称正常退出或排除产品异常。源/日志均保留，不以盲目重跑将失败覆盖。

@@ -5,6 +5,10 @@ import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
 import { diagnosticErrors } from './english-diagnostics'
 const messages: Record<string, [string, string]> = {
+  CLI_INPUT_FAILED: [
+    '执行输入未完整写入 CLI，本次执行失败；请核对日志和进程状态后再重试。',
+    'The execution input was not fully written to the CLI. Check logs and process state before retrying.',
+  ],
   CLI_CHECK_BUSY: [
     '该CLI已有检查或尚未确认结束的检查进程，请稍后重试并核对诊断。',
     'This CLI has an active check or an uncertain check process. Retry later and inspect diagnostics.',

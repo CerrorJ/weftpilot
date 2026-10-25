@@ -6,7 +6,11 @@
 
 ## 当前状态
 
-真实人工处理与退出响应测试维护已完成独立Tester/Reviewer：真实Codex人工1/1、真实文件M1退回新Run1/1，独立Claude完整同Run续接及英文显式验收PASS/13断言；退出实际备份2/2、受控防误报6/6和原生菜单丢响应探针1/1通过。strict/lint/格式、43单元/6装配、实际包36通过16跳过。仅测试/文档变化，产品与固定090/fb313df未变；当前待提交，Mac修正后CI尚无结果，不追溯关闭c303失败或旧停止/Keychain根因。详见[人工补验](human-review-regression.md)和[退出响应](native-quit-response.md)。
+当前接入091：内核`aaeeeb41990920f3223f32a94b2c6e86ef7719a4`已推送，153项、原服务/内核构建及独立Tester/Reviewer通过；桌面已锁定0.9.1/p1/schema8/128文件并独立重建相同tar摘要，补充输入失败双语提示、装配Git根目录保护和锁定内核CI回归。桌面strict/lint/格式、43单元/7装配、实际Windows包36通过16跳过及真实Codex文件闭环1/1通过；独立Tester9断言及唯一真实Claude trial通过，正常退出且自有树为空，独立Reviewer最终APPROVE。当前待提交，尚无091远端CI，不继承26f结果。见[输入生命周期接入](cli-input-lifecycle.md)。
+
+此前测试维护`26f2f309bbc11eed74b45e18db7b99a561c08d5c`[CI 40174133079](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功，各43单元/6装配、开发及实际包36通过16跳过及NSIS/ARM64未签名DMG/ZIP装配通过；c303恢复退出原失败仍保留，Keychain/旧停止根因未关闭。
+
+此前090真实人工处理与退出响应测试维护已完成独立Tester/Reviewer并提交26f：真实Codex人工1/1、真实文件M1退回新Run1/1，独立Claude完整同Run续接及英文显式验收PASS/13断言；退出实际备份2/2、受控防误报6/6和原生菜单丢响应探针1/1通过。strict/lint/格式、43单元/6装配、实际包36通过16跳过。仅测试/文档变化，产品与固定090/fb313df未变；其CI结论见上段，不追溯关闭c303失败或旧停止/Keychain根因。详见[人工补验](human-review-regression.md)和[退出响应](native-quit-response.md)。
 
 草稿入口已提交推送`c3030fb98ab40f5719f26fc06e0988845bb0f7b9`，Windows独立Tester/Reviewer通过；[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows全部成功，macOS开发35通过1失败16跳过，在恢复退出菜单evaluate上下文销毁，实际包/安装器未执行。当前不宣称双平台成功。后续仅测试维护：严格核对真实exit0与恢复证据的[退出helper](native-quit-response.md)，以及真实人工处理显式核对交付的[回归补验](human-review-regression.md)；Windows定向备份2/2、真实Codex人工1/1和真实文件M1退回新Run1/1通过，独立Claude与退出边界验证继续中。内核不变090/fb313df/p1/schema8，未改产品状态机或原未知停止现场。
 

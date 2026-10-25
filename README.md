@@ -16,9 +16,9 @@
 
 最终界面以`product-design`交互原型为验收基准。[原型对齐分支](https://github.com/CerrorJ/weftpilot/tree/feat/prototype-alignment)已接回八页导航、任务列表/创建弹窗/详情抽屉、设置、角色六步/卡片与独立运行设置。[执行前检查](docs/development/task-preflight.md)、[Run历史与交付验收](docs/development/task-review.md)及080固定内核的[CLI分项检查](docs/development/cli-checks.md)已按各自限定范围通过Windows独立Tester/Reviewer。版本读取、默认CLI登录报告与真实模型试运行分开，不把查询结果当作角色就绪。飞书角色路由及[其余原型差异](docs/development/prototype-alignment.md)继续推进，整体设计尚未封板。
 
-最新角色复制`4fdd9fe`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台通过，各36单元/6装配、开发及实际包34通过16跳过，未签名NSIS与ARM64 DMG/ZIP装配通过；固定090内核和[角色复制](docs/development/role-copy.md)已完成Windows独立验收/审查。本次未复现Keychain失败，历史根因与隔离试验失败仍保留在[调查](docs/development/macos-keychain-investigation.md)。后续[草稿入口](docs/development/role-draft-entry.md)已通过Windows独立验收/审查，当前待提交，不继承已提交版本的CI；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)。
+角色复制`4fdd9fe`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台通过，各36单元/6装配、开发及实际包34通过16跳过，未签名NSIS与ARM64 DMG/ZIP装配通过；固定090内核和[角色复制](docs/development/role-copy.md)已完成Windows独立验收/审查。[草稿入口](docs/development/role-draft-entry.md)后续已提交c303；用户设备、正式旧密文升级和签名等仍见[外部清单](docs/development/pending-external-validation.md)，Keychain历史及隔离试验失败保留在[调查](docs/development/macos-keychain-investigation.md)。
 
-草稿入口后续已推送`c3030fb`，[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows成功、macOS开发在恢复退出测试收到上下文销毁，未进入实际包/安装器；当前不是双平台通过。[退出响应验证](docs/development/native-quit-response.md)继续核对实际exit0与内核停止/恢复证据，不继承4fdd结果。
+后续测试维护`26f2f309`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功：各43单元/6装配，开发与实际包36通过16跳过，未签名原生安装包装配通过；c303退出响应失败与历史Keychain/旧停止根因分别保留。当前固定内核0.9.1接入已通过Windows独立Tester/Reviewer、实际包36通过16跳过、真实Codex文件闭环和独立Claude试运行；内核153项及桌面43单元/7装配通过，尚无本增量远端CI或新正式身份安装器结论，见[接入记录](docs/development/cli-input-lifecycle.md)。
 
 ## 分支职责
 

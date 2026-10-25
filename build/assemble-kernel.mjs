@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs'
 import { readFile, mkdir, writeFile, rename, rm } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { pnpmInvocation } from './pnpm-invocation.mjs'
+import { assertKernelSource } from './kernel-source-state.mjs'
 
 const lock = JSON.parse(await readFile('config/kernel-lock.json', 'utf8'))
 const root = resolve('.kernel')
@@ -13,8 +14,8 @@ const run = (command, args, cwd) =>
 const pnpm = await pnpmInvocation(process.env.npm_execpath)
 const runPnpm = (args) => run(pnpm.command, [...pnpm.prefix, ...args], source)
 await mkdir(root, { recursive: true })
-if (!existsSync(`${source}/.git`))
-  run('git', ['clone', '--no-checkout', lock.repository, source], root)
+if (!existsSync(`${source}/.git`)) run('git', ['clone', lock.repository, source], root)
+assertKernelSource(source)
 // CI 通过有范围的 checkout 提供私有源码，不保存 token；已有固定对象时无需再联网。
 try {
   execFileSync('git', ['cat-file', '-e', `${lock.sourceCommit}^{commit}`], {

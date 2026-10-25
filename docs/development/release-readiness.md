@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+当前接入固定内核091/`aaeeeb4`/p1/schema8/128文件，两份干净重建tar摘要一致；内核153项及独立Tester/Reviewer通过，桌面43单元/7装配和strict/lint/格式、实际Windows包36通过16跳过、真实Codex文件闭环及独立Claude试运行通过，桌面独立Tester/Reviewer最终PASS/APPROVE。本增量无远端CI或新正式身份安装器，不继承前版结果，见[接入记录](cli-input-lifecycle.md)。此前测试维护`26f2f309`[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功，各43单元/6装配、开发与实际包36通过16跳过及未签名原生安装包装配通过。下方为各版本当时记录，未验收事项不自动关闭。
+
 后续仅测试维护已Windows独立验收/审查：退出菜单响应丢失必须等待实际exit0/close并保留恢复后置证明，人工处理两CLI实际同Run与英文逐项验收有独立证据。43单元/6装配、实际包36通过16跳过；产品仍是c303/固定090产物，无新正式身份本地安装器或修正后Mac CI结论。具体真实/受控范围见[退出记录](native-quit-response.md)及[人工补验](human-review-regression.md)。
 
 最新草稿提交`c3030fb`的[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows成功（37单元/6装配、开发及实际包36通过16跳过、未签名NSIS装配），macOS开发应用因恢复期间退出evaluate上下文销毁失败（35通过1失败16跳过），未走实际包/安装器。当前不是双平台通过；[测试退出响应修正](native-quit-response.md)本机及独立验证中，不能将仅有传输错误当作正常退出或产品异常已排除。以下c303待提交为此前验收时点。

@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+后续退出测试维护26f的[CI 40174133079](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功，实际包各36通过16跳过，恢复后置检查保持；旧c303失败按原提交保留。当前固定091接入已有Windows内核153项、桌面43单元/7装配和实际包36通过16跳过、真实Codex文件闭环及独立Claude试运行通过，独立Tester/Reviewer最终PASS/APPROVE，尚无091远端CI；这不关闭旧taskkill255/128、Keychain或正式发行待办，见[接入记录](cli-input-lifecycle.md)。
+
 c303草稿[CI 40172942235](https://github.com/CerrorJ/weftpilot/actions/runs/40172942235)Windows成功、macOS开发恢复退出evaluate上下文销毁失败，实际包/安装器未执行。本项先按可自行修正的测试响应边界继续验证，见[退出记录](native-quit-response.md)；不向用户索取凭据、不归因为Keychain、不把Mac失败写成已通过，正式平台待办仍保留。
 
 090复制`4fdd9fe`的[CI 40171628155](https://github.com/CerrorJ/weftpilot/actions/runs/40171628155)双平台成功，实际包各34通过16跳过。Mac本次合成密文/备份/诊断通过，没有跳过加密断言；不将这一轮未复现写成Keychain根因关闭，正式旧密文升级、用户设备和真实Mac CLI仍待验收。

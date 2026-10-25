@@ -36,6 +36,8 @@ jobs:
           path: .kernel/source
           persist-credentials: false
       - run: pnpm kernel:assemble
+      - name: Verify locked kernel regressions
+        run: pnpm --dir .kernel/source test
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm format:check
