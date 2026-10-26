@@ -44,27 +44,25 @@ test(
       assert.equal(state.models.at(-1)?.model, 'synthetic-model-v2')
 
       await page.getByRole('button', { name: '需求管理', exact: true }).click()
+      await page.getByRole('button', { name: '新建需求', exact: true }).click()
       await page.getByRole('textbox', { name: '需求标题', exact: true }).fill('产品需求')
       await page.getByRole('textbox', { name: '需求内容', exact: true }).fill('原始需求内容')
       await page.getByRole('textbox', { name: '需求验收条件', exact: true }).fill('原始需求条件')
       await page.getByRole('button', { name: '创建需求', exact: true }).click()
-      await page
-        .getByRole('option', { name: '产品需求 · v1', exact: true })
-        .waitFor({ state: 'attached' })
+      const requirementDetail = page.getByRole('dialog', { name: '需求详情', exact: true })
+      await requirementDetail.getByRole('heading', { name: '产品需求', exact: true }).waitFor()
       const requirementId = (await snapshot(page)).requirements[0]!.id
-      await page
-        .getByRole('combobox', { name: '编辑需求', exact: true })
-        .selectOption(requirementId)
+      await requirementDetail.getByRole('button', { name: '编辑需求', exact: true }).click()
       await page.getByRole('textbox', { name: '需求内容', exact: true }).fill('第二版需求内容')
-      // 按需求区域选择，避免后续新增其他版本操作时产生歧义。
       await page
-        .locator('section')
-        .filter({ has: page.getByRole('heading', { name: '需求版本', exact: true }) })
+        .getByRole('dialog', { name: '编辑需求', exact: true })
         .getByRole('button', { name: '保存新版本', exact: true })
         .click()
-      await page
-        .getByRole('option', { name: '产品需求 · v2', exact: true })
-        .waitFor({ state: 'attached' })
+      await requirementDetail
+        .locator('.requirement-detail > p')
+        .filter({ hasText: '第二版需求内容' })
+        .waitFor()
+      await requirementDetail.getByRole('button', { name: '关闭', exact: true }).click()
       await page.getByRole('button', { name: '团队管理', exact: true }).click()
       await page.getByRole('textbox', { name: '团队名称', exact: true }).fill('产品团队')
       await page.getByRole('checkbox', { name: '测试开发者 · codex', exact: true }).check()
@@ -128,7 +126,7 @@ test(
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
       await page.getByRole('button', { name: 'Requirements', exact: true }).click()
       await page.getByRole('heading', { name: 'Requirements', exact: true }).waitFor()
-      await page.getByRole('combobox', { name: 'Edit requirement', exact: true }).waitFor()
+      await page.getByRole('button', { name: 'View requirement · 产品需求', exact: true }).waitFor()
       assert.deepEqual(pageErrors, [])
       await quit(application)
     } finally {

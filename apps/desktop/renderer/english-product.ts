@@ -55,6 +55,19 @@ export const englishProduct: Record<string, string> = {
   需求内容: 'Requirement content',
   需求验收条件: 'Requirement acceptance criteria',
   创建需求: 'Create requirement',
+  需求详情: 'Requirement details',
+  需求列表: 'Requirement list',
+  查看需求: 'View requirement',
+  还没有需求: 'No requirements yet',
+  '先关联项目，再记录目标与验收标准。':
+    'Connect a project, then capture goals and acceptance criteria.',
+  '把目标和验收标准说清楚，再交给团队推进。':
+    'Define goals and acceptance criteria before the team starts.',
+  条关联任务: 'linked tasks',
+  关联任务: 'Linked tasks',
+  编辑基准版本: 'Editing base version',
+  '包含此需求各版本的任务；任务仍保留其创建时绑定的版本。':
+    'Includes tasks for all versions. Each task keeps its originally pinned version.',
   'AI 团队': 'AI teams',
   '成员与协调者组成版本化团队。派发时固定团队版本，每个子任务独立执行和验收。':
     'Versioned teams contain members and a coordinator. Task creation pins the team version; each subtask runs and is reviewed separately.',

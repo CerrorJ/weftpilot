@@ -85,3 +85,11 @@ jobs:
           path: .tmp/evidence/project-git-copy-*.png
           if-no-files-found: warn
           retention-days: 7
+      - name: Preserve requirement UI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: requirement-ui-${{ runner.os }}
+          path: .tmp/evidence/requirement-catalog-*.png
+          if-no-files-found: warn
+          retention-days: 7

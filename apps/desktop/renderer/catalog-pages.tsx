@@ -47,6 +47,8 @@ export const CatalogPage = ({
         openProjectTasks={openProjectTasks}
       />
     )
+  if (page === 'requirements' && actions.state)
+    return <RequirementSetup actions={actions} openTask={openTask} />
   return (
     <>
       <PageHeading title={title} description={description} />
@@ -54,10 +56,7 @@ export const CatalogPage = ({
       {!actions.state ? (
         <p role="status">{t('正在读取内核状态…')}</p>
       ) : (
-        <div className="catalog-surface">
-          {page === 'requirements' && <RequirementSetup actions={actions} />}
-          {page === 'teams' && <TeamSetup actions={actions} />}
-        </div>
+        <div className="catalog-surface">{page === 'teams' && <TeamSetup actions={actions} />}</div>
       )}
     </>
   )
