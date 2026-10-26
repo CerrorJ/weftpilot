@@ -2,6 +2,8 @@
 
 2026-10-26，`feat/requirement-catalog`从`44d4df6`继续，固定内核仍为`0.9.4 / 51f0b18d40cfb97371ae90178ca66762507aea6d / protocol1 / schema8`。131文件与tar SHA-256 `3670811868fc3672142b9f9bd494dc156637ddfe882e8be47237eafab6399d40`未变。本次没有新增桌面业务数据库或内核副本。
 
+实际提交`ca46ce248ab4abbc7b80ff09836321734af7c4d4`已推送，Windows独立Tester PASS/Reviewer APPROVE、无新增P0—P3；[CI40271482336](https://github.com/CerrorJ/weftpilot/actions/runs/40271482336)双平台成功，各51单元、开发/实际包59项43通过16明确跳过、0失败/取消，需求新增用例两模式均实际执行。装配Win8/Mac7通过1平台跳过；锁定内核Win160/160、Mac150通过10平台跳过；未签名NSIS/ARM64 DMG/ZIP装配过。独立Tester/Reviewer随后补验确切提交/完整日志、两平台4张PNG、两ZIP官方digest/大小及逐PNG字节，一致后限定原生CI范围PASS/APPROVE。以下尚未提交/待CI为原时点；下一[需求创建关联任务](requirement-task-create.md)不继承此CI结果。
+
 ## 实际实现
 
 按`product-design/c29c2f5`需求页恢复列表行、目标摘要、所属项目、关联任务数与新建弹窗；点击行打开详情，查看原文、验收标准和历史版本，关联任务打开同一全局任务详情。列表只投影每个需求最新版本，历史内容仍来自内核，不复制演示需求。

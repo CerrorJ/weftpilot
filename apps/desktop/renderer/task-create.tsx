@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import type { Project, RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
+import type {
+  Project,
+  RoleVersion,
+  RequirementVersion,
+} from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
@@ -11,9 +15,10 @@ interface CreateContext {
   actions: WorkspaceActions
   onCreated?: (id: string) => void
   trigger?: string
+  requirement?: RequirementVersion
 }
-export const TaskCreate = ({ projects, roles, actions, onCreated, trigger }: CreateContext) => {
-  const { t } = useI18n()
+export const TaskCreate = (context: CreateContext) => {
+  const { projects, actions, onCreated, trigger } = context
   const [project, setProject] = useState('')
   const projectId = project || projects[0]?.id || ''
   return (
@@ -24,30 +29,78 @@ export const TaskCreate = ({ projects, roles, actions, onCreated, trigger }: Cre
       error={actions.error}
     >
       {(close) => (
-        <form
-          onSubmit={(event) =>
-            submitTask(event, { actions, projectId }, (id) => {
-              close()
-              onCreated?.(id)
-            })
-          }
-        >
-          <TaskAssignments
-            projects={projects}
-            roles={roles}
-            projectId={projectId}
-            selectProject={setProject}
-          />
-          <RequirementReference key={projectId} projectId={projectId} actions={actions} />
-          <TextField label={t('任务名称')} name="title" />
-          <TextField label={t('任务目标')} name="goal" multiline />
-          <TextField label={t('验收条件')} name="criteria" multiline />
-          <button className="primary" disabled={actions.busy || !projects.length || !roles.length}>
-            {t('创建待执行任务')}
-          </button>
-        </form>
+        <TaskCreateForm
+          context={context}
+          selection={{ projectId, selectProject: setProject }}
+          saved={(id) => {
+            close()
+            onCreated?.(id)
+          }}
+        />
       )}
     </CreateDialog>
+  )
+}
+
+type ProjectSelection = { projectId: string; selectProject: (id: string) => void }
+
+/** 打开时固定来源版本；需求后台变更不能把正在填写的任务悄悄转绑新版本。 */
+const TaskCreateForm = ({
+  context,
+  selection,
+  saved,
+}: {
+  context: CreateContext
+  selection: ProjectSelection
+  saved: (id: string) => void
+}) => {
+  const { t } = useI18n()
+  const { projects, roles, actions } = context
+  const [requirement] = useState(context.requirement)
+  const fields = requirement ?? { title: '', body: '', acceptanceCriteria: '' }
+  const projectId = requirement?.projectId ?? selection.projectId
+  const availableProjects = requirement
+    ? projects.filter((item) => item.id === projectId)
+    : projects
+  return (
+    <form onSubmit={(event) => submitTask(event, { actions, projectId, requirement }, saved)}>
+      <TaskAssignments
+        projects={availableProjects}
+        roles={roles}
+        projectId={projectId}
+        selectProject={selection.selectProject}
+        lockedProject={Boolean(requirement)}
+      />
+      {requirement ? (
+        <PinnedRequirement requirement={requirement} />
+      ) : (
+        <RequirementReference key={projectId} projectId={projectId} actions={actions} />
+      )}
+      <TextField label={t('任务名称')} name="title" value={fields.title} />
+      <TextField label={t('任务目标')} name="goal" value={fields.body} multiline />
+      <TextField
+        label={t('验收条件')}
+        name="criteria"
+        value={fields.acceptanceCriteria}
+        multiline
+      />
+      <button
+        className="primary"
+        disabled={actions.busy || !availableProjects.length || !roles.length}
+      >
+        {t('创建待执行任务')}
+      </button>
+    </form>
+  )
+}
+
+const PinnedRequirement = ({ requirement }: { requirement: RequirementVersion }) => {
+  const { t } = useI18n()
+  return (
+    <p className="field-note">
+      {t('固定需求版本：')}
+      {requirement.title} · v{requirement.version}
+    </p>
   )
 }
 const TaskAssignments = ({
@@ -55,9 +108,11 @@ const TaskAssignments = ({
   roles,
   projectId,
   selectProject,
+  lockedProject = false,
 }: Pick<CreateContext, 'projects' | 'roles'> & {
   projectId: string
   selectProject: (id: string) => void
+  lockedProject?: boolean
 }) => {
   const { t } = useI18n()
   return (
@@ -67,6 +122,7 @@ const TaskAssignments = ({
         <select
           aria-label={t('所属项目')}
           required
+          disabled={lockedProject}
           name="project"
           value={projectId}
           onChange={(event) => selectProject(event.target.value)}
@@ -119,15 +175,21 @@ const RequirementReference = ({
 }
 const submitTask = (
   event: React.FormEvent<HTMLFormElement>,
-  { actions, projectId }: { actions: WorkspaceActions; projectId: string },
+  {
+    actions,
+    projectId,
+    requirement: pinned,
+  }: { actions: WorkspaceActions; projectId: string; requirement: RequirementVersion | undefined },
   saved: (id: string) => void,
 ) => {
   event.preventDefault()
   const element = event.currentTarget
   const form = new FormData(element)
-  const requirement = actions.state?.requirements.find(
-    (item) => `${item.id}@${item.version}` === formText(form, 'requirement'),
-  )
+  const requirement =
+    pinned ??
+    actions.state?.requirements.find(
+      (item) => `${item.id}@${item.version}` === formText(form, 'requirement'),
+    )
   void actions
     .execute({
       type: 'task.create',

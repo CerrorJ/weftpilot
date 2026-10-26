@@ -4,6 +4,8 @@ import { useI18n } from './preferences'
 import { CreateDialog } from './create-dialog'
 import { RequirementEditor } from './requirement-editor'
 import { TaskTable } from './task-table'
+import { TaskCreate } from './task-create'
+import { latestVersions } from './object-versions'
 
 export const RequirementDetail = ({
   requirement,
@@ -20,7 +22,10 @@ export const RequirementDetail = ({
 }) => {
   const { t } = useI18n()
   const project = state.projects.find((item) => item.id === requirement.projectId)
-  const tasks = state.tasks.filter((task) => task.requirementRef?.id === requirement.id)
+  const openLinkedTask = (id: string) => {
+    close()
+    openTask(id)
+  }
   return (
     <CreateDialog title="需求详情" error="" autoOpen hideTrigger closeIcon onClosed={close}>
       {() => (
@@ -33,18 +38,16 @@ export const RequirementDetail = ({
           <p className="preserve-text">{requirement.body}</p>
           <h3>{t('需求验收条件')}</h3>
           <p className="preserve-text">{requirement.acceptanceCriteria}</p>
-          <RequirementEditor actions={actions} requirement={requirement} />
-          <h3>{t('关联任务')}</h3>
-          <p className="field-note">
-            {t('包含此需求各版本的任务；任务仍保留其创建时绑定的版本。')}
-          </p>
-          <TaskTable
-            tasks={tasks}
+          <RequirementActions
+            requirement={requirement}
             state={state}
-            selectTask={(id) => {
-              close()
-              openTask(id)
-            }}
+            actions={actions}
+            created={openLinkedTask}
+          />
+          <RequirementTasks
+            requirementId={requirement.id}
+            state={state}
+            selectTask={openLinkedTask}
           />
           <RequirementHistory
             versions={state.requirements.filter((item) => item.id === requirement.id)}
@@ -54,6 +57,53 @@ export const RequirementDetail = ({
     </CreateDialog>
   )
 }
+
+const RequirementTasks = ({
+  requirementId,
+  state,
+  selectTask,
+}: {
+  requirementId: string
+  state: WorkspaceSnapshot
+  selectTask: (id: string) => void
+}) => {
+  const { t } = useI18n()
+  return (
+    <>
+      <h3>{t('关联任务')}</h3>
+      <p className="field-note">{t('包含此需求各版本的任务；任务仍保留其创建时绑定的版本。')}</p>
+      <TaskTable
+        tasks={state.tasks.filter((task) => task.requirementRef?.id === requirementId)}
+        state={state}
+        selectTask={selectTask}
+      />
+    </>
+  )
+}
+
+const RequirementActions = ({
+  requirement,
+  state,
+  actions,
+  created,
+}: {
+  requirement: RequirementVersion
+  state: WorkspaceSnapshot
+  actions: WorkspaceActions
+  created: (id: string) => void
+}) => (
+  <div className="requirement-actions">
+    <RequirementEditor actions={actions} requirement={requirement} />
+    <TaskCreate
+      projects={state.projects.filter((item) => item.id === requirement.projectId)}
+      roles={latestVersions(state.roles)}
+      actions={actions}
+      requirement={requirement}
+      trigger="创建关联任务"
+      onCreated={created}
+    />
+  </div>
+)
 
 const RequirementHistory = ({ versions }: { versions: RequirementVersion[] }) => {
   const { t } = useI18n()

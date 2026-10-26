@@ -65,6 +65,7 @@ export const englishProduct: Record<string, string> = {
     'Define goals and acceptance criteria before the team starts.',
   条关联任务: 'linked tasks',
   关联任务: 'Linked tasks',
+  创建关联任务: 'Create linked task',
   编辑基准版本: 'Editing base version',
   '包含此需求各版本的任务；任务仍保留其创建时绑定的版本。':
     'Includes tasks for all versions. Each task keeps its originally pinned version.',

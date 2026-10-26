@@ -63,6 +63,11 @@
 .requirement-detail details {
   margin-top: 8px;
 }
+.requirement-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 .requirement-history {
   padding: 18px 0;
   border-top: 1px solid var(--line);

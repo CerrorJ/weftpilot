@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+需求目录`ca46ce248ab4abbc7b80ff09836321734af7c4d4`已推送，独立Windows Tester/Reviewer通过，[CI40271482336](https://github.com/CerrorJ/weftpilot/actions/runs/40271482336)双平台成功，各开发/实际包43通过16跳过、51单元与未签名安装包装配成功；独立Tester/Reviewer补验4图/摘要及确切日志后限定CI范围PASS/APPROVE。已接着实现[创建关联任务](requirement-task-create.md)：需求版本和项目固定、文本预填/失败保留/成功打开确切任务、后台新版本不改绑；新实际Windows包60项42通过18明确跳过、51单元/8装配/strict/lint/格式通过，独立验收和新CI待完成。内核094/51f/131文件/原摘要保持不变。
+
 Git地址复制`44d4df6`的[CI40269550640](https://github.com/CerrorJ/weftpilot/actions/runs/40269550640)双平台成功，各开发/实际包42通过16明确跳过、51单元及未签名安装包装配通过，真实复制/读回/Unicode/迟到回执两项在强制原生模式实际跑过；独立Tester/Reviewer补验日志、8图和摘要后限定CI范围PASS/APPROVE，本机受限保留。继续[需求目录](requirement-catalog.md)：列表/详情/新建与编辑弹窗、CAS输入保护及历史引用；实际Windows包59项41通过18明确跳过，51单元/8装配/strict/lint/格式通过，独立验收和新分支CI待完成。整体原型与M0—M4仍未封板。
 
 已核验`35d411d`测试层及`5f28898`项目导航的[CI40264396158](https://github.com/CerrorJ/weftpilot/actions/runs/40264396158)双平台成功：各44单元，装配Win8/Mac7通过1平台跳过；锁定内核Win160/160、Mac150通过10平台跳过；开发及实际应用各39通过16明确跳过，未签名NSIS/ARM64 DMG/ZIP装配成功。旧0xC0000005本轮未复现，具体历史根因及用户设备/真实Mac CLI/安装升级/签名限制保持原归属。
