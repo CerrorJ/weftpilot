@@ -20,7 +20,7 @@
 
 后续测试维护`26f2f309`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功：各43单元/6装配，开发与实际包36通过16跳过，未签名原生安装包装配通过；c303退出响应失败与历史Keychain/旧停止根因分别保留。随后固定内核0.9.1接入已通过Windows独立Tester/Reviewer、实际包36通过16跳过、真实Codex文件闭环和独立Claude试运行；内核153项及桌面43单元/7装配通过，见[接入记录](docs/development/cli-input-lifecycle.md)。
 
-本地`feat/project-overview`进一步固定0.9.2内核并接入[项目卡片、创建与真实仓库详情](docs/development/project-overview.md)，Windows独立Tester19断言及Reviewer通过。内核157项、桌面44单元/7装配、实际功能修复包38通过16跳过；后续仅英文字典修正已在最终包定向复验。两仓推送/标准下载受本机网络阻塞，备用GitHub连接器上传403；新提交尚未远端分发，无本增量CI或新正式身份安装器结果，不继承旧CI。已核验官方Electron归档的离线实际包仅作为本机验证，详细范围和后续步骤见交接。
+`feat/project-overview/de97647`已推送并接入[项目卡片、创建与真实仓库详情](docs/development/project-overview.md)，Windows独立Tester19断言及Reviewer通过；其CI暴露锁定092内核的原生路径问题。后续`fix/native-path-identities`固定0.9.4/51f0b18，内核160项、桌面44单元/8装配、新实际Windows包38通过16跳过。独立中文长/短父目录回归通过，COM测试编码问题已关闭。原093实际包的一次退出超时尚未定位。新双平台CI及接入审查结果见[路径修复记录](docs/development/native-path-identities.md)，不继承旧CI或把Windows本机结果当macOS验收。
 
 ## 分支职责
 
