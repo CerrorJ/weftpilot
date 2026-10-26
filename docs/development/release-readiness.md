@@ -4,6 +4,8 @@
 
 ## 当前能力与验证范围
 
+2026-10-26当前已验证实现提交为`16eabd7156d214a4d6def8ae7d6876383a108bcb`，固定094/51f/protocol1/schema8/131文件/原tar摘要。[CI40272620242](https://github.com/CerrorJ/weftpilot/actions/runs/40272620242)双平台成功，各51单元、开发及实际包44通过16明确跳过、未签名NSIS/ARM64 DMG/ZIP装配通过。Git地址复制、需求目录及创建关联任务按各自确切提交验收，见[进度](progress.md)。当前docs分支只更新报告，不作为新的已打包源码身份；本机系统限制、旧故障、飞书/模型成功路径、用户设备/安装升级/真实Mac CLI、许可/签名和整体设计仍按[待办](remaining-work.md)保持真实状态。
+
 2026-10-26当前稳定提交`44d4df6`/固定094的[CI40269550640](https://github.com/CerrorJ/weftpilot/actions/runs/40269550640)两平台成功：51单元，装配Win8/Mac7通过1平台跳过；开发及实际包各42通过16明确跳过；未签名NSIS与ARM64 DMG/ZIP装配成功。正常HTTPS推送已恢复，旧092网络/CI阻塞不再是当前状态。下文保留各版本原时点；本机剪贴板权限、旧Windows访问冲突/Keychain根因、用户设备/真实Mac CLI/签名和飞书等限制不因绿色CI自动关闭。需求目录后续WIP不继承44d验收，见[需求记录](requirement-catalog.md)。
 
 最新本地项目页增量固定092/3910834/p1/schema8/131文件，内核157全量及独立Tester/Reviewer通过；桌面44单元/7装配、功能修复包38通过16跳过，最终仅字典补正的i18n包独立定向确认P3关闭。项目页独立Tester19断言PASS、Reviewer APPROVE，两实例菜单退出0/内核停止/自有树空；受控历史和门控回执与真实CLI分别记录。当前两仓网络推送、标准Electron下载及备用连接器上传权限仍阻塞，离线归档官方SHA核验后仅本机装配验证，没有新CI/Mac/正式身份安装器或发行结论。见[项目页交接](project-overview.md)，下方091为此前版本时点。

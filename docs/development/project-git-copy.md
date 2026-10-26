@@ -20,6 +20,6 @@
 
 ## 验收门禁与复现
 
-CI显式设置`WEFTPILOT_REQUIRE_NATIVE_CLIPBOARD=1`，`CI=true`同样强制原生成功；剪贴板不可用必须失败，不能借本机跳过规则变绿。完整原生CI必须执行两项真实成功/迟到回执检查，并保留相关页面PNG供独立复核；不上传业务库、原剪贴板或凭据。当前新分支尚未形成CI结果或最终独立验收，不继承父5f的绿色结果。
+CI显式设置`WEFTPILOT_REQUIRE_NATIVE_CLIPBOARD=1`，`CI=true`同样强制原生成功；剪贴板不可用必须失败，不能借本机跳过规则变绿。完整原生CI必须执行两项真实成功/迟到回执检查，并保留相关页面PNG供独立复核；不上传业务库、原剪贴板或凭据。提交前候选没有继承父5f的绿色结果，后续确切提交的双平台结果见本文顶部。
 
-按README装配、构建新实际包；设置`WEFTPILOT_PACKAGED_EXE`执行`pnpm test:e2e`，定向`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/project-git-copy.test.ts`。本机有界跳过必须同时记录原因；要求真实成功时设置上述强制变量，任何失败仍按失败处理。源码/产物、Tester/Reviewer、新CI及平台结论后续据实际结果追加，不把本候选标作整体M4或原型封板。
+按README装配、构建新实际包；设置`WEFTPILOT_PACKAGED_EXE`执行`pnpm test:e2e`，定向`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/project-git-copy.test.ts`。本机有界跳过必须同时记录原因；要求真实成功时设置上述强制变量，任何失败仍按失败处理。本文的局部验收不代表整体M4或原型封板。

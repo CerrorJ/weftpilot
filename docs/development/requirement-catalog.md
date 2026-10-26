@@ -19,10 +19,10 @@
 - 实际Windows包完整59项：41通过、18明确跳过、0失败、0取消。18项含本机剪贴板成功路径2项（系统访问受限已单独记录）及原16项模型/安装器等显式选择，不将其算作本次成功。
 - 首轮两个定向用例因当前正文和隐藏历史存在相同文本而触发测试选择器歧义；保留原失败日志，随后精确限定当前正文，未删除历史或弱化版本断言。真实包核对131精确集合/逐文件SHA及内外锁。
 - 首批中文浅色列表/英文深色700px详情已实际查看，没有新增视觉阻塞。独立Windows Tester限定增量PASS：创建拒绝获焦/输入保留、v1/v2冲突、三版历史、任务仍固定v1、嵌套Esc/归焦、精确任务跳转、700px表内实际横滚、重启恢复与28文件SHA保护通过；两次主验收正常菜单exit0/自有树空，实际包131集合/逐SHA/双锁一致。
-- 独立辅助driver曾误读控制文件BOM而退出，其首次程序退出码未知；另有resize未等待、确认滚动后读取已dispose进程的辅助错误，均保留，不用后续主周期通过覆盖。Reviewer与本分支原生CI待完成；父44d的CI不包含本增量。
+- 独立辅助driver曾误读控制文件BOM而退出，其首次程序退出码未知；另有resize未等待、确认滚动后读取已dispose进程的辅助错误，均保留，不用后续主周期通过覆盖。当时Reviewer与本分支原生CI尚未完成，最终确切提交结果见顶部；父44d的CI不包含本增量。
 
 ## 复现和未完成项
 
 按README装配固定内核，`pnpm build`、`pnpm package`；设置`WEFTPILOT_PACKAGED_EXE`后运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/requirement-catalog.test.ts tests/e2e/product-catalog.test.ts`或`pnpm test:e2e`。完整检查使用`pnpm typecheck`、`pnpm lint`、`pnpm format:check`、`pnpm test`和`pnpm test:packaging`。
 
-本增量没有伪造原型中的优先级、需求阶段或“转任务”成功；这些需要后续内核对象/用例及对应交互扩展。当前版本徽标只是已有真实版本，不替代业务阶段。需求页整体、团队页、角色飞书路由及完整原型/M0—M4验收均未因此完成。
+此ca46增量不包含优先级、需求阶段或“转任务”，没有展示模拟成功；后续16e的真实[创建关联任务](requirement-task-create.md)另行验收，优先级和阶段仍待内核扩展。当前版本徽标只是已有真实版本，不替代业务阶段。需求页整体、团队页、角色飞书路由及完整原型/M0—M4验收均未因此完成。

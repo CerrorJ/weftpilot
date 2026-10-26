@@ -8,6 +8,10 @@
 
 ## 当前状态
 
+需求创建关联任务实现`16eabd7156d214a4d6def8ae7d6876383a108bcb`已提交推送，独立Windows Tester PASS/Reviewer APPROVE；[CI40272620242](https://github.com/CerrorJ/weftpilot/actions/runs/40272620242)双平台成功，各51单元、开发/实际包44通过16明确跳过、未签名原生安装包装配通过。独立Tester/Reviewer各自补验确切日志、8图与官方摘要一致，限定增量PASS/APPROVE；固定项目/来源版本、输入保护、唯一任务/零Run、重启及两次正常退出证明齐全。本次没有模型执行或飞书联调。当前`docs/requirement-workflow-validation`仅汇总确切实现提交的验收，不改变或重建应用/内核；后续仍按[待办](remaining-work.md)推进，不宣布整体M0—M4或原型封板。
+
+两仓已分别推送：桌面实现16e/`feat/requirement-task-create`，Agent-Team关联文档885bb40/`fix/native-path-identities`；运行内核来源仍51f/094/p1/schema8/131文件，tar摘要不变。文档提交不漂移锁定产物；未合并开发分支或公开发布。
+
 需求目录`ca46ce248ab4abbc7b80ff09836321734af7c4d4`已推送，独立Windows Tester/Reviewer通过，[CI40271482336](https://github.com/CerrorJ/weftpilot/actions/runs/40271482336)双平台成功，各开发/实际包43通过16跳过、51单元与未签名安装包装配成功；独立Tester/Reviewer补验4图/摘要及确切日志后限定CI范围PASS/APPROVE。已接着实现[创建关联任务](requirement-task-create.md)：需求版本和项目固定、文本预填/失败保留/成功打开确切任务、后台新版本不改绑；新实际Windows包60项42通过18明确跳过、51单元/8装配/strict/lint/格式通过，独立验收和新CI待完成。内核094/51f/131文件/原摘要保持不变。
 
 Git地址复制`44d4df6`的[CI40269550640](https://github.com/CerrorJ/weftpilot/actions/runs/40269550640)双平台成功，各开发/实际包42通过16明确跳过、51单元及未签名安装包装配通过，真实复制/读回/Unicode/迟到回执两项在强制原生模式实际跑过；独立Tester/Reviewer补验日志、8图和摘要后限定CI范围PASS/APPROVE，本机受限保留。继续[需求目录](requirement-catalog.md)：列表/详情/新建与编辑弹窗、CAS输入保护及历史引用；实际Windows包59项41通过18明确跳过，51单元/8装配/strict/lint/格式通过，独立验收和新分支CI待完成。整体原型与M0—M4仍未封板。
