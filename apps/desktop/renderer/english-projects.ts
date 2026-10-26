@@ -24,6 +24,13 @@ export const englishProjects: Record<string, string> = {
   重新检查仓库: 'Check repository again',
   '正在检查仓库…': 'Checking repository…',
   'Git 地址': 'Git address',
+  'Git 地址不可用': 'Git address unavailable',
+  '复制 Git 地址': 'Copy Git address',
+  '正在复制…': 'Copying…',
+  'Git 地址已复制': 'Git address copied',
+  'Git 地址已变化，请重新检查仓库。': 'The Git address changed. Check the repository again.',
+  '未能确认复制，请重试或手动复制地址。':
+    'Copy could not be confirmed. Retry or copy the address manually.',
   当前分支: 'Current branch',
   '分离 HEAD': 'Detached HEAD',
   当前提交: 'Current commit',

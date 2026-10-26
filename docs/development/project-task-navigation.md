@@ -18,4 +18,6 @@
 
 最终所有直接测试入口统一后完整55项再次39通过/16明确跳过/0失败/0取消（约58秒），44单元/8装配及严格检查通过。退出层独立真实CLI停止用例为1trial+2业务Run全确认结束，另有独立窗口和负例6/6，最终Reviewer APPROVE；它属于测试维护验证，不冒充本导航新增业务执行或新macOS结论。新CI待最终开发分支推送后核验。
 
+实际功能提交`5f28898de54b09668eedd909410991c107037009`及依赖35d411d已推送；[CI40264396158](https://github.com/CerrorJ/weftpilot/actions/runs/40264396158)双平台成功，开发/实际包均39通过16跳过，44单元和各自装配/原生安装包装配通过。Windows与macOS runner的原生结果不替代用户安装升级或真实Mac CLI。本导航限定范围完成，继续Git地址复制与项目其余差异，整体原型未封板。
+
 复现：按README装配固定内核并构建全新实际包，设置`WEFTPILOT_PACKAGED_EXE`后运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/project-task-navigation.test.ts tests/e2e/task-browser.test.ts tests/e2e/feishu-binding.test.ts`。全量另执行`pnpm test:e2e`；CLI/模型的显式跳过仍不算通过。

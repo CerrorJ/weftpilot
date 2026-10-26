@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import type { Project, ProjectInspection } from '@weftpilot/agent-team-kernel/protocol'
 import { useI18n } from './preferences'
 import { useProjectInspection } from './use-project-inspection'
+import { ProjectGitAddress } from './project-git-address'
 
 export const ProjectRepository = ({ project }: { project: Project }) => {
   const { t } = useI18n()
@@ -44,16 +45,17 @@ const InspectionStatus = ({
 }
 
 const SavedFacts = ({ project, report }: Report & { project: Project }) => {
-  const { t } = useI18n()
   return (
-    <FactRows
-      mono
-      entries={[
-        ['Git 地址', (report ? report.gitUrl : project.gitUrl) || t('本地仓库（未配置 origin）')],
-        ['默认分支', project.defaultBranch],
-        ['工作目录', project.repositoryPath],
-      ]}
-    />
+    <>
+      <ProjectGitAddress project={project} gitUrl={report ? report.gitUrl : project.gitUrl} />
+      <FactRows
+        mono
+        entries={[
+          ['默认分支', project.defaultBranch],
+          ['工作目录', project.repositoryPath],
+        ]}
+      />
+    </>
   )
 }
 

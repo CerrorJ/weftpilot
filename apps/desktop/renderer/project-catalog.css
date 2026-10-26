@@ -135,6 +135,29 @@
   margin: 0;
   overflow-wrap: anywhere;
 }
+.project-git-address,
+.project-copy-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.project-git-address > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.project-copy-control {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--muted);
+}
+.project-copy-button {
+  display: inline-grid;
+  place-items: center;
+  padding: 5px;
+  min-width: 28px;
+  min-height: 28px;
+}
 .project-dirty {
   color: var(--error);
 }

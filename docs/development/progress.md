@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+已核验`35d411d`测试层及`5f28898`项目导航的[CI40264396158](https://github.com/CerrorJ/weftpilot/actions/runs/40264396158)双平台成功：各44单元，装配Win8/Mac7通过1平台跳过；锁定内核Win160/160、Mac150通过10平台跳过；开发及实际应用各39通过16明确跳过，未签名NSIS/ARM64 DMG/ZIP装配成功。旧0xC0000005本轮未复现，具体历史根因及用户设备/真实Mac CLI/安装升级/签名限制保持原归属。
+
+继续`feat/project-git-copy`接回原型[Git地址复制](project-git-copy.md)：只消费内核脱敏元数据，主进程命名桥接核对后串行写入并私有比较。51单元/严格检查通过；本机实际包58项40通过18跳过，其中新增两个真实成功路径被系统剪贴板不可访问阻塞，负路径已验证。独立验证及强制原生成功的CI待完成，当前是开发候选，不能记作功能验收通过；不改系统权限或等待用户而继续CI验证和其他工作。
+
 8076500的[双平台CI40256239326](https://github.com/CerrorJ/weftpilot/actions/runs/40256239326)已核验：路径回归Win160/160、Mac150通过10平台跳过；44单元、装配及两平台开发应用均过，Mac实际包38通过16跳过、DMG/ZIP装配过，Win实际包备份最后退出0xC0000005失败（37通过1失败16跳过），非双平台全绿。[退出调查](windows-exit-investigation.md)保留故障与本机调试连接证据。后续`35d411d`独立提交测试层维护：仅will-quit释放Windows测试调试器、所有特殊启动也接入、M0加强严格exit0，原负例不弱化。独立真实CLI停止/完全退出1/1（1trial+2业务Run全部confirmed_ended/PID消失）、实际窗口及6负例通过，Reviewer最终APPROVE；PS5 BOM/UTC/白名单边界定向关闭，新CI仍待核验。
 
 项目详情按原型新增[项目任务管理跳转](project-task-navigation.md)：精确UUID筛选同名项目、空列表、显式全局入口重置/轮询保留、原详情入口。独立实际窗口及P2定向补验通过，Reviewer限定UI增量APPROVE；最终fixed包55项39通过16跳过/0失败/0取消、44单元/8装配/strict/lint/摘要通过。功能在feat/project-task-navigation单独提交；新CI待推送后核验，不把旧CI当新功能通过。固定内核仍094/51f0b18，131文件/摘要未变。

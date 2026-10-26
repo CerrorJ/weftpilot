@@ -15,6 +15,7 @@ import { registerFeishuBridge } from './feishu-bridge'
 import { registerMaintenanceBridge } from './maintenance-bridge'
 import type { KernelController } from './kernel-controller'
 import { parseInput } from './input-validation'
+import { registerProjectClipboardBridge } from './project-clipboard-bridge'
 
 const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
@@ -61,6 +62,7 @@ export const registerWorkflowBridge = (options: {
     return window
   }
   registerQueries({ ...options, assertSender })
+  registerProjectClipboardBridge({ client: options.client, assertSender })
   for (const [method, type] of Object.entries(commandTypes)) {
     ipcMain.handle(`workflow:${method}`, (event, raw: unknown) => {
       assertSender(event)
