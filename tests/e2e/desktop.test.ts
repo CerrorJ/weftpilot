@@ -5,6 +5,8 @@ import { cp, mkdtemp, mkdir, readFile, rm } from 'node:fs/promises'
 import { basename, dirname, join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { _electron as electron } from 'playwright'
+import { prepareElectronTest } from './electron-test-session'
+import { quit } from './workflow-helpers'
 
 test(
   '真实 Electron 工具进程运行锁定内核，窗口关闭继续，完全退出确认结束',
@@ -21,15 +23,17 @@ test(
       process.platform === 'win32'
         ? join(process.env.SystemRoot ?? 'C:/Windows', 'System32')
         : '/usr/bin:/bin'
-    const application = await electron.launch({
-      ...(executablePath ? { executablePath, args: [] } : { args: ['.'] }),
-      ...(executablePath ? { cwd: data } : {}),
-      env: {
-        ...process.env,
-        WEFTPILOT_TEST_DATA: data,
-        ...(executablePath ? { PATH: packagedPath, Path: packagedPath } : {}),
-      },
-    })
+    const application = await prepareElectronTest(
+      await electron.launch({
+        ...(executablePath ? { executablePath, args: [] } : { args: ['.'] }),
+        ...(executablePath ? { cwd: data } : {}),
+        env: {
+          ...process.env,
+          WEFTPILOT_TEST_DATA: data,
+          ...(executablePath ? { PATH: packagedPath, Path: packagedPath } : {}),
+        },
+      }),
+    )
     // after钩子独立报告清理失败，避免finally的EBUSY覆盖原业务断言。
     context.after(async () => {
       await application.close().catch(() => undefined)
@@ -80,16 +84,9 @@ test(
       }),
       true,
     )
-    const exit = new Promise<void>((done) => {
-      application.once('close', done)
-    })
-    await application.evaluate(({ Menu }) => {
-      const item = Menu.getApplicationMenu()?.items[0]?.submenu?.items[0]
-      item?.click()
-    })
-    await exit
+    await quit(application)
     const { DatabaseSync } = await import('node:sqlite')
-    const db = new DatabaseSync(resolve(data, 'kernel/kernel.sqlite'))
+    const db = new DatabaseSync(resolve(data, 'kernel/kernel.sqlite'), { readOnly: true })
     const events = db.prepare('SELECT type FROM events ORDER BY sequence').all()
     db.close()
     assert.deepEqual(

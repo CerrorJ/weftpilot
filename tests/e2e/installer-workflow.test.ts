@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { prepareElectronTest } from './electron-test-session'
 import { test } from 'node:test'
 import { join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
@@ -53,11 +54,13 @@ test(
     try {
       assert.equal(await setup(first.path, 'install'), 0)
       assert.equal((await validationRegistration())?.version, first.manifest.version)
-      application = await electron.launch({
-        executablePath,
-        args: [],
-        env: environment,
-      })
+      application = await prepareElectronTest(
+        await electron.launch({
+          executablePath,
+          args: [],
+          env: environment,
+        }),
+      )
       assert.equal(
         await application.evaluate(({ app }) => app.getVersion()),
         first.manifest.version,
@@ -102,11 +105,13 @@ test(
       assert.equal(encryptedBefore.includes(Buffer.from('installer-synthetic-secret')), false)
       assert.equal(await setup(second.path, 'install'), 0)
       assert.equal((await validationRegistration())?.version, second.manifest.version)
-      application = await electron.launch({
-        executablePath,
-        args: [],
-        env: environment,
-      })
+      application = await prepareElectronTest(
+        await electron.launch({
+          executablePath,
+          args: [],
+          env: environment,
+        }),
+      )
       page = await application.firstWindow()
       assert.equal(
         await application.evaluate(({ app }) => app.getVersion()),

@@ -45,6 +45,10 @@ test(
       })
       const binding = initial.feishuBinding!
       assert.equal(JSON.stringify(initial).includes(firstSecret), false)
+      // 内核快照可早于本窗口保存回调/React提交，仍须等待并精确验证真实字段清空。
+      await page.waitForFunction(
+        () => document.querySelector<HTMLInputElement>('input[name="secret"]')?.value === '',
+      )
       assert.equal(await page.getByLabel('App Secret', { exact: true }).inputValue(), '')
       const encrypted = await readFile(
         join(fixture.data, 'credentials/feishu', `${binding.credentialRef}.bin`),

@@ -1,4 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
+import { prepareElectronTest } from './electron-test-session'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises'
@@ -133,10 +134,12 @@ test(
       process.platform === 'win32'
         ? join(process.env.SystemRoot ?? 'C:/Windows', 'System32')
         : '/usr/bin:/bin'
-    const application = await electron.launch({
-      ...(executablePath ? { executablePath, args: [] } : { args: ['.'] }),
-      env: { ...process.env, PATH: path, Path: path, WEFTPILOT_TEST_DATA: fixture.data },
-    })
+    const application = await prepareElectronTest(
+      await electron.launch({
+        ...(executablePath ? { executablePath, args: [] } : { args: ['.'] }),
+        env: { ...process.env, PATH: path, Path: path, WEFTPILOT_TEST_DATA: fixture.data },
+      }),
+    )
     try {
       const page = await application.firstWindow()
       await openSettingsPage(page, 'kernel')
