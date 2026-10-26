@@ -8,10 +8,17 @@ import { HumanPage } from './human-page'
 import { latestVersions } from './object-versions'
 import { TaskOverview } from './task-overview'
 import { useTaskBrowser, type TaskBrowser } from './use-task-browser'
+import type { TaskEntry } from './navigation'
 
-export const TasksPage = ({ actions, taskId }: { actions: WorkspaceActions; taskId: string }) => {
+export const TasksPage = ({
+  actions,
+  taskEntry,
+}: {
+  actions: WorkspaceActions
+  taskEntry: TaskEntry
+}) => {
   const { t } = useI18n()
-  const browser = useTaskBrowser(taskId)
+  const browser = useTaskBrowser(taskEntry)
   return (
     <>
       <PageHeading

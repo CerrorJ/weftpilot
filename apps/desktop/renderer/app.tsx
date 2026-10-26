@@ -2,7 +2,8 @@
 import { useI18n, PreferencesProvider, AppearanceSettings } from './preferences'
 import './desktop-api'
 import { useWorkspace, type WorkspaceActions } from './use-workspace'
-import { navigation, type NavigationId } from './navigation'
+import { navigation, type NavigationId, type TaskEntry } from './navigation'
+import { useWorkspaceNavigation } from './use-workspace-navigation'
 import { NavigationIcon } from './navigation-icon'
 import { CatalogPage, isCatalog, type RoleNavigation } from './catalog-pages'
 import { WorkspaceHome } from './workspace-home'
@@ -17,19 +18,14 @@ export const App = () => (
 )
 
 const AppShell = () => {
-  const [page, setPage] = useState<NavigationId>('home')
-  const [taskId, setTaskId] = useState('')
+  const routing = useWorkspaceNavigation()
+  const { page, taskEntry, openTask, openProjectTasks } = routing
   const [roleReturn, setRoleReturn] = useState(false)
   const [roleResume, setRoleResume] = useState(false)
   const actions = useWorkspace()
   const navigate = (id: NavigationId) => {
-    setTaskId('')
-    setPage(id)
+    routing.navigate(id)
     setRoleResume(false)
-  }
-  const openTask = (id: string) => {
-    setTaskId(id)
-    setPage('tasks')
   }
   return (
     <div className="workspace">
@@ -39,14 +35,15 @@ const AppShell = () => {
         <div className="page-content">
           <PageContent
             page={page}
-            taskId={taskId}
+            taskEntry={taskEntry}
             actions={actions}
             navigate={navigate}
             openTask={openTask}
+            openProjectTasks={openProjectTasks}
             roleReturn={roleReturn}
             returnRole={() => {
               setRoleReturn(false)
-              setPage('roles')
+              routing.navigate('roles')
               setRoleResume(true)
             }}
             roleNavigation={{
@@ -148,19 +145,21 @@ const SidebarFooter = ({ actions }: { actions: WorkspaceActions }) => {
 
 const PageContent = ({
   page,
-  taskId,
+  taskEntry,
   actions,
   navigate,
   openTask,
+  openProjectTasks,
   roleReturn,
   returnRole,
   roleNavigation,
 }: {
   page: NavigationId
-  taskId: string
+  taskEntry: TaskEntry
   actions: WorkspaceActions
   navigate: (page: NavigationId) => void
   openTask: (id: string) => void
+  openProjectTasks: (id: string) => void
   roleReturn: boolean
   returnRole: () => void
   roleNavigation: RoleNavigation
@@ -174,6 +173,7 @@ const PageContent = ({
         actions={actions}
         roleNavigation={roleNavigation}
         openTask={openTask}
+        openProjectTasks={openProjectTasks}
       />
     )
   if (page === 'settings') return <SettingsPage actions={actions} />
@@ -184,7 +184,7 @@ const PageContent = ({
         <SkillPage actions={actions} />
       </>
     )
-  return <TasksPage actions={actions} taskId={taskId} />
+  return <TasksPage key={taskEntry.visit} actions={actions} taskEntry={taskEntry} />
 }
 
 const ReturnToRole = ({ onReturn }: { onReturn: () => void }) => {

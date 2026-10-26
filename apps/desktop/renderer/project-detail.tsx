@@ -15,17 +15,22 @@ interface Context {
   actions: WorkspaceActions
   back: () => void
   openTask: (id: string) => void
+  openProjectTasks: (id: string) => void
 }
 
-export const ProjectDetail = ({ project, state, actions, back, openTask }: Context) => {
+export const ProjectDetail = ({
+  project,
+  state,
+  actions,
+  back,
+  openTask,
+  openProjectTasks,
+}: Context) => {
   const { t } = useI18n()
   const heading = useRef<HTMLDivElement>(null)
   useEffect(() => {
     heading.current?.focus()
   }, [])
-  const tasks = state.tasks.filter(
-    (task) => task.projectId === project.id && task.purpose !== 'role_trial',
-  )
   return (
     <section className="project-detail" aria-label={project.name}>
       <button className="project-back" onClick={back}>
@@ -48,13 +53,39 @@ export const ProjectDetail = ({ project, state, actions, back, openTask }: Conte
         </PageHeading>
       </div>
       <ProjectRepository project={project} />
-      <div className="project-section-heading">
-        <h2>{t('项目任务')}</h2>
-        <span className="badge">{tasks.length}</span>
-      </div>
-      <TaskTable tasks={tasks} state={state} selectTask={openTask} />
+      <ProjectTasks
+        project={project}
+        state={state}
+        openTask={openTask}
+        openProjectTasks={openProjectTasks}
+      />
       <ProjectExecutions project={project} state={state} />
     </section>
+  )
+}
+
+const ProjectTasks = ({
+  project,
+  state,
+  openTask,
+  openProjectTasks,
+}: Pick<Context, 'project' | 'state' | 'openTask' | 'openProjectTasks'>) => {
+  const { t } = useI18n()
+  const tasks = state.tasks.filter(
+    (task) => task.projectId === project.id && task.purpose !== 'role_trial',
+  )
+  return (
+    <>
+      <div className="project-section-heading">
+        <h2>
+          {t('项目任务')} <span className="badge">{tasks.length}</span>
+        </h2>
+        <button onClick={() => openProjectTasks(project.id)}>
+          {t('在任务管理中查看')} <span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <TaskTable tasks={tasks} state={state} selectTask={openTask} />
+    </>
   )
 }
 

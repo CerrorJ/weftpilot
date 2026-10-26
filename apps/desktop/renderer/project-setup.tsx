@@ -12,10 +12,12 @@ export const ProjectSetup = ({
   state,
   actions,
   openTask,
+  openProjectTasks,
 }: {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
   openTask: (id: string) => void
+  openProjectTasks: (id: string) => void
 }) => {
   const selection = useProjectCatalogSelection(state.projects)
   const project = state.projects.find((item) => item.id === selection.selected)
@@ -29,6 +31,7 @@ export const ProjectSetup = ({
           actions={actions}
           back={selection.back}
           openTask={openTask}
+          openProjectTasks={openProjectTasks}
         />
       ) : (
         <ProjectCatalog state={state} actions={actions} selection={selection} />

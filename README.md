@@ -20,7 +20,7 @@
 
 后续测试维护`26f2f309`的[CI](https://github.com/CerrorJ/weftpilot/actions/runs/40174133079)双平台成功：各43单元/6装配，开发与实际包36通过16跳过，未签名原生安装包装配通过；c303退出响应失败与历史Keychain/旧停止根因分别保留。随后固定内核0.9.1接入已通过Windows独立Tester/Reviewer、实际包36通过16跳过、真实Codex文件闭环和独立Claude试运行；内核153项及桌面43单元/7装配通过，见[接入记录](docs/development/cli-input-lifecycle.md)。
 
-`feat/project-overview/de97647`已推送并接入[项目卡片、创建与真实仓库详情](docs/development/project-overview.md)，Windows独立Tester19断言及Reviewer通过；其CI暴露锁定092内核的原生路径问题。后续`fix/native-path-identities`固定0.9.4/51f0b18，内核160项、桌面44单元/8装配、新实际Windows包38通过16跳过。独立中文长/短父目录回归通过，COM测试编码问题已关闭。原093实际包的一次退出超时尚未定位。新双平台CI及接入审查结果见[路径修复记录](docs/development/native-path-identities.md)，不继承旧CI或把Windows本机结果当macOS验收。
+`feat/project-overview/de97647`已推送并接入[项目卡片与真实仓库详情](docs/development/project-overview.md)。后续8076500固定内核0.9.4/51f0b18，其CI两平台路径回归通过、macOS实际包38通过16跳过，Windows实际包退出异常仍见[调查](docs/development/windows-exit-investigation.md)。`feat/project-task-navigation`进一步接回原型[项目任务筛选跳转](docs/development/project-task-navigation.md)，独立Tester/Reviewer通过；测试退出层35d411d另经真实CLI停止/完全退出验证。最终Windows实际包39通过16跳过、44单元/8装配通过，新CI待核验，M0—M4与整体原型尚未封板。
 
 ## 分支职责
 

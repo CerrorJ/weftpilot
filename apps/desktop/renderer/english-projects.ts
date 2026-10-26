@@ -19,6 +19,7 @@ export const englishProjects: Record<string, string> = {
   '每次执行使用独立分支与工作目录。': 'Each run uses its own branch and worktree.',
   新建项目任务: 'New project task',
   项目任务: 'Project tasks',
+  在任务管理中查看: 'View in tasks',
   代码仓库: 'Repository',
   重新检查仓库: 'Check repository again',
   '正在检查仓库…': 'Checking repository…',

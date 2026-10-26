@@ -26,18 +26,27 @@ export const CatalogPage = ({
   actions,
   roleNavigation,
   openTask,
+  openProjectTasks,
 }: {
   page: CatalogId
   actions: WorkspaceActions
   roleNavigation: RoleNavigation
   openTask: (id: string) => void
+  openProjectTasks: (id: string) => void
 }) => {
   const { t } = useI18n()
   const [title, description] = titles[page]
   if (page === 'roles' && actions.state)
     return <RoleSetup state={actions.state} actions={actions} {...roleNavigation} />
   if (page === 'projects' && actions.state)
-    return <ProjectSetup state={actions.state} actions={actions} openTask={openTask} />
+    return (
+      <ProjectSetup
+        state={actions.state}
+        actions={actions}
+        openTask={openTask}
+        openProjectTasks={openProjectTasks}
+      />
+    )
   return (
     <>
       <PageHeading title={title} description={description} />

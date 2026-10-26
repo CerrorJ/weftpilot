@@ -10,3 +10,9 @@ export const navigation = [
 ] as const
 
 export type NavigationId = (typeof navigation)[number]['id']
+
+export interface TaskEntry {
+  taskId: string
+  projectId: string
+  visit: number
+}

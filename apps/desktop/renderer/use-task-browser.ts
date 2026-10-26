@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { TaskView } from './task-views'
+import type { TaskEntry } from './navigation'
 
 interface BrowserState {
   view: TaskView
@@ -8,12 +9,12 @@ interface BrowserState {
   selected: string
 }
 /** 只保存列表交互状态；创建选择来自已校验回执，不因其他渠道的新任务或轮询跳转详情。 */
-export const useTaskBrowser = (initialTaskId: string) => {
+export const useTaskBrowser = (entry: TaskEntry) => {
   const [state, setState] = useState<BrowserState>({
     view: 'all',
-    project: '',
+    project: entry.projectId,
     search: '',
-    selected: initialTaskId,
+    selected: entry.taskId,
   })
   const filter = (patch: Partial<Pick<BrowserState, 'view' | 'project' | 'search'>>) =>
     setState((current) => ({ ...current, ...patch, selected: '' }))

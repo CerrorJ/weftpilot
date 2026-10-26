@@ -23,7 +23,11 @@ export const TaskToolbar = ({
       {tabs}
       <label>
         <span className="visually-hidden">{t('筛选项目')}</span>
-        <select value={project} onChange={(event) => setProject(event.target.value)}>
+        <select
+          aria-label={t('筛选项目')}
+          value={project}
+          onChange={(event) => setProject(event.target.value)}
+        >
           <option value="">{t('所有项目')}</option>
           {projects.map((item) => (
             <option key={item.id} value={item.id}>

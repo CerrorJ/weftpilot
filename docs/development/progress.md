@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+8076500的[双平台CI40256239326](https://github.com/CerrorJ/weftpilot/actions/runs/40256239326)已核验：路径回归Win160/160、Mac150通过10平台跳过；44单元、装配及两平台开发应用均过，Mac实际包38通过16跳过、DMG/ZIP装配过，Win实际包备份最后退出0xC0000005失败（37通过1失败16跳过），非双平台全绿。[退出调查](windows-exit-investigation.md)保留故障与本机调试连接证据。后续`35d411d`独立提交测试层维护：仅will-quit释放Windows测试调试器、所有特殊启动也接入、M0加强严格exit0，原负例不弱化。独立真实CLI停止/完全退出1/1（1trial+2业务Run全部confirmed_ended/PID消失）、实际窗口及6负例通过，Reviewer最终APPROVE；PS5 BOM/UTC/白名单边界定向关闭，新CI仍待核验。
+
+项目详情按原型新增[项目任务管理跳转](project-task-navigation.md)：精确UUID筛选同名项目、空列表、显式全局入口重置/轮询保留、原详情入口。独立实际窗口及P2定向补验通过，Reviewer限定UI增量APPROVE；最终fixed包55项39通过16跳过/0失败/0取消、44单元/8装配/strict/lint/摘要通过。功能在feat/project-task-navigation单独提交；新CI待推送后核验，不把旧CI当新功能通过。固定内核仍094/51f0b18，131文件/摘要未变。
+
 内核`fix/native-path-identities/51f0b18`已提交推送；桌面固定0.9.4/p1/schema8/131文件，远程隔离重建及实际包摘要一致。内核真实8.3临时目录160/160、原服务/内核构建、独立Tester/Reviewer通过；中文长/短父TEMP下两仓定向验收零跳过，审查发现的COM编码P2已关闭。桌面44单元/8装配、strict/lint/格式、新锁定内核160项及新实际Windows包完整54项38通过/16跳过。094独立实际窗口PASS（两周期正常退出、短DATA/仓库、偏好重启），随后Reviewer最终APPROVE。新双平台CI待提交后核验，详见[原生路径记录](native-path-identities.md)。
 
 原093实际包首次37通过/1取消/16跳过，保留已停止内核但主进程残留现场；其后只读生命周期诊断完整轮38通过/16跳过、094原始全量同样通过，都不能关闭原间歇性原因。旧停止不确定/Keychain/恢复负例及损坏缓存现场分别保留。
