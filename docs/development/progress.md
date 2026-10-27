@@ -8,9 +8,15 @@
 
 ## 当前状态
 
+当前完成[需求优先级/业务阶段](requirement-metadata.md)增量：桌面214实现及6a7340b修复、内核0.10.0/969b548/p1/schema9/132文件已分别推送。修复[CI40435856697](https://github.com/CerrorJ/weftpilot/actions/runs/40435856697)双平台SUCCESS，各51单元、开发/实际包45通过16明确跳过、未签名原生安装包装配通过；固定内核Win164/164、Mac154通过10平台跳过。独立Tester/Reviewer验证真实094→0100升级、版本/冲突/清除/归档、P2四空白边界和6a原生CI日志/12图/官方摘要后限定增量PASS/APPROVE。214的trim P2及初轮REQUEST_CHANGES保留，未将214绿色当修复证据。本地修复只重跑1+4专项，完整修复61由确切6a CI覆盖；不倒写本地结果。下一项为项目目标/描述/默认团队，整体原型和M0—M4未封板。
+
+两仓关联：桌面代码`feat/requirement-metadata/6a7340b`；Agent-Team源码`feat/requirement-metadata/969b548`，关联文档205e81e。后者不改变固定内核版本或摘要；桌面`docs/requirement-metadata-validation`仅汇总证据，未合并分支或公开发布。
+
 需求优先级/阶段进入[0100接入](requirement-metadata.md)：唯一内核969b548已先提交推送，0.10.0/p1/schema9/132文件与新tar摘要从两份干净检出重建一致；内核164及原服务/嵌入构建、独立Tester/Reviewer通过。桌面已锁定产物，strict/lint/格式、51单元/8装配及实际Windows包完整61项45通过16明确跳过；独立旧094→新0100实际界面验收进行中，新分支CI尚待，未将局部通过当完整M2/M4。今日真实剪贴板成功/迟到用例也实际通过，旧error5本轮未复现，历史根因不因此关闭。
 
 后续21401f候选真实界面/升级/schema9归档已独立通过，其[CI40434671475](https://github.com/CerrorJ/weftpilot/actions/runs/40434671475)两平台SUCCESS；但Reviewer发现枚举trim导致异常空白变清除/合法值的P2，故候选不验收。现已保留原值、仅严格空串清除，新增四项实际异常选项断言，新Windows修复包4相关回归通过；独立P2补验与修复后CI继续，不用214绿色覆盖缺口。
+
+P2修复已单独提交推送6a7340b，独立Tester真实四负例/合法清除和枚举保存通过，正常exit0/自有树空；Reviewer定向APPROVE并保留原REQUEST_CHANGES。源0.10.0/969/132文件/摘要未变，[修复CI40435856697](https://github.com/CerrorJ/weftpilot/actions/runs/40435856697)后续双平台通过且已独立补验。`docs/requirement-metadata-validation`仅汇总报告，不改变或重新装配运行产物；完整M0—M4仍未封板。
 
 需求创建关联任务实现`16eabd7156d214a4d6def8ae7d6876383a108bcb`已提交推送，独立Windows Tester PASS/Reviewer APPROVE；[CI40272620242](https://github.com/CerrorJ/weftpilot/actions/runs/40272620242)双平台成功，各51单元、开发/实际包44通过16明确跳过、未签名原生安装包装配通过。独立Tester/Reviewer各自补验确切日志、8图与官方摘要一致，限定增量PASS/APPROVE；固定项目/来源版本、输入保护、唯一任务/零Run、重启及两次正常退出证明齐全。本次没有模型执行或飞书联调。当前`docs/requirement-workflow-validation`仅汇总确切实现提交的验收，不改变或重建应用/内核；后续仍按[待办](remaining-work.md)推进，不宣布整体M0—M4或原型封板。
 

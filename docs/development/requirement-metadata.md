@@ -2,9 +2,15 @@
 
 2026-10-27。按`product-design/c29c2f5`需求页及`openReq`接入低/中/高优先级和待澄清、待确认、方案已确认、实现中四个阶段，沿用现有列表/详情/版本编辑与中英文、明暗主题。
 
+桌面实现`21401f24b4d3b631a95b7a7b96e10dd3c3ee149f`及修复`6a7340b8adc08414113ebcfaae0f780acfcbcacf`已分别提交推送。独立Tester已完成214原界面/升级/归档及6a空白边界补验，Reviewer保留214 REQUEST_CHANGES并在6a定向复核关闭P2、APPROVE，无新增P0—P3。修复[CI40435856697](https://github.com/CerrorJ/weftpilot/actions/runs/40435856697)双平台SUCCESS：内核Win164/164、Mac154通过10平台跳过；各51单元，装配Win8/Mac7通过1平台跳过；开发及实际应用各61项45通过16明确跳过、0失败/取消；未签名NSIS/ARM64 DMG/ZIP及blockmap装配通过。元数据容器在两系统/两运行方式共4次实际执行，源码包含四个空白负值循环，未跳过该能力。
+
+独立Tester和Reviewer各自核对确切6a/head、完整日志、两官方artifact元数据、两ZIP官方size/SHA及12PNG逐字节，12张图均实际查看，无新增视觉阻塞，限定本增量及原生CI PASS/APPROVE。长表单使用内部竖滚，页脚可通过键盘滚入，未冒称全部首屏可见。当前docs分支只保存确切提交证据，不改变应用或内核身份，不能替代用户设备安装/升级/真实Mac CLI或签名验证。
+
 ## 内核与版本边界
 
 固定Agent-Team `969b548947b0bf6d0303f4a476130d7da0bf4452`，内核0.10.0 / protocol1 / schema9，握手能力`requirement-metadata`。132文件，产物`weftpilot-agent-team-kernel-0.10.0.tgz`，SHA-256 `1ebd0ff1b81afcbf12204e9de4358462c77ab1b0c493a37468c691152d5d8732`。先提交/推送内核，再从两份干净检出重建同一摘要并装配桌面，未覆盖094或引用相邻未提交源码。
+
+Agent-Team关联记录`205e81e5d7e9d2044de5aca054af70689e43666a`只更新文档；运行产物来源仍969，不能在关联文档HEAD重建并覆盖0100。桌面已验证身份为6a7340b，当前docs分支仅保存该提交的验收结果。
 
 字段与枚举、缺省/继承/null、CAS、事务、幂等及持久化都在Agent-Team。桌面从同一协议枚举生成选项，只提交命名`requirement.save`；没有第二份任务状态。需求阶段由所有者记录，不代表方案审批、任务执行、队列优先级或交付验收；修改生成新需求版本，已有Task和Run不改绑。
 
@@ -22,7 +28,7 @@ schema9只提升旧内核读取门禁，不更新历史JSON；升级前留一致
 
 独立Windows界面验收通过214候选的旧094→0100升级、版本/历史/冲突/清除、双语700px/键盘/重启及新schema9归档创建/检查；四个自有窗口正常菜单exit0/树空，28个Git文件SHA保护。Reviewer随后发现P2：枚举经过通用formText.trim，异常空白可能变成null或合法值。保留原审查REQUEST_CHANGES，214的两平台CI即使显示SUCCESS也不能关闭该缺口。
 
-修复只让严格空串映射null，其余FormData原值交主进程/内核拒绝。补充已有high/plan_confirmed基准上的priority空白/带空格high及stage空白/带空格implementing四个真实异常选项，逐次拒绝/完整快照不变/输入保留/重开仍为旧值；开发专项及新实际修复包4项相关回归通过，132摘要/双锁、strict/lint/格式通过。未重跑本地全61或重新拍视觉图，原全61属于修复前包；修复独立补验和新提交原生CI待完成。完整M0—M4、原型八页、真实飞书和有效自定义模型服务、用户Mac安装/升级/真实CLI及签名仍未整体验收。
+修复只让严格空串映射null，其余FormData原值交主进程/内核拒绝。补充已有high/plan_confirmed基准上的priority空白/带空格high及stage空白/带空格implementing四个真实异常选项，逐次拒绝/完整快照不变/输入保留/重开仍为旧值；开发专项及新实际修复包4项相关回归通过，132摘要/双锁、strict/lint/格式通过。独立真实界面四负例、合法清除/枚举保存、正常菜单exit0/树空及28个Git文件SHA保护通过；Reviewer又独立验证实际serializer/修复内核对四字符串和两个File原值拒绝，P2关闭。没有重跑本地全61、原迁移/视觉或冒充模型执行，原本地全61属于修复前包；修复后的完整61是在上方确切6a原生CI执行。完整M0—M4、原型八页、真实飞书和有效自定义模型服务、用户Mac安装/升级/真实CLI及签名仍未整体验收。
 
 ## 复现
 
