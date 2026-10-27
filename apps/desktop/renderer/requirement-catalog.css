@@ -75,3 +75,11 @@
 .requirement-history p {
   margin-top: 12px;
 }
+.requirement-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}

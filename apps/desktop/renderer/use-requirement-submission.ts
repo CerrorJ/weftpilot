@@ -28,6 +28,7 @@ export const useRequirementSubmission = ({
         title: formText(form, 'title'),
         body: formText(form, 'body'),
         acceptanceCriteria: formText(form, 'criteria'),
+        ...readMetadata(form),
       })
       if (result && element.isConnected) saved?.(result.id)
     } finally {
@@ -35,3 +36,11 @@ export const useRequirementSubmission = ({
     }
   }
 }
+
+/** 表单枚举仍由命名主进程/内核严格校验；非法值原样提交拒绝，不静默改成清除。 */
+const readMetadata = (form: FormData): Pick<RequirementVersion, 'priority' | 'stage'> => ({
+  priority: (formText(form, 'priority') || null) as NonNullable<
+    RequirementVersion['priority']
+  > | null,
+  stage: (formText(form, 'stage') || null) as NonNullable<RequirementVersion['stage']> | null,
+})

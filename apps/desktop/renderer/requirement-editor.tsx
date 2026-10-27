@@ -6,6 +6,7 @@ import { CreateDialog } from './create-dialog'
 import { CreationMark } from './creation-mark'
 import { TextField } from './form-fields'
 import { useRequirementSubmission } from './use-requirement-submission'
+import { RequirementMetadataFields } from './requirement-metadata'
 
 interface EditorContext {
   actions: WorkspaceActions
@@ -47,6 +48,7 @@ const RequirementForm = ({ actions, requirement, saved }: EditorContext) => {
         </p>
       )}
       <RequirementFields base={base} projects={projects} />
+      <RequirementMetadataFields base={base} />
       <button className="primary" disabled={actions.busy || !projects.length}>
         {t(base ? '保存新版本' : '创建需求')}
       </button>

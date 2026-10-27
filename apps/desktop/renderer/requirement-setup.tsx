@@ -6,6 +6,7 @@ import { PageHeading } from './page-heading'
 import { latestVersions } from './object-versions'
 import { RequirementEditor } from './requirement-editor'
 import { RequirementDetail } from './requirement-detail'
+import { RequirementPriority, RequirementStage } from './requirement-metadata'
 import './requirement-catalog.css'
 
 export const RequirementSetup = ({
@@ -89,11 +90,15 @@ const RequirementRow = ({
       >
         <span className="requirement-row-top">
           <span>{project?.name ?? requirement.projectId}</span>
-          <span className="badge">v{requirement.version}</span>
+          <span className="requirement-metadata">
+            <RequirementStage requirement={requirement} />
+            <span className="badge">v{requirement.version}</span>
+          </span>
         </span>
         <strong>{requirement.title}</strong>
         <span className="requirement-summary">{requirement.body}</span>
         <span className="requirement-row-bottom">
+          <RequirementPriority requirement={requirement} />
           <span>
             {tasks.length} {t('条关联任务')}
           </span>

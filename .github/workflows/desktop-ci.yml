@@ -93,5 +93,6 @@ jobs:
           path: |
             .tmp/evidence/requirement-catalog-*.png
             .tmp/evidence/requirement-task-create-*.png
+            .tmp/evidence/requirement-metadata-*.png
           if-no-files-found: warn
           retention-days: 7

@@ -6,6 +6,7 @@ import { RequirementEditor } from './requirement-editor'
 import { TaskTable } from './task-table'
 import { TaskCreate } from './task-create'
 import { latestVersions } from './object-versions'
+import { RequirementMetadataSummary } from './requirement-metadata'
 
 export const RequirementDetail = ({
   requirement,
@@ -30,11 +31,10 @@ export const RequirementDetail = ({
     <CreateDialog title="需求详情" error="" autoOpen hideTrigger closeIcon onClosed={close}>
       {() => (
         <div className="requirement-detail">
-          <div className="requirement-row-top">
-            <span>{project?.name ?? requirement.projectId}</span>
-            <span className="badge">v{requirement.version}</span>
-          </div>
-          <h3>{requirement.title}</h3>
+          <RequirementHeading
+            requirement={requirement}
+            projectName={project?.name ?? requirement.projectId}
+          />
           <p className="preserve-text">{requirement.body}</p>
           <h3>{t('需求验收条件')}</h3>
           <p className="preserve-text">{requirement.acceptanceCriteria}</p>
@@ -57,6 +57,23 @@ export const RequirementDetail = ({
     </CreateDialog>
   )
 }
+
+const RequirementHeading = ({
+  requirement,
+  projectName,
+}: {
+  requirement: RequirementVersion
+  projectName: string
+}) => (
+  <>
+    <div className="requirement-row-top">
+      <span>{projectName}</span>
+      <span className="badge">v{requirement.version}</span>
+    </div>
+    <h3>{requirement.title}</h3>
+    <RequirementMetadataSummary requirement={requirement} />
+  </>
+)
 
 const RequirementTasks = ({
   requirementId,
@@ -120,6 +137,7 @@ const RequirementHistory = ({ versions }: { versions: RequirementVersion[] }) =>
               {item.title} · v{item.version}
             </h3>
             <p className="preserve-text">{item.body}</p>
+            <RequirementMetadataSummary requirement={item} />
             <p className="preserve-text">{item.acceptanceCriteria}</p>
           </article>
         ))}
