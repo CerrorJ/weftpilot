@@ -8,6 +8,10 @@
 
 ## 当前状态
 
+0110最终包追加回归出现两项Windows崩溃弹窗/未退出现场，所属测试为prototype-navigation与role-wizard-version-regressions，根因未定，保留进程/数据/日志，不将此轮写作通过。新增项目只读历史展示的真实CLI专项再次1/1通过；此前完整47通过17跳过仅适用于各自包。当前按[项目配置记录](project-settings.md)继续独立诊断、UI验证及新提交原生CI，不强杀换绿或停等用户。
+
+当前推进[项目目标/描述/默认团队](project-settings.md)：唯一内核c960/0.11.0/p1/schema10/134文件已先推送并两份干净重建一致；内核170回归及独立Tester/Reviewer通过。桌面真实接入创建/配置、项目团队、双版本CAS和固定Run上下文；开发/实际Windows完整64均47通过17明确跳过，真实CLI上下文文件1/1通过。首轮内核创建P1、UI清除团队卸载草稿P2和select名称已修，保留失败历史。Run只读展示追加、独立UI/最终审查及当前双平台CI继续验收，尚不关闭此增量或整体M0—M4；下方0100内容保留历史时点。
+
 当前完成[需求优先级/业务阶段](requirement-metadata.md)增量：桌面214实现及6a7340b修复、内核0.10.0/969b548/p1/schema9/132文件已分别推送。修复[CI40435856697](https://github.com/CerrorJ/weftpilot/actions/runs/40435856697)双平台SUCCESS，各51单元、开发/实际包45通过16明确跳过、未签名原生安装包装配通过；固定内核Win164/164、Mac154通过10平台跳过。独立Tester/Reviewer验证真实094→0100升级、版本/冲突/清除/归档、P2四空白边界和6a原生CI日志/12图/官方摘要后限定增量PASS/APPROVE。214的trim P2及初轮REQUEST_CHANGES保留，未将214绿色当修复证据。本地修复只重跑1+4专项，完整修复61由确切6a CI覆盖；不倒写本地结果。下一项为项目目标/描述/默认团队，整体原型和M0—M4未封板。
 
 两仓关联：桌面代码`feat/requirement-metadata/6a7340b`；Agent-Team源码`feat/requirement-metadata/969b548`，关联文档205e81e。后者不改变固定内核版本或摘要；桌面`docs/requirement-metadata-validation`仅汇总证据，未合并分支或公开发布。

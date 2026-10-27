@@ -7,6 +7,7 @@ import { ProjectCard } from './project-card'
 import { ProjectDetail } from './project-detail'
 import { useProjectCatalogSelection } from './use-project-catalog-selection'
 import './project-catalog.css'
+import './project-settings.css'
 
 export const ProjectSetup = ({
   state,
@@ -57,7 +58,7 @@ const ProjectCatalog = ({
         description="连接代码仓库，为团队提供共同的工作上下文。"
         eyebrow="PROJECTS / CONTEXT"
       >
-        <ProjectCreate actions={actions} created={selection.created} />
+        <ProjectCreate actions={actions} created={selection.created} teams={state.teams} />
       </PageHeading>
       {actions.error && <p role="alert">{t(actions.error)}</p>}
       <section className="project-catalog" aria-label={t('项目列表')}>

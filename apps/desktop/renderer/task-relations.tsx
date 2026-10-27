@@ -1,5 +1,6 @@
 import type { Task, Run, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import { useI18n } from './preferences'
+import { RunProjectContext } from './run-project-context'
 import { taskLabels } from './task-status'
 export const TaskRelations = ({
   task,
@@ -72,6 +73,7 @@ export const RunInputs = ({ run, state }: { run: Run; state: WorkspaceSnapshot }
   const deliveries = state.deliveries.filter((item) => run.inputDeliveryIds?.includes(item.id))
   return (
     <section>
+      <RunProjectContext run={run} />
       {run.waitingReason && <p role="status">{t(waitingLabels[run.waitingReason])}</p>}
       {run.requirementSnapshot && (
         <details>

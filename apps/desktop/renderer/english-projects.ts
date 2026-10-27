@@ -1,4 +1,27 @@
 export const englishProjects: Record<string, string> = {
+  '固定项目上下文：': 'Pinned project context: ',
+  '此执行未记录项目上下文快照。': 'This run has no recorded project context snapshot.',
+  '本次项目未设置目标和描述。': 'This project had no goal or description set for this run.',
+  项目目标: 'Project goal',
+  项目描述: 'Project description',
+  默认团队: 'Default team',
+  未设置默认团队: 'No default team',
+  原团队不可用: 'Original team unavailable',
+  项目设置: 'Project settings',
+  编辑项目版本: 'Editing project version',
+  保存项目设置: 'Save project settings',
+  项目团队: 'Project team',
+  协调角色: 'Coordinator',
+  团队成员: 'Team member',
+  角色不可用: 'Role unavailable',
+  '在项目设置中关联默认团队，然后创建真实团队计划。':
+    'Link a default team in project settings, then create a team plan.',
+  '默认团队关联团队身份；创建计划时固定当时的团队版本。项目上下文在新执行开始时固定，已有执行保持原样。':
+    'The default team follows team identity; plans capture the version at creation. New runs capture project context; existing runs retain their snapshots.',
+  '此处展示团队当前版本；已有计划和执行保留各自的固定快照。':
+    'The current team version is shown here. Existing plans and runs retain their snapshots.',
+  '此计划使用打开时的项目和团队版本。切换项目或团队将重置计划；后台更新不会改写草稿。':
+    'This plan uses the project and team versions shown when opened. Switching either resets the plan; background updates preserve your draft.',
   '连接代码仓库，为团队提供共同的工作上下文。':
     'Connect repositories and give your team shared working context.',
   新建项目: 'New project',

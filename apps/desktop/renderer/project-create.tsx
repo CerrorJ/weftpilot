@@ -1,20 +1,27 @@
 import { useRef, useState } from 'react'
+import type { TeamVersion } from '@weftpilot/agent-team-kernel/protocol'
+import { latestVersions } from './object-versions'
+import { ProjectContextFields, projectFormContext } from './project-context-fields'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { CreateDialog } from './create-dialog'
 import { CreationMark } from './creation-mark'
+import { formText, TextField } from './form-fields'
 
 export const ProjectCreate = ({
   actions,
   created,
+  teams,
 }: {
   actions: WorkspaceActions
   created: (id: string) => void
+  teams: TeamVersion[]
 }) => (
   <CreateDialog title="新建项目" triggerIcon={<CreationMark />} error={actions.error}>
     {(close) => (
       <ProjectCreateForm
         actions={actions}
+        teams={teams}
         created={(id) => {
           close()
           created(id)
@@ -27,23 +34,29 @@ export const ProjectCreate = ({
 const ProjectCreateForm = ({
   actions,
   created,
+  teams,
 }: {
   actions: WorkspaceActions
   created: (id: string) => void
+  teams: TeamVersion[]
 }) => {
   const { t } = useI18n()
-  const [name, setName] = useState('')
-  const [branch, setBranch] = useState('main')
+  const [basisTeams] = useState(() => latestVersions(teams))
   const [pending, setPending] = useState(false)
   const submitting = useRef(false)
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitting.current) return
     const form = event.currentTarget
+    const values = new FormData(form)
     submitting.current = true
     setPending(true)
     try {
-      const result = await actions.createProject({ name, defaultBranch: branch })
+      const result = await actions.createProject({
+        name: formText(values, 'name'),
+        defaultBranch: formText(values, 'branch'),
+        ...projectFormContext(values),
+      })
       if (result && 'id' in result && form.isConnected) created(result.id)
     } finally {
       submitting.current = false
@@ -55,51 +68,12 @@ const ProjectCreateForm = ({
       <p className="field-note">
         {t('选择已有 Git 仓库；每次执行使用独立分支与工作目录，主目录有未提交改动时阻止启动。')}
       </p>
-      <ProjectRepositoryFields
-        name={name}
-        branch={branch}
-        changeName={setName}
-        changeBranch={setBranch}
-      />
+      <TextField label={t('项目名称')} name="name" />
+      <TextField label={t('默认分支')} name="branch" value="main" />
+      <ProjectContextFields teams={basisTeams} />
       <button className="primary" disabled={pending || actions.busy}>
         {t(pending ? '正在添加项目…' : '选择仓库并添加')}
       </button>
     </form>
-  )
-}
-
-const ProjectRepositoryFields = ({
-  name,
-  branch,
-  changeName,
-  changeBranch,
-}: {
-  name: string
-  branch: string
-  changeName: (value: string) => void
-  changeBranch: (value: string) => void
-}) => {
-  const { t } = useI18n()
-  return (
-    <>
-      <label>
-        {t('项目名称')}
-        <input
-          required
-          maxLength={200}
-          value={name}
-          onChange={(event) => changeName(event.target.value)}
-        />
-      </label>
-      <label>
-        {t('默认分支')}
-        <input
-          required
-          maxLength={200}
-          value={branch}
-          onChange={(event) => changeBranch(event.target.value)}
-        />
-      </label>
-    </>
   )
 }

@@ -94,5 +94,6 @@ jobs:
             .tmp/evidence/requirement-catalog-*.png
             .tmp/evidence/requirement-task-create-*.png
             .tmp/evidence/requirement-metadata-*.png
+            .tmp/evidence/project-settings-*.png
           if-no-files-found: warn
           retention-days: 7

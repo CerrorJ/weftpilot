@@ -4,6 +4,8 @@ import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { PageHeading } from './page-heading'
 import { ProjectRepository } from './project-repository'
+import { ProjectSettings } from './project-settings'
+import { ProjectTeam } from './project-team'
 import { TaskCreate } from './task-create'
 import { TaskTable } from './task-table'
 import { latestVersions } from './object-versions'
@@ -27,32 +29,22 @@ export const ProjectDetail = ({
   openProjectTasks,
 }: Context) => {
   const { t } = useI18n()
-  const heading = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    heading.current?.focus()
-  }, [])
   return (
     <section className="project-detail" aria-label={project.name}>
       <button className="project-back" onClick={back}>
         {t('返回项目列表')}
       </button>
-      <div ref={heading} tabIndex={-1}>
-        <PageHeading
-          title={project.name}
-          literalTitle
-          description="每次执行使用独立分支与工作目录。"
-          eyebrow="PROJECT / OVERVIEW"
-        >
-          <TaskCreate
-            projects={[project]}
-            roles={latestVersions(state.roles)}
-            actions={actions}
-            onCreated={openTask}
-            trigger="新建项目任务"
-          />
-        </PageHeading>
+      <ProjectHeading project={project} state={state} actions={actions} openTask={openTask} />
+      {project.goal && (
+        <section className="project-goal" aria-label={t('项目目标')}>
+          <h2>{t('项目目标')}</h2>
+          <p>{project.goal}</p>
+        </section>
+      )}
+      <div className="project-context-grid">
+        <ProjectRepository project={project} />
+        <ProjectTeam project={project} state={state} actions={actions} openTask={openTask} />
       </div>
-      <ProjectRepository project={project} />
       <ProjectTasks
         project={project}
         state={state}
@@ -61,6 +53,45 @@ export const ProjectDetail = ({
       />
       <ProjectExecutions project={project} state={state} />
     </section>
+  )
+}
+
+const ProjectHeading = ({
+  project,
+  state,
+  actions,
+  openTask,
+}: Pick<Context, 'project' | 'state' | 'actions' | 'openTask'>) => {
+  const { t } = useI18n()
+  const heading = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
+  return (
+    <div ref={heading} tabIndex={-1}>
+      <PageHeading
+        title={project.name}
+        literalTitle
+        description={project.description || t('每次执行使用独立分支与工作目录。')}
+        literalDescription
+        eyebrow="PROJECT / OVERVIEW"
+      >
+        <div className="project-heading-actions">
+          <ProjectSettings
+            project={project}
+            teams={latestVersions(state.teams)}
+            actions={actions}
+          />
+          <TaskCreate
+            projects={[project]}
+            roles={latestVersions(state.roles)}
+            actions={actions}
+            onCreated={openTask}
+            trigger="新建项目任务"
+          />
+        </div>
+      </PageHeading>
+    </div>
   )
 }
 

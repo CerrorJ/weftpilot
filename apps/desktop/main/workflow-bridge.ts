@@ -2,6 +2,7 @@ import { dialog, ipcMain, type BrowserWindow, type IpcMainInvokeEvent } from 'el
 import { z } from 'zod'
 import {
   businessCommandSchema,
+  projectSettingsFields,
   preflightInputSchema,
   cliCheckInputSchema,
   projectInspectionInputSchema,
@@ -21,6 +22,7 @@ const submissionSchema = z
   .object({ key: z.string().uuid(), input: z.record(z.string(), z.unknown()) })
   .strict()
 const commandTypes = {
+  configureProject: 'project.configure',
   saveRole: 'role.save',
   copyRole: 'role.copy',
   saveSkillSource: 'skill.source.save',
@@ -122,6 +124,7 @@ const registerProjectPicker = (options: {
       .object({
         name: z.string().trim().min(1).max(200),
         defaultBranch: z.string().trim().min(1).max(200),
+        ...projectSettingsFields,
       })
       .strict()
     const fields = parseInput(fieldsSchema, input.input)

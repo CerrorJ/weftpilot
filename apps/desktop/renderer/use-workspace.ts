@@ -45,7 +45,9 @@ export const useWorkspace = () => {
     perform(JSON.stringify(command), async (key) =>
       parseCommandResult(await sendCommand(command, key)),
     )
-  const createProject = (input: { name: string; defaultBranch: string }) =>
+  const createProject = (
+    input: Omit<Extract<BusinessCommand, { type: 'project.create' }>, 'type' | 'repositoryPath'>,
+  ) =>
     perform(JSON.stringify({ type: 'project.create', ...input }), (key) =>
       workflow().createProject({ key, input }).then(parseProjectCreationResult),
     )

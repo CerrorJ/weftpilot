@@ -12,6 +12,7 @@ type ConfigurationOrDecisionCommand = Extract<
       | 'requirement.save'
       | 'team.save'
       | 'project.create'
+      | 'project.configure'
       | 'human.resolve'
       | 'feishu.save'
       | 'skill.source.save'
@@ -22,26 +23,45 @@ type ConfigurationOrDecisionCommand = Extract<
 >
 export const sendCommand = (command: BusinessCommand, key: string): Promise<unknown> => {
   if (isSkillCommand(command)) return sendSkillCommand(command, key)
+  if (isProductConfiguration(command)) return sendProductConfiguration(command, key)
   const api = workflow()
   switch (command.type) {
     case 'role.save':
       return api.saveRole({ key, input: command })
     case 'role.copy':
       return api.copyRole({ key, input: command })
-    case 'model.save':
-      return api.saveModel({ key, input: command })
     case 'human.resolve':
       return api.resolveHuman({ key, input: command })
     case 'feishu.save':
       return api.saveFeishu({ key, input: command })
+    default:
+      return sendExecution(command, key)
+  }
+}
+
+type ProductConfiguration = Extract<
+  BusinessCommand,
+  { type: 'model.save' | 'requirement.save' | 'team.save' | 'project.create' | 'project.configure' }
+>
+
+const isProductConfiguration = (command: BusinessCommand): command is ProductConfiguration =>
+  ['model.save', 'requirement.save', 'team.save', 'project.create', 'project.configure'].includes(
+    command.type,
+  )
+
+const sendProductConfiguration = (command: ProductConfiguration, key: string): Promise<unknown> => {
+  const api = workflow()
+  switch (command.type) {
+    case 'model.save':
+      return api.saveModel({ key, input: command })
     case 'requirement.save':
       return api.saveRequirement({ key, input: command })
     case 'team.save':
       return api.saveTeam({ key, input: command })
+    case 'project.configure':
+      return api.configureProject({ key, input: command })
     case 'project.create':
       throw new Error('项目目录须从系统对话框选择')
-    default:
-      return sendExecution(command, key)
   }
 }
 

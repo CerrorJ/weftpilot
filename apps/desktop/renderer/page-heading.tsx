@@ -7,12 +7,14 @@ export const PageHeading = ({
   children,
   eyebrow,
   literalTitle = false,
+  literalDescription = false,
 }: {
   title: string
   description: string
   children?: ReactNode
   eyebrow?: string
   literalTitle?: boolean
+  literalDescription?: boolean
 }) => {
   const { t } = useI18n()
   return (
@@ -20,7 +22,7 @@ export const PageHeading = ({
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h1>{literalTitle ? title : t(title)}</h1>
-        <p>{t(description)}</p>
+        <p>{literalDescription ? description : t(description)}</p>
       </div>
       {children}
     </header>
