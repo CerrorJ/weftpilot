@@ -37,10 +37,14 @@ export const useRequirementSubmission = ({
   }
 }
 
-/** 表单枚举仍由命名主进程/内核严格校验；非法值原样提交拒绝，不静默改成清除。 */
-const readMetadata = (form: FormData): Pick<RequirementVersion, 'priority' | 'stage'> => ({
-  priority: (formText(form, 'priority') || null) as NonNullable<
-    RequirementVersion['priority']
-  > | null,
-  stage: (formText(form, 'stage') || null) as NonNullable<RequirementVersion['stage']> | null,
-})
+/** 仅严格空串表示清除；枚举不可trim或转字符串，异常值留给命名主进程/内核拒绝。 */
+const readMetadata = (form: FormData): Pick<RequirementVersion, 'priority' | 'stage'> => {
+  const priority = form.get('priority')
+  const stage = form.get('stage')
+  return {
+    priority: (priority === '' ? null : priority) as NonNullable<
+      RequirementVersion['priority']
+    > | null,
+    stage: (stage === '' ? null : stage) as NonNullable<RequirementVersion['stage']> | null,
+  }
+}

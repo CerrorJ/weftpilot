@@ -77,6 +77,29 @@ test(
       assert.equal(version2.priority, 'high')
       assert.equal(version2.stage, 'plan_confirmed')
       await detail.getByRole('button', { name: '编辑需求', exact: true }).click()
+      for (const invalid of [
+        { label: '需求优先级', value: '   ' },
+        { label: '需求优先级', value: ' high ' },
+        { label: '需求阶段', value: '   ' },
+        { label: '需求阶段', value: ' implementing ' },
+      ]) {
+        const beforeInvalid = await snapshot(page)
+        const select = editor.getByLabel(invalid.label, { exact: true })
+        await select.evaluate((element, value) => {
+          const target = element as HTMLSelectElement
+          target.add(new Option('非法空白值', value))
+          target.value = value
+        }, invalid.value)
+        await editor.getByRole('button', { name: '保存新版本', exact: true }).click()
+        await editor.getByRole('alert').filter({ hasText: 'INPUT_INVALID' }).waitFor()
+        assert.equal(await select.inputValue(), invalid.value)
+        assert.deepEqual(await snapshot(page), beforeInvalid)
+        await page.keyboard.press('Escape')
+        await editor.waitFor({ state: 'detached' })
+        await detail.getByRole('button', { name: '编辑需求', exact: true }).click()
+        assert.equal(await priority.inputValue(), 'high')
+        assert.equal(await stage.inputValue(), 'plan_confirmed')
+      }
       await priority.selectOption('medium')
       await stage.selectOption('implementing')
       await page.evaluate(
