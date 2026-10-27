@@ -38,8 +38,18 @@
 
 根据[原生dialog关闭算法](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)和[Playwright角色定位默认忽略隐藏元素](https://playwright.dev/docs/api/class-locator#locator-get-by-role-option-include-hidden)，role定位失配不等于React close回调/卸载完成。这是时序原因的推断，未将aae标为修复通过。仅增强相关测试：保留原焦点true断言，先以CSS等待真实dialog DOM移除，失败时输出activeTag/aria/dialogCount；无UI/内核改动、sleep或强制焦点。本机最新实际包四相关用例4/4通过；新提交仍须重新跑原生完整CI，不能用本地结果关闭Mac门禁。
 
+## 2f修正后的原生完整验证
+
+桌面`2f448700f03706cef77deabd20ecc259a1c8cda4`仅修改上述测试关闭等待和记录，不改变应用或内核。[CI40452246829](https://github.com/CerrorJ/weftpilot/actions/runs/40452246829)两平台SUCCESS：Windows job122017422680核心175/175、51单元、8装配；macOS job122017422854核心165通过10平台跳过、51单元、7装配1平台跳过。两平台开发版和实际包各66项49通过17明确跳过、0失败0取消；原焦点断言与两个团队用例均真实通过。NSIS/blockmap及ARM64 DMG/ZIP未签名装配通过，不等于用户安装升级、签名发行、真实飞书或macOS真实CLI验收。
+
+本轮官方图独立保存，不覆盖aae首轮：Windows artifact12710789387，494375字节，SHA-256 `5761f93f8a6bfa567bbae39ff216e0f6a1b71462cc68e2c56493b7d0325a66b0`；macOS12711700516，727719字节，SHA-256 `14b1b0079263aa146b3f04f17b56a3ae85cd5eee0fbdcbf33b564525fb7e5fac`。每平台10张团队/项目/需求图，独立Tester与Reviewer均核官方完整日志、ZIP大小/SHA、逐PNG字节/摘要并逐张实看20图，最终限定PASS/APPROVE，无新P级。13 GUI源码与2f一致，测试等待改动已审。
+
+2f普通Git推送两次遭TLS EOF后，使用本机既有代理的命令级传输设置成功，保持证书校验，没有修改全局Git、系统或远程配置。产物仍固定2ab/0.12.0及上述摘要；后续docs提交不重新生成同版本内核。
+
 ## 复现与后续
+
+两仓验收文档各在`docs/team-catalog-validation`保留：内核关联文档提交`ce43ac887f382cc61b906939db4a1c48e1c96439`，不替代固定源码2ab；桌面文档分支承接精确2f代码。下一角色飞书开发使用独立`feat/role-feishu-routing`工作树，不在已锁定产物中混入未提交源码。
 
 固定pnpm12.3.4/Node24：`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm build`，`pnpm dev`启动。检查`pnpm typecheck`、`pnpm lint`、`pnpm format:check`、`pnpm test`、`pnpm test:packaging`。定向`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/team-catalog.test.ts tests/e2e/product-catalog.test.ts tests/e2e/project-settings.test.ts`。`pnpm package`装配后以WEFTPILOT_PACKAGED_EXE指定本次实际文件运行`pnpm test:e2e`；本机串行参数如上记录，不改CI标准门禁。
 
-已有双CLI登录时，WEFTPILOT_REAL_TEAM=1显式运行`tests/e2e/dual-cli-team.test.ts`，不复制凭据。下一步补确切候选CI和独立证据，再推进角色飞书绑定/路由与整体设计；不自动合并或公开发布。
+已有双CLI登录时，WEFTPILOT_REAL_TEAM=1显式运行`tests/e2e/dual-cli-team.test.ts`，不复制凭据。下一步推进角色飞书绑定/路由与整体设计；不自动合并或公开发布。
