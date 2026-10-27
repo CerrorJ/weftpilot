@@ -192,6 +192,8 @@ test(
       assert.equal((await snapshot(page)).tasks.length, 0)
       await page.keyboard.press('Escape')
       await dialog.waitFor({ state: 'detached' })
+      // role查询在原生隐藏时就会失配；CSS等待真正卸载，确保close回调已完成。
+      await page.locator('.project-team dialog').waitFor({ state: 'detached' })
       assert.equal(await open.evaluate((element) => document.activeElement === element), true)
       await open.click()
       await fillPlan(page, '项目版本冲突草稿')
@@ -221,6 +223,7 @@ test(
       )
       await page.keyboard.press('Escape')
       await dialog.waitFor({ state: 'detached' })
+      await page.locator('.project-team dialog').waitFor({ state: 'detached' })
       await open.click()
       await fillPlan(page, '解除关联时保留草稿')
       await setProjectTeam(page, null)
@@ -236,12 +239,14 @@ test(
       assert.equal((await snapshot(page)).tasks.length, 0)
       await page.keyboard.press('Escape')
       await dialog.waitFor({ state: 'detached' })
-      assert.equal(
-        await page
-          .locator('.project-team')
-          .evaluate((element) => document.activeElement === element),
-        true,
-      )
+      await page.locator('.project-team dialog').waitFor({ state: 'detached' })
+      const focus = await page.locator('.project-team').evaluate((element) => ({
+        focused: document.activeElement === element,
+        activeTag: document.activeElement?.tagName,
+        activeLabel: document.activeElement?.getAttribute('aria-label'),
+        dialogs: element.querySelectorAll('dialog').length,
+      }))
+      assert.equal(focus.focused, true, JSON.stringify(focus))
       await setProjectTeam(page, team.id)
       await open.waitFor()
       await open.click()

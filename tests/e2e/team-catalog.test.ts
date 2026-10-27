@@ -243,6 +243,7 @@ test(
       assert.equal(await edit.getByLabel('团队名称', { exact: true }).inputValue(), original.name)
       await page.keyboard.press('Escape')
       await edit.waitFor({ state: 'detached' })
+      await page.locator('dialog[aria-label="编辑团队"]').waitFor({ state: 'detached' })
       assert.equal(await detail.isVisible(), true)
       assert.equal(
         await detail

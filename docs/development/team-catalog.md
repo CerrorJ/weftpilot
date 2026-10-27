@@ -30,6 +30,14 @@
 
 前一0110两个停止工作/CrashSender窗口仍保留，未强杀或以新正常退出关闭，WeType/CrashRpt共存不证明因果。用户设备、签名发行、真实飞书、可配置协作模板/并发、八页整体及M0—M4不据此封板。
 
+## aae首轮原生CI与关闭边界补验
+
+桌面候选`aae35a47cd464aaf2a43a45c4df9a09cb47c1078`已正常推送；[CI40449807913](https://github.com/CerrorJ/weftpilot/actions/runs/40449807913)整体FAIL。Windows job122009618262通过：核心175、51单元、8装配，开发/实际包各66项49通过17跳过0失败0取消，未签名NSIS/blockmap完成。Mac job122009618127：核心165通过10平台跳过、51单元、7装配1平台跳过，开发66为48通过1失败17跳过0取消，打包应用/安装包未执行，不能说Mac通过。
+
+唯一失败为project-settings解除默认团队后Esc返回区域焦点断言。新增团队两个用例在Win两模式/Mac开发共6个结果实际通过，不继承为整轮通过。独立Tester/Reviewer核两官方全日志及20PNG/逐条字节后保留失败结论，无新视觉P级：Win artifact12710212665，495690字节，SHA `4fe2ccfae4aad184a322f99f67203927a54dbd86ae49ad813b55f758941c241d`；Mac12709444666，724956字节，SHA `11ee0c06d4b80582a81e70e8e01a5a2a73391a5723f48d4755c871abbae285f1`，各10图均对应aae。
+
+根据[原生dialog关闭算法](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)和[Playwright角色定位默认忽略隐藏元素](https://playwright.dev/docs/api/class-locator#locator-get-by-role-option-include-hidden)，role定位失配不等于React close回调/卸载完成。这是时序原因的推断，未将aae标为修复通过。仅增强相关测试：保留原焦点true断言，先以CSS等待真实dialog DOM移除，失败时输出activeTag/aria/dialogCount；无UI/内核改动、sleep或强制焦点。本机最新实际包四相关用例4/4通过；新提交仍须重新跑原生完整CI，不能用本地结果关闭Mac门禁。
+
 ## 复现与后续
 
 固定pnpm12.3.4/Node24：`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm build`，`pnpm dev`启动。检查`pnpm typecheck`、`pnpm lint`、`pnpm format:check`、`pnpm test`、`pnpm test:packaging`。定向`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/team-catalog.test.ts tests/e2e/product-catalog.test.ts tests/e2e/project-settings.test.ts`。`pnpm package`装配后以WEFTPILOT_PACKAGED_EXE指定本次实际文件运行`pnpm test:e2e`；本机串行参数如上记录，不改CI标准门禁。

@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+团队候选aae已推，[首CI40449807913](https://github.com/CerrorJ/weftpilot/actions/runs/40449807913)Windows完整49P17S/66通过，Mac开发48P1F17S（解除默认团队后的焦点断言），整体FAIL，Mac实际包/安装未执行；独立核20图/摘要/日志后原样保留。相关测试现补CSS真实DOM卸载等待并保留焦点断言/失败诊断，本机实际4P；应用代码与0120/2ab产物未改，新确切提交原生CI待重验。详见[团队记录](team-catalog.md)，不把此前源码/GUI批准或Win通过覆盖Mac失败。
+
 继续[团队目录/版本编辑](team-catalog.md)：唯一内核0120/2ab/p1/schema11/135文件已先推送并两干净重建一致，175核心及独立后端Tester/Reviewer通过；桌面卡片/说明/负责人/历史编辑、13角色12/13边界接入。strict/lint/格式、51单元/8装配、独立GUI限定PASS，最新实际双CLI团队1/1通过。首完整串行66为46P1F19S，保存后版本即时读断言已修为等确切v3、实际包专项2P，不倒写全套；当前候选CI继续验。成员少选经事件证据确认为驱动未点中，撤回产品归因；旧0110两错误窗口仍PENDING。前一项目配置docs分支已随正常Git恢复补推，下方保留过程时点。
 
 项目配置增量代码7b2954b/内核c960-0110的[CI40442209173](https://github.com/CerrorJ/weftpilot/actions/runs/40442209173)双平台SUCCESS：Win170核心/51单元/8装配，Mac160核心+10平台跳过/51单元/7装配+1平台跳过，各开发/实际包64项47通过17明确跳过；未签名NSIS及ARM64 DMG/ZIP装配通过。独立GUI/CI Tester与Reviewer核16图/官方摘要/日志后限定PASS/APPROVE，P2关闭；本机两个停止工作窗口与未结束整轮仍PENDING，不被CI绿覆盖。详见[完整关联和限制](project-settings.md)。代码分支不合并不发布，docs仅汇总证据。下一项已在独立feat/team-catalog工作树开始，以0110现有内核补齐团队目录/编辑/版本交互；下方保留本增量过程时点。
