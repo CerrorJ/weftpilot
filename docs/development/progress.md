@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+项目配置增量代码7b2954b/内核c960-0110的[CI40442209173](https://github.com/CerrorJ/weftpilot/actions/runs/40442209173)双平台SUCCESS：Win170核心/51单元/8装配，Mac160核心+10平台跳过/51单元/7装配+1平台跳过，各开发/实际包64项47通过17明确跳过；未签名NSIS及ARM64 DMG/ZIP装配通过。独立GUI/CI Tester与Reviewer核16图/官方摘要/日志后限定PASS/APPROVE，P2关闭；本机两个停止工作窗口与未结束整轮仍PENDING，不被CI绿覆盖。详见[完整关联和限制](project-settings.md)。代码分支不合并不发布，docs仅汇总证据。下一项已在独立feat/team-catalog工作树开始，以0110现有内核补齐团队目录/编辑/版本交互；下方保留本增量过程时点。
+
 0110最终包追加回归出现两项Windows崩溃弹窗/未退出现场，所属测试为prototype-navigation与role-wizard-version-regressions，根因未定，保留进程/数据/日志，不将此轮写作通过。新增项目只读历史展示的真实CLI专项再次1/1通过；此前完整47通过17跳过仅适用于各自包。当前按[项目配置记录](project-settings.md)继续独立诊断、UI验证及新提交原生CI，不强杀换绿或停等用户。
 
 当前推进[项目目标/描述/默认团队](project-settings.md)：唯一内核c960/0.11.0/p1/schema10/134文件已先推送并两份干净重建一致；内核170回归及独立Tester/Reviewer通过。桌面真实接入创建/配置、项目团队、双版本CAS和固定Run上下文；开发/实际Windows完整64均47通过17明确跳过，真实CLI上下文文件1/1通过。首轮内核创建P1、UI清除团队卸载草稿P2和select名称已修，保留失败历史。Run只读展示追加、独立UI/最终审查及当前双平台CI继续验收，尚不关闭此增量或整体M0—M4；下方0100内容保留历史时点。
