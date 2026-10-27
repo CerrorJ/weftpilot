@@ -19,6 +19,10 @@ export const productErrors: Record<string, [string, string]> = {
     '团队成员必须唯一，协调者必须在成员中',
     'Members must be unique and include the coordinator.',
   ],
+  TEAM_NAME_TAKEN: [
+    '团队名称已被其他团队使用，请修改名称后重试',
+    'Another team already uses this name. Choose a different name and retry.',
+  ],
   CROSS_PROJECT_REFERENCE: [
     '需求或依赖必须属于同一项目',
     'Requirements and dependencies must belong to the same project.',

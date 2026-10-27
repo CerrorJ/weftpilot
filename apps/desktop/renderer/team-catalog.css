@@ -1,0 +1,140 @@
+.team-catalog {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.team-card {
+  min-width: 0;
+  padding: 25px;
+  background: var(--input-background);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.team-card-heading,
+.team-detail-heading {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+  justify-content: space-between;
+}
+.team-card-heading h2,
+.team-detail-heading h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.team-card-heading .badge {
+  flex-shrink: 0;
+}
+.team-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 14px 0 22px;
+}
+.team-members {
+  padding: 0;
+  margin: 20px 0;
+  list-style: none;
+}
+.team-members li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.team-member-initial {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--forest);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.team-members li > div {
+  flex: 1;
+  min-width: 0;
+}
+.team-members strong {
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.team-members small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.team-collaboration {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+}
+.team-collaboration h3 {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.team-collaboration ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.team-collaboration li {
+  padding-left: 2px;
+}
+.team-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.team-card-actions > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.team-detail-heading {
+  margin: 26px 0 14px;
+}
+.team-detail .preserve-text {
+  font-size: 13px;
+  line-height: 1.8;
+}
+.team-members-field {
+  margin: 24px 0;
+}
+.team-members-field .check-label {
+  padding: 6px 0;
+}
+.team-members-field .check-label > span:first-of-type {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 980px) {
+  .team-catalog {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .team-card {
+    padding: 20px;
+  }
+  .team-card-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

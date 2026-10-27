@@ -4,6 +4,7 @@ import { test } from 'node:test'
 import type { Page } from 'playwright'
 import { createFixture, launch, configure, snapshot, quit } from './workflow-helpers'
 import { navigate } from './navigation-helpers'
+import { waitTeamCard } from './team-helpers'
 
 test(
   '项目设置：真实创建、严格团队ID、CAS草稿、明确清空及重启；中英文与明暗主题',
@@ -276,9 +277,7 @@ const seedTeam = async (page: Page) => {
     role.id,
   )
   await navigate(page, '团队管理')
-  await page
-    .getByRole('option', { name: '项目开发团队 · v1', exact: true })
-    .waitFor({ state: 'attached' })
+  await waitTeamCard(page, '项目开发团队', 1)
   return (await snapshot(page)).teams.at(-1)!
 }
 

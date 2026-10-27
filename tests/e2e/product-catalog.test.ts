@@ -1,4 +1,5 @@
 import { openSettingsPage } from './navigation-helpers'
+import { openTeamEditor, waitTeamCard } from './team-helpers'
 import { openRoleEditor, goRoleStep, saveRoleEditor, waitRoleCard } from './role-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -63,13 +64,14 @@ test(
         .filter({ hasText: '第二版需求内容' })
         .waitFor()
       await requirementDetail.getByRole('button', { name: '关闭', exact: true }).click()
-      await page.getByRole('button', { name: '团队管理', exact: true }).click()
+      await openTeamEditor(page)
       await page.getByRole('textbox', { name: '团队名称', exact: true }).fill('产品团队')
       await page.getByRole('checkbox', { name: '测试开发者 · codex', exact: true }).check()
-      await page.getByRole('button', { name: '创建团队', exact: true }).click()
       await page
-        .getByRole('option', { name: '产品团队 · v1', exact: true })
-        .waitFor({ state: 'attached' })
+        .getByRole('dialog', { name: '创建团队', exact: true })
+        .getByRole('button', { name: '创建团队', exact: true })
+        .click()
+      await waitTeamCard(page, '产品团队', 1)
 
       await page.getByRole('button', { name: '任务管理', exact: true }).click()
       await page.getByRole('button', { name: '创建任务', exact: true }).click()

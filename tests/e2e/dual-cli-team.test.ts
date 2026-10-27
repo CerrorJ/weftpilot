@@ -1,4 +1,5 @@
 import { confirmPreflight } from './preflight-helpers'
+import { openTeamEditor, waitTeamCard } from './team-helpers'
 import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -51,14 +52,15 @@ test(
       })
       const codex = configured.roles.find((role) => role.cli === 'codex')!
       const claude = configured.roles.find((role) => role.cli === 'claude')!
-      await page.getByRole('button', { name: '团队管理', exact: true }).click()
+      await openTeamEditor(page)
       await page.getByRole('textbox', { name: '团队名称', exact: true }).fill('双 CLI 文件团队')
       await page.getByRole('checkbox', { name: '测试开发者 · codex', exact: true }).check()
       await page.getByRole('checkbox', { name: 'Claude 文件开发者 · claude', exact: true }).check()
-      await page.getByRole('button', { name: '创建团队', exact: true }).click()
       await page
-        .getByRole('option', { name: '双 CLI 文件团队 · v1', exact: true })
-        .waitFor({ state: 'attached' })
+        .getByRole('dialog', { name: '创建团队', exact: true })
+        .getByRole('button', { name: '创建团队', exact: true })
+        .click()
+      await waitTeamCard(page, '双 CLI 文件团队', 1)
       await page.getByRole('button', { name: '任务管理', exact: true }).click()
       await page.getByRole('button', { name: '创建团队任务', exact: true }).click()
       await page.getByRole('textbox', { name: '团队任务名称', exact: true }).fill('跨 CLI 文件交接')

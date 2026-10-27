@@ -49,15 +49,13 @@ export const CatalogPage = ({
     )
   if (page === 'requirements' && actions.state)
     return <RequirementSetup actions={actions} openTask={openTask} />
+  if (page === 'teams' && actions.state)
+    return <TeamSetup state={actions.state} actions={actions} />
   return (
     <>
       <PageHeading title={title} description={description} />
       {actions.error && <p role="alert">{t(actions.error)}</p>}
-      {!actions.state ? (
-        <p role="status">{t('正在读取内核状态…')}</p>
-      ) : (
-        <div className="catalog-surface">{page === 'teams' && <TeamSetup actions={actions} />}</div>
-      )}
+      <p role="status">{t('正在读取内核状态…')}</p>
     </>
   )
 }

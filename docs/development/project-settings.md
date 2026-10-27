@@ -2,7 +2,7 @@
 
 2026-10-27，按固定原型product-design/c29c2f5接入真实项目上下文及项目团队。桌面消费唯一内核，不直接读业务数据库。项目创建可同时保存目标/描述/默认团队，仍由系统目录选择器提供仓库；设置只编辑名称与业务上下文，不切换仓库、Git地址或默认分支。
 
-当前为开发候选：最终包追加完整回归出现Windows崩溃弹窗，尚未正常结束，不能验收整轮。此前完整通过与新增真实CLI/快照通过分别记录，继续独立诊断和新提交原生CI，不降低退出门禁。
+当前功能与确切提交的双平台原生CI通过；本机最终包追加完整回归出现两个停止工作/CrashSender错误窗口，尚未正常结束，Windows本机完整轮及发行稳定性保持PENDING。此前完整通过、新增真实CLI/快照和CI各自记录，不降低退出门禁或以CI关闭本机现场。
 
 ## 业务与交互
 
@@ -27,7 +27,17 @@
 
 Windows实际包真实CLI专项首次1/1通过：项目goal/description中的两个随机UUID不在任务内，CLI在隔离目录实际写文件并逐字匹配；Run succeeded/confirmed_ended、Task in_review、无acceptance，项目改版不改旧Run。新增只读展示后，在新实际包再次1/1通过，并真实打开历史快照，确认仍显示两个旧UUID而不含后续目标。两轮各自覆盖自己的包和断言，不将首次结果倒写。常规CI模型专项明确opt-in，不把skip算模型成功。
 
-首轮内核创建误spread baselineCommit被strict拒绝的P1，已显式只取允许字段并加真实Git回归。UI首轮默认团队条件卸载计划的P2，修后真实解除关联/保稿/CAS/Esc回归通过。初两E2E的select标签超时已修aria-labelledby；原失败日志均保留。独立UI、最终审查及当前双平台原生CI仍在进行，不用局部静态或旧CI替代。
+首轮内核创建误spread baselineCommit被strict拒绝的P1，已显式只取允许字段并加真实Git回归。UI首轮默认团队条件卸载计划的P2，修后真实解除关联/保稿/CAS/Esc回归通过并由独立Tester/Reviewer关闭。初两E2E的select标签超时已修aria-labelledby；原失败日志保留。独立GUI/CI Tester限定PASS，Reviewer最终限定APPROVE：核13源、5包与dist字节、134文件/双锁、两官方全日志、ZIP和16PNG逐条SHA并实看。未关闭源码P0—P3为零，本机退出兼容性另为PENDING，不把源码审核扩展成整体发行验收。
+
+## 确切提交的原生CI
+
+桌面`7b2954b52d2d0ad219e8575cdee26e93a40a73ac`、固定内核c960的[CI40442209173](https://github.com/CerrorJ/weftpilot/actions/runs/40442209173)双平台SUCCESS。Windows job121984943648：内核170/170、51单元、8装配、开发与实际包各64项47通过17条件跳过0失败0取消，未签名NSIS/blockmap装配通过。macOS job121984943394：内核160通过10平台跳过、51单元、7装配1平台跳过、开发及实际包各64项47通过17条件跳过0失败0取消，未签名ARM64 DMG/ZIP/blockmap通过。两个项目设置/默认团队容器在四种原生模式均实际运行通过；模型专项17跳过中的一项不被算真实CLI成功，真实模型依据上面两轮本机实际包证据。
+
+界面证据各8PNG（项目设置2+需求6），下载ZIP后按官方大小和摘要核验，限制文件名集合再解压：Windows artifact12706274911，381302字节，SHA-256 `b9fa6d2ecc57be1162bf070b28a3af73e13cfc91abea66b77ad9489c13a76287`；macOS artifact12707491195，551663字节，SHA-256 `cd1b34e06fa863dc34cab6ead754c1b484f20cd7147fe3df3ce361c4c564b66d`。图片均对应7b；Mac项目中文图显示真实Git检查中，只作为布局/团队/原文证明，不冒称该图仓库已verified。
+
+本机两个错误窗口另行只读取证：各业务库schema10、quick_check正常、无Run/执行片段、末条kernel.stopped，读前后DB SHA不变，但主进程仍在，不能当应用exit0。UIA正文是Error launching CrashSender.exe；模块中有WeType提供的CrashRpt1500.dll，仅共存不能证明因果，尚无对应Application1000/1001记录，不能据窗口标题确定Windows WER机制或故障模块。遮挡截图明确不是错误正文的视觉证据。未强杀、关闭现场、改输入法或系统设置；详细PID/创建时间/自有树/只读DB/原日志保留在ignored证据。该问题与旧停止/退出故障分别保留，完整M4仍不封板。
+
+独立Tester自己的6个周期均菜单退出/真实exit0、自有树空，56个Git文件摘要与输入保护核对保持，0Run/审批，实际延迟两个真实回执不关新表单或抢导航。旧0100→0110的项目/角色/团队及备份9保留已验；早期旧计划seed漏expectedTeamVersion实际拒绝，因此不声称旧Task升级已由该场景证明。Run有记录展示依据root真实CLI第二轮与Reviewer源码核对，Tester不重复冒称亲跑模型。各辅助失败和现场均保持原归属。
 
 ## 复现
 
@@ -35,4 +45,6 @@ Windows实际包真实CLI专项首次1/1通过：项目goal/description中的两
 
 本机已有CLI登录条件下，以WEFTPILOT_REAL_PROJECT_CONTEXT=1显式运行`tests/e2e/project-context-cli.test.ts`，不复制登录文件。未设置时模型专项跳过。本机实际包来自官方Electron42原始归档，经SHA核验和固定装配器构建到新目录，不覆盖旧测试包。
 
-剩余：独立UI/双平台CI、团队列表/编辑页、角色飞书路由、八页整体设计、用户macOS设备安装/升级/真实CLI、签名与许可/更新渠道。未创建或连接飞书测试应用，未切换现有服务，未自动合并或公开发布；M0—M4整体不据此封板。
+两仓代码已推送，功能关联为桌面feat/project-settings/7b2954b、内核feat/project-settings/c960。后续docs分支只汇总验收，不改变应用/产物身份。内核文档91fed09首次HTTPS推送曾遭临时TLS失败；随后关联文档已随正常Git恢复补推为桌面2d13e7c、内核aa01ac4，未关闭证书校验或修改全局网络/远程配置，不改变该CI的固定源码。
+
+剩余：本机Windows退出现场、团队列表/编辑页、角色飞书路由、八页整体设计、用户macOS设备安装/升级/真实CLI、签名与许可/更新渠道。未创建或连接飞书测试应用，未切换现有服务，未自动合并或公开发布；M0—M4整体不据此封板。下一项已建立独立feat/team-catalog工作树，复用0110团队用例，不覆盖本次证据或故障现场。
