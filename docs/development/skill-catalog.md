@@ -1,6 +1,8 @@
 # 技能目录与原型交互接入
 
-更新：2026-10-29，开发中，尚未验收。桌面`feat/skill-catalog`承接角色渠道3af，继续固定Agent-Team `2750d66321d4920745c2f3f2a88428fcc73f78bd / 0.13.0 / protocol1 / schema12`；正规产物142文件，tar SHA-256 `c5efd3cee257afa2e723f64f5a5fd6b4f3fd74dac40f51652c6b3237175e9ecd`。本增量不改协议、内核或锁，不维护第二份技能状态。
+更新：2026-10-29，本增量限定验收完成，整体M4与八页未封板。桌面`feat/skill-catalog/0a3cb4241a52d099c2fea53d46ac3e8c89b234d6`承接角色渠道3af，继续固定Agent-Team `2750d66321d4920745c2f3f2a88428fcc73f78bd / 0.13.0 / protocol1 / schema12`；正规产物142文件，tar SHA-256 `c5efd3cee257afa2e723f64f5a5fd6b4f3fd74dac40f51652c6b3237175e9ecd`。本增量不改协议、内核或锁，不维护第二份技能状态。
+
+[最终CI40864862490](https://github.com/CerrorJ/weftpilot/actions/runs/40864862490)两平台SUCCESS：Win核心185/58单元/8装配，Mac核心175通过10平台跳过/58单元/7装配1平台跳过；开发及实际默认72各55通过17明确跳过，实际公共来源专项各1通过2CLI明确跳过（Win10.266s、Mac9.284s），未签名NSIS/ARM64 DMG/ZIP装配通过。独立Tester核32官方新图/两ZIP摘要/逐图字节SHA及完整日志，Reviewer补审限定APPROVE；另Windows真实完整来源链独立GUI PASS、三P2修后关闭。三轮a629/939/637 FAIL与29/29/30图原样保留；本轮未复现不关闭旧Mac加密/下载原因。下文待验文字保留各历史时点，迟到回执注入、真实模型/CLI、用户设备与正式发行仍单独验收。
 
 ## 实际范围
 
