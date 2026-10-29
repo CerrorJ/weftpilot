@@ -24,6 +24,14 @@
 
 独立一次修正包确认已完成：三处来源选项均含不同短ID/仓库，完整UUID值及筛选隔离不变；英文View details实际可点、Esc回原按钮、700px无文档横溢出，重启与两次正常菜单退出/PID取证通过，限定GUI PASS，两P2关闭。修正包APP JS SHA-256 `8c83fe8dc9c0107d5f362de87ec640cbd7b18dd0fdf12228906a9aac43050467`，CSS `2773ae61b8f7819af997319a1a30cebac8dbc13ebdcce279407c8672112b40aa`；正规142内核及固定锁不变。最终strict/lint/格式、58单元、8装配通过；独立代码审查与新候选原生CI按确切提交继续。没有再做网络下载或把PENDING安装链写成通过。
 
+已推候选`a629996d79fe881255a9c513e666462ba7e3e413`的[首CI40858103506](https://github.com/CerrorJ/weftpilot/actions/runs/40858103506)总体FAIL。两平台核心185（Mac175通过10平台跳过）、58单元、装配Win8/Mac7通过1平台跳过、开发71项54通过17跳过、未签名安装装配均通过；Win实际默认71同为54P17S，但实际公共来源专项0通过1失败2CLI跳过，在切已安装后立即要求2张卡片而实际1张。两次真实下载/许可确认/安装的前置断言已过，此失败不是下载限流；官方图显示v1已安装，当前界面快照可能尚未轮询到v2。测试现补等待实际卡片“已安装”才切换视图，原2张计数及后续升级/卸载断言不放宽，修后新CI须另验。
+
+Mac首CI实际默认71项53通过1失败17跳过，备份saveModel再次CREDENTIAL_STORAGE_UNAVAILABLE，后续来源专项未执行。官方430字节诊断仅公开元数据：失败后ready=true、darwin/arm64、Electron42.0.0、Node24.15.0、encryptionAvailable=false；无Secret或目录，不据此确定唯一根因。独立Tester核官方两日志/两ZIP/29图（Win15、Mac14）及诊断摘要后仍FAIL，不以来源部分通过或截图核验关闭失败。
+
+Reviewer另发现第三P2：已安装视图卸载后原卡片消失，关闭详情缺少键盘归焦目标，原审查REQUEST_CHANGES保留。现只在详情卸载后、仍在该页、无其他模态框且没有有效焦点时回当前视图标签；有效原卡片仍照常归焦。明确的受控旧技能记录夹具只用于此展示/卸载测试，不代表网络、安装或资源可执行；同测试在旧8c包30秒未归焦超时，新包4ee81ed6c4c6fee01cbaa5c6a682045ea38e757ddcef02e0c957f8df1f501b52的两个相关容器2/2通过、0Run。独立窗口定向补验/代码补审与修后CI继续，不用历史夹具替代真实来源链。
+
+第三P2独立窗口补验已限定PASS：新自有受控历史仅准备展示状态，后续卸载/Esc/Close全部由agent-browser操作；中文卸载A后回已安装标签，B仍在时回原详情按钮，英文深色700px同样正常。只读核A已卸载、B完整对象原样、0Run/0import、quick_check=ok，原生菜单exit0及登记PID缺席。未下载、未模型调用，不把该结果改写为安装全链通过；源码补审及新CI仍单独收口。
+
 ## 复现
 
 固定Node24与pnpm12.3.4，执行`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm typecheck`、`pnpm lint`、`pnpm test`、`pnpm test:packaging`、`pnpm build`。默认窗口`pnpm test:e2e`；实际包设置WEFTPILOT_PACKAGED_EXE后运行同一测试。公共来源专项设置WEFTPILOT_REAL_SKILLS=1再运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts`，不设置真实CLI开关。首次下载失败不应清除或覆盖原有可用安装。

@@ -101,7 +101,11 @@ test(
         predicate: (state) =>
           state.skills.find((skill) => skill.id === first.id)?.available === false,
       })
-      await uninstall.getByRole('button', { name: '关闭', exact: true }).click()
+      await page.keyboard.press('Escape')
+      await uninstall.waitFor({ state: 'detached' })
+      await page.waitForFunction(() =>
+        document.activeElement?.matches('.skill-catalog-tabs button[aria-pressed="true"]'),
+      )
       await page.locator(`[data-catalog-id="${first.id}"]`).waitFor({ state: 'detached' })
       assert.equal(await page.locator(`[data-catalog-id="${second.id}"]`).count(), 1)
       await page.getByRole('button', { name: '技能市场', exact: true }).click()

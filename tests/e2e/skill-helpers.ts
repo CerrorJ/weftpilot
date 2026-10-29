@@ -74,6 +74,11 @@ export const importFixtureSkill = async (page: Page, version: 1 | 2 = 1) => {
     .getByRole('dialog', { name: '技能版本详情', exact: true })
     .getByRole('button', { name: '关闭', exact: true })
     .click()
+  // 内核已安装回执早于下一次界面轮询；等实际卡片反映安装后再切换已安装视图。
+  await page
+    .locator(`[data-catalog-id="${item.id}"]`)
+    .getByText('已安装', { exact: true })
+    .waitFor()
   return installed.skills.find((skill) => skill.id === item.id)!
 }
 

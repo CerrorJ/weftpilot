@@ -9,6 +9,7 @@ import { skillCatalog, filterSkillCatalog, type SkillCatalogEntry } from './skil
 import { SkillCatalogControls, type SkillCatalogFilter } from './skill-catalog-controls'
 import { SkillCatalogCard } from './skill-catalog-card'
 import { SkillCatalogDetail } from './skill-catalog-detail'
+import { restoreSkillCatalogFocus } from './skill-catalog-focus'
 import './skills.css'
 import './skill-catalog.css'
 
@@ -49,7 +50,16 @@ export const SkillPage = ({ actions }: { actions: WorkspaceActions }) => {
           </p>
         </>
       )}
-      {entry && <SkillCatalogDetail entry={entry} actions={actions} close={() => select('')} />}
+      {entry && (
+        <SkillCatalogDetail
+          entry={entry}
+          actions={actions}
+          close={() => {
+            select('')
+            restoreSkillCatalogFocus()
+          }}
+        />
+      )}
     </section>
   )
 }
