@@ -2,6 +2,8 @@
 
 更新：2026-10-29，开发中。按固定product-design/c29c2f5的角色第5步接入新建、关联已有和暂不接入三种入口，复用原创Logo、六步布局、中文/英文与系统/明暗主题。新建目前走官方控制台辅助；扫码注册尚未接入，不显示虚构授权成功。工作空间旧连接继续兼容，但不代表所有角色已独立授权。
 
+当前实现为桌面`feat/role-feishu-routing/3afbbe15ebe09893a460d88a467b2a7289989e3f`（功能f3、许可修复c5ab、失败诊断3af），固定内核2750不变。独立Windows GUI限定PASS、源码Reviewer补审APPROVE，第二许可P2关闭，原REQUEST_CHANGES保留。[修正CI40854594227](https://github.com/CerrorJ/weftpilot/actions/runs/40854594227)双平台SUCCESS：Windows核心185、单元54、装配8；macOS核心175通过10平台跳过、单元54、装配7通过1平台跳过；各开发及实际包70项53通过17明确跳过0失败0取消，未签名NSIS/ARM64 DMG/ZIP装配通过。独立CI Tester正在收口官方24图/摘要；新诊断未产生失败元数据，本轮未复现不等于f3加密失败根因已修复。本文其余“进行中”保留各轮历史时点，真实租户、模型和整体验收仍另列。
+
 ## 唯一内核与固定产物
 
 Agent-Team源码`feat/role-feishu-routing/2750d66321d4920745c2f3f2a88428fcc73f78bd`已正常提交推送。内核0.13.0/protocol1/schema12，新增role-feishu-routing能力及feishu.role.connect/disconnect/status命名请求。`weftpilot-agent-team-kernel-0.13.0.tgz` SHA-256 `c5efd3cee257afa2e723f64f5a5fd6b4f3fd74dac40f51652c6b3237175e9ecd`，两个干净检出重建一致；正规产物精确142文件，装配目录另外有宿主artifact-lock.json，共143文件，不能混用计数。内外锁、manifest与逐文件摘要已由独立Tester核验；实际包也已核142集合/摘要。旧012等产物保留，不重新打包同版本或依赖邻仓WIP。
