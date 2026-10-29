@@ -8,7 +8,7 @@ export const taskLabels: Record<Task['status'], string> = {
 }
 
 /** 进程状态未知优先呈现；不能用任务阶段掩盖未确认结束的执行。 */
-export const runLabel = (run: Run): string => {
+export const runLabel = (run: Pick<Run, 'status' | 'processState'>): string => {
   if (run.processState === 'uncertain') return '状态待确认'
   const labels: Record<Run['status'], string> = {
     queued: '排队中',

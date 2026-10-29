@@ -8,6 +8,8 @@ import { TaskToolbar } from './task-toolbar'
 import { TaskTabs } from './task-tabs'
 import { taskGroups } from './task-views'
 import { useDrawerFocus } from './use-drawer-focus'
+import { TaskBoard } from './task-board'
+import { TaskLayoutToggle } from './task-layout-toggle'
 
 export const TaskWorkspace = ({
   state,
@@ -23,7 +25,7 @@ export const TaskWorkspace = ({
   const task = groups.all.find((item) => item.id === browser.selected)
   const visible = groups[browser.view].filter((item) => matchesTask(item, state, browser))
   return (
-    <section aria-label={t('任务列表')}>
+    <section aria-label={t(browser.layout === 'board' ? '任务看板' : '任务列表')}>
       <TaskToolbar
         projects={state.projects}
         tabs={<TaskTabs view={browser.view} groups={groups} select={browser.setView} />}
@@ -31,15 +33,9 @@ export const TaskWorkspace = ({
         search={browser.search}
         setProject={browser.setProject}
         setSearch={browser.setSearch}
+        layoutToggle={<TaskLayoutToggle layout={browser.layout} change={browser.setLayout} />}
       />
-      {!groups.all.length ? (
-        <section className="empty-state">
-          <h2>{t('还没有任务')}</h2>
-          <p>{t('先添加项目和角色，再开始第一项真实任务。')}</p>
-        </section>
-      ) : (
-        <TaskTable tasks={visible} state={state} selectTask={browser.selectTask} />
-      )}
+      <TaskResults empty={!groups.all.length} tasks={visible} state={state} browser={browser} />
       {task && (
         <TaskDrawer
           task={task}
@@ -50,6 +46,32 @@ export const TaskWorkspace = ({
         />
       )}
     </section>
+  )
+}
+
+const TaskResults = ({
+  empty,
+  tasks,
+  state,
+  browser,
+}: {
+  empty: boolean
+  tasks: Task[]
+  state: WorkspaceSnapshot
+  browser: TaskBrowser
+}) => {
+  const { t } = useI18n()
+  if (empty)
+    return (
+      <section className="empty-state">
+        <h2>{t('还没有任务')}</h2>
+        <p>{t('先添加项目和角色，再开始第一项真实任务。')}</p>
+      </section>
+    )
+  return browser.layout === 'board' ? (
+    <TaskBoard tasks={tasks} state={state} selectTask={browser.selectTask} />
+  ) : (
+    <TaskTable tasks={tasks} state={state} selectTask={browser.selectTask} />
   )
 }
 

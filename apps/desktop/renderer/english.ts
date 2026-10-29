@@ -15,6 +15,7 @@ import { englishRoleCopy } from './english-role-copy'
 import { englishRoleDrafts } from './english-role-drafts'
 import { englishProjects } from './english-projects'
 import { englishTeams } from './english-teams'
+import { englishTaskBoard } from './english-task-board'
 export const english: Record<string, string> = {
   ...englishShell,
   ...englishRoleWizard,
@@ -26,6 +27,7 @@ export const english: Record<string, string> = {
   ...englishRoleDrafts,
   ...englishProjects,
   ...englishTeams,
+  ...englishTaskBoard,
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,

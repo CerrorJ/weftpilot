@@ -11,6 +11,8 @@
   --primary-hover: #2f5636;
   --disabled: #dce1d9;
   --error: #923829;
+  --status-active: #386a84;
+  --status-review: #8a6c28;
   color-scheme: light;
 }
 
@@ -27,6 +29,8 @@
   --primary-hover: #abc994;
   --disabled: #344a35;
   --error: #ffac96;
+  --status-active: #9cc8df;
+  --status-review: #e5c98b;
   --forest: #c6dfb3;
   --muted: #afbea8;
   --line: #42523e;
@@ -46,6 +50,8 @@
     --primary-hover: #abc994;
     --disabled: #344a35;
     --error: #ffac96;
+    --status-active: #9cc8df;
+    --status-review: #e5c98b;
     --forest: #c6dfb3;
     --muted: #afbea8;
     --line: #42523e;

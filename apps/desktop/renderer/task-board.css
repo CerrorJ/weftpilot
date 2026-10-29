@@ -1,0 +1,106 @@
+.task-layout-toggle {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.task-layout-toggle button {
+  display: flex;
+  padding: 8px;
+  background: transparent;
+}
+.task-layout-toggle button[aria-pressed='true'] {
+  background: var(--selected);
+  color: var(--forest);
+}
+.task-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  align-items: stretch;
+  padding-top: 19px;
+}
+.task-board-column {
+  min-width: 0;
+  background: var(--surface);
+  border-radius: 7px;
+  padding: 12px;
+  min-height: 350px;
+}
+.task-board-column > h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 550;
+  color: var(--muted);
+}
+.task-board-column > h2 > span:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.task-board-column > h2 > span:last-child {
+  font-size: 11px;
+  color: var(--muted);
+}
+.task-board-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  background: var(--input-background);
+  text-align: left;
+  border-radius: 6px;
+}
+.task-board-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.task-board-card code {
+  color: var(--muted);
+  font-size: 10px;
+}
+.task-board-card strong {
+  font-size: 12px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.task-board-project,
+.task-board-owner,
+.task-board-empty {
+  color: var(--muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.task-board-empty {
+  text-align: center;
+  padding: 20px 0;
+}
+.task-board-card .task-status {
+  white-space: normal;
+}
+.task-board-container > .field-note {
+  margin-top: 20px;
+}
+@media (max-width: 1000px) {
+  .task-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .task-board {
+    grid-template-columns: 1fr;
+  }
+}

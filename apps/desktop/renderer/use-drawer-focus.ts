@@ -24,7 +24,12 @@ export const useDrawerFocus = (taskId: string, close: () => void) => {
     button,
     dismiss: () => {
       close()
-      if (trigger.current?.isConnected) trigger.current.focus()
+      // 切换列表/看板会卸载旧按钮；显式关闭时按确切任务ID寻找当前视图的来源。
+      const target = trigger.current?.isConnected
+        ? trigger.current
+        : (document.querySelector<HTMLElement>(`[data-task-id="${taskId}"]`) ??
+          document.querySelector<HTMLElement>('.task-layout-toggle button[aria-pressed="true"]'))
+      target?.focus()
     },
   }
 }

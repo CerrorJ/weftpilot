@@ -1,7 +1,10 @@
 import type { Task, WorkspaceSnapshot } from '@weftpilot/agent-team-kernel/protocol'
 import { useI18n } from './preferences'
-import { taskLabels, runLabel } from './task-status'
+import { runLabel } from './task-status'
 import { taskOwnerName } from './task-owner'
+import { latestTaskRun } from './task-display'
+import { TaskStatusBadge } from './task-status-badge'
+import { TaskProgress } from './task-progress'
 
 export const TaskTable = ({
   tasks,
@@ -44,10 +47,7 @@ const TaskRow = ({
   selectTask: (id: string) => void
 }) => {
   const { t } = useI18n()
-  const run = state.runs
-    .filter((item) => item.taskId === task.id)
-    .sort((a, b) => a.attempt - b.attempt)
-    .at(-1)
+  const run = latestTaskRun(state.runs, task.id)
   const children = state.tasks.filter((item) => item.parentTaskId === task.id)
   const owner = taskOwnerName({ run, task, roles: state.roles })
   return (
@@ -61,33 +61,12 @@ const TaskRow = ({
       </td>
       <td>{state.projects.find((item) => item.id === task.projectId)?.name}</td>
       <td>
-        <span className={`task-status ${task.status}`}>
-          {t(
-            run && ['ready', 'in_progress'].includes(task.status)
-              ? runLabel(run)
-              : taskLabels[task.status],
-          )}
-        </span>
+        <TaskStatusBadge task={task} run={run} />
       </td>
       <td>
         <TaskProgress tasks={children} />
       </td>
       <td>{owner ?? '—'}</td>
     </tr>
-  )
-}
-
-/** 只有显式子任务总数才展示进度，不把事件数或CLI输出当作工作量。 */
-const TaskProgress = ({ tasks }: { tasks: Task[] }) => {
-  const { t } = useI18n()
-  if (!tasks.length) return <span className="unknown-steps">—</span>
-  const completed = tasks.filter((item) => item.status === 'done').length
-  return (
-    <div className="known-steps">
-      <progress aria-label={t('子任务验收')} max={tasks.length} value={completed} />
-      <span>
-        {completed}/{tasks.length}
-      </span>
-    </div>
   )
 }

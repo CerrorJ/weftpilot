@@ -9,6 +9,7 @@ export const TaskToolbar = ({
   search,
   setProject,
   setSearch,
+  layoutToggle,
 }: {
   projects: Project[]
   tabs: ReactNode
@@ -16,6 +17,7 @@ export const TaskToolbar = ({
   search: string
   setProject: (id: string) => void
   setSearch: (value: string) => void
+  layoutToggle: ReactNode
 }) => {
   const { t } = useI18n()
   return (
@@ -45,6 +47,7 @@ export const TaskToolbar = ({
           placeholder={t('搜索任务…')}
         />
       </label>
+      {layoutToggle}
     </div>
   )
 }

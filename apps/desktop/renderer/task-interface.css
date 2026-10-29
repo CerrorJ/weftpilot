@@ -162,15 +162,18 @@
 }
 
 .task-status.in_progress {
-  color: #386a84;
+  color: var(--status-active);
 }
 
 .task-status.in_review {
-  color: #8a6c28;
+  color: var(--status-review);
 }
 
 .task-status.done {
   color: var(--forest);
+}
+.task-status[data-attention='true'] {
+  color: var(--error);
 }
 
 .known-steps {
