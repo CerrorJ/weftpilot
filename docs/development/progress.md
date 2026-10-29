@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+任务看板源码`e4a64bc666cf17e0e18177c8721159f0b8e8262a`独立GUI限定PASS/Reviewer APPROVE；[CI40868460148](https://github.com/CerrorJ/weftpilot/actions/runs/40868460148)整轮FAIL，新看板用例两平台开发及实际包四处通过。Win核心185/单元60/装配8，开发及实际包各73项56通过17跳过，真实公共来源1通过2CLI跳过，NSIS装配成功。Mac核心175通过10跳过/单元60/装配7通过1跳过，开发同绿、实际包55通过1失败17跳过，唯一失败是备份模型密钥`CREDENTIAL_STORAGE_UNAVAILABLE`；来源专项未执行，ARM64 DMG/ZIP已装配。独立CI Tester核34图/官方摘要/完整日志，Reviewer另核官方run/jobs及日志批准限定事实。Mac窄图卡片在截图范围外，不能据图宣称完整视觉覆盖；历史存储根因未关闭，详见[看板](task-board.md)。当前docs分支仅汇总确切e4证据，不重新构建或改变固定2750/0.13.0/p1/schema12/142文件产物，也不合并发布。下段保留提交前时点。
+
 继续[任务列表/看板](task-board.md)：同一快照/筛选与四栏、列表切换保留详情UUID、确切创建回执及归焦已实现，固定2750/013/142不变。60单元/strict/lint/规模、开发专项1P，新Windows实际包完整73项56P17S0F0cancel通过；独立GUI限定PASS，受控历史unknown退出拒绝及精确人工夹具清场单列，不算真实停止证明。独立审查和本提交原生CI继续，工作台与设置差距仍未实施。
 
 技能目录0a3的[CI40864862490](https://github.com/CerrorJ/weftpilot/actions/runs/40864862490)双平台SUCCESS：各58单元、开发及实际默认72项55P17S、实际公共来源专项各1P2CLI-S、未签名安装装配通过；独立Tester已核官方32图/摘要/完整日志。Windows另有完整真实来源独立GUI PASS。源码和CI补审分开记录，a629/939/637三轮FAIL及历史Mac根因保留，不能继承为本看板提交的CI。
