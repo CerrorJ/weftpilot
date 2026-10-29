@@ -34,6 +34,10 @@ Reviewer另发现第三P2：已安装视图卸载后原卡片消失，关闭详�
 
 焦点修复已推939f491，独立Reviewer在GUI之后补审APPROVE，保留初REQUEST_CHANGES。[修后CI40860718489](https://github.com/CerrorJ/weftpilot/actions/runs/40860718489)Windows开发72项55通过17跳过，但实际包72项54通过1失败17跳过：第一次卸载/Esc/归焦断言已过，第二张仍存在卡片打开后立即Esc，原生详情未关闭。其后安装器和公共来源专项未执行，不能借首轮安装包装配补齐。检查发现测试helper点击后直接返回locator，未等React effect调用showModal；现补实际dialog visible等待才允许后续键盘操作，不删除任何Esc/卡片/焦点断言。此修正不改产品资源或内核，修后新CI须再验证，不仅凭解释关闭939失败。
 
+测试等待提交6370de6的[CI40862406624](https://github.com/CerrorJ/weftpilot/actions/runs/40862406624)两平台开发/实际默认72项均55通过17跳过，两个Esc及备份通过，未签名原生包装配成功；但真实来源专项各0通过1失败2CLI跳过，总体仍FAIL。Mac首下载SKILL_DOWNLOAD_FAILED，无HTTP根因证据。Win已到卸载后焦点断言：官方图明确是重新进入页面后的默认市场视图，已卸载卡片仍保留且原“查看详情”有有效focus ring，要求回已安装标签的测试前提不成立。现从角色返回后明确点已安装，等实际卡片移除再Esc，原卸载/两版本/焦点/重启断言保持。同一4ee实际包完整公共来源专项现1通过2CLI明确跳过、exit0（10729ms），不改应用来强抢已存在的有效焦点。独立Tester核该轮30图/官方摘要及日志后仍保留FAIL。
+
+11时后条件改变，独立Tester只读一次相同固定tree请求200/remaining45，随后新DATA通过产品实际发起两次下载、零重试/Token/替身：完整说明、MIT许可证、3文件大小/SHA及落盘字节核对通过；两次未勾确认均不安装，显式批准后已安装2及两张卡；第二比较基准精确first.id、first为null，真实展开proof.txt变化；角色草稿保存旧版摘要但未启用/0Run。卸载first后已安装1仅second，市场保留历史，旧角色JSON不变，新角色仅可选second；重启保持，3次原生菜单exit0、登记PID缺席、quick_check=ok。该完整来源链现独立真PASS，不再PENDING；晚到导入回执故障注入、模型/CLI和平台CI失败仍未关闭。源码和142内核与已批准4ee包一致，后续新测试提交CI继续。
+
 ## 复现
 
 固定Node24与pnpm12.3.4，执行`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm typecheck`、`pnpm lint`、`pnpm test`、`pnpm test:packaging`、`pnpm build`。默认窗口`pnpm test:e2e`；实际包设置WEFTPILOT_PACKAGED_EXE后运行同一测试。公共来源专项设置WEFTPILOT_REAL_SKILLS=1再运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts`，不设置真实CLI开关。首次下载失败不应清除或覆盖原有可用安装。
