@@ -13,7 +13,7 @@ import {
   waitForSnapshot,
   quit,
 } from './workflow-helpers'
-import { importFixtureSkill, skillProofV1 } from './skill-helpers'
+import { importFixtureSkill, skillProofV1, openSkillDetail } from './skill-helpers'
 import {
   openRoleEditor,
   goRoleStep,
@@ -46,6 +46,13 @@ test(
       const second = await importFixtureSkill(page, 2)
       assert.notEqual(first.digest, second.digest)
       assert.notEqual(first.id, second.id)
+      await page.getByRole('searchbox', { name: '搜索技能', exact: true }).fill('DOES_NOT_EXIST')
+      await page.getByRole('heading', { name: '没有找到匹配的技能', exact: true }).waitFor()
+      await page.getByRole('searchbox', { name: '搜索技能', exact: true }).fill(first.name)
+      assert.equal(await page.locator('[data-catalog-id]').count(), 2)
+      await page.getByRole('button', { name: /^已安装/ }).click()
+      assert.equal(await page.locator('[data-catalog-id]').count(), 2)
+      const detail = await openSkillDetail(page, second.id)
       const changes = page
         .locator(`[data-import-id="${second.id}"] details`)
         .filter({ hasText: '与此前安装版本的文件变化' })
@@ -55,6 +62,7 @@ test(
       const imports = (await snapshot(page)).skillImports
       assert.equal(imports.find((item) => item.id === second.id)?.comparisonPackageId, first.id)
       assert.equal(imports.find((item) => item.id === first.id)?.comparisonPackageId, null)
+      await detail.getByRole('button', { name: '关闭', exact: true }).click()
       await page.getByRole('button', { name: '角色管理', exact: true }).click()
       await resumeRoleDraft(page)
       await goRoleStep(page, 0)
@@ -82,6 +90,7 @@ test(
       const role = saved.roles.find((role) => role.name === '保留的角色草稿')!
       assert.deepEqual(role.skills, [{ id: first.id, digest: first.digest }])
       await page.getByRole('button', { name: '技能中心', exact: true }).click()
+      const uninstall = await openSkillDetail(page, first.id)
       await page
         .locator(`[data-skill-id="${first.id}"]`)
         .getByRole('button', { name: '卸载此版本', exact: true })
@@ -92,6 +101,16 @@ test(
         predicate: (state) =>
           state.skills.find((skill) => skill.id === first.id)?.available === false,
       })
+      await uninstall.getByRole('button', { name: '关闭', exact: true }).click()
+      await page.locator(`[data-catalog-id="${first.id}"]`).waitFor({ state: 'detached' })
+      assert.equal(await page.locator(`[data-catalog-id="${second.id}"]`).count(), 1)
+      await page.getByRole('button', { name: '技能市场', exact: true }).click()
+      await page
+        .locator(`[data-catalog-id="${first.id}"]`)
+        .getByText('已卸载，历史保留', { exact: true })
+        .waitFor()
+      await mkdir('.tmp/evidence', { recursive: true })
+      await page.screenshot({ path: '.tmp/evidence/skill-catalog-installed-zh-light.png' })
       await page.locator('.appearance-settings summary').click()
       await page.getByRole('combobox', { name: '语言', exact: true }).selectOption('en')
       await page.getByRole('combobox', { name: 'Appearance', exact: true }).selectOption('dark')
@@ -105,7 +124,15 @@ test(
       assert.equal(restored.skills.find((skill) => skill.id === second.id)?.available, true)
       assert.deepEqual(restored.roles.find((item) => item.id === role.id)?.skills, role.skills)
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark')
+      await page.screenshot({ path: '.tmp/evidence/skill-catalog-restored-en-dark.png' })
       await quit(application)
+    } catch (error) {
+      await mkdir('.tmp/evidence', { recursive: true })
+      const page = await application.firstWindow().catch(() => undefined)
+      await page
+        ?.screenshot({ path: '.tmp/evidence/skill-catalog-source-failure.png' })
+        .catch(() => undefined)
+      throw error
     } finally {
       await application.close().catch(() => undefined)
       await fixture.cleanup()

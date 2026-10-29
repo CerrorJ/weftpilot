@@ -1,4 +1,31 @@
 export const englishSkills: Record<string, string> = {
+  查看详情: 'View details',
+  '为角色补充能力，从安装到引用都在这里完成。':
+    'Extend your roles, from installation to assignment.',
+  管理技能源: 'Manage skill sources',
+  '添加来源 / 预览技能': 'Add source / preview skill',
+  技能视图: 'Skill views',
+  技能市场: 'Skill market',
+  筛选技能源: 'Filter skill source',
+  全部来源: 'All sources',
+  搜索技能: 'Search skills',
+  '搜索 Skills…': 'Search skills…',
+  技能版本详情: 'Skill version details',
+  固定来源与版本: 'Pinned source and version',
+  '下载完成后可核对完整说明和许可证。':
+    'Review the full instructions and license after downloading.',
+  '目录仅展示已下载或安装的真实版本。添加公共来源并预览后，才能确认安装。':
+    'The catalog shows downloaded or installed versions. Add a public source and review it before approving installation.',
+  '外部依赖、CLI 兼容性和账号授权须按技能说明分别核对。安装不会扩大角色权限。':
+    'Check external dependencies, CLI compatibility, and account access against the instructions. Installation does not grant role permissions.',
+  没有找到匹配的技能: 'No matching skills',
+  尚未安装技能: 'No skills installed',
+  从一个可信来源开始: 'Start with a trusted source',
+  '调整搜索内容或来源筛选，查看其他固定版本。':
+    'Adjust your search or source filter to find other pinned versions.',
+  '添加你已核验许可的公共来源，先查看说明与许可证，再确认安装。':
+    'Add a public source you trust. Read the instructions and license before approving installation.',
+  读取当前来源版本: 'Reload current source version',
   技能中心: 'Skills',
   '固定来源与版本，先检查内容，再安装到角色。':
     'Pin the source and version. Review the content before assigning it to a role.',

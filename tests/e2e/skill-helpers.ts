@@ -12,6 +12,7 @@ export const fixtureSkillDirectory = 'tests/fixtures/skills/weftpilot-verificati
 /** 下载真实公共提交，不替换网络、安装器或内核；本仓原创MIT资源免于复制第三方技能。 */
 export const importFixtureSkill = async (page: Page, version: 1 | 2 = 1) => {
   await page.getByRole('button', { name: '技能中心', exact: true }).click()
+  await page.getByRole('button', { name: '添加来源 / 预览技能', exact: true }).click()
   if (version === 2) {
     const source = (await snapshot(page)).skillSources[0]!
     await page.getByRole('combobox', { name: '编辑来源', exact: true }).selectOption(source.id)
@@ -69,5 +70,17 @@ export const importFixtureSkill = async (page: Page, version: 1 | 2 = 1) => {
     timeout: 10000,
     predicate: (state) => state.skills.some((skill) => skill.id === item.id),
   })
+  await page
+    .getByRole('dialog', { name: '技能版本详情', exact: true })
+    .getByRole('button', { name: '关闭', exact: true })
+    .click()
   return installed.skills.find((skill) => skill.id === item.id)!
+}
+
+export const openSkillDetail = async (page: Page, id: string) => {
+  await page
+    .locator(`[data-catalog-id="${id}"]`)
+    .getByRole('button', { name: '查看详情', exact: true })
+    .click()
+  return page.getByRole('dialog', { name: '技能版本详情', exact: true })
 }

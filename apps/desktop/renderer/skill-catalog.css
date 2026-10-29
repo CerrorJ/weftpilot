@@ -1,0 +1,119 @@
+.skill-catalog-toolbar,
+.skill-catalog-tabs,
+.skill-card-heading,
+.skill-card-bottom,
+.skill-card-version {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.skill-catalog-toolbar {
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+.skill-catalog-toolbar label {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+.skill-catalog-source {
+  flex: 0 1 240px;
+}
+.skill-catalog-tabs {
+  gap: 4px;
+  margin-right: auto;
+}
+.skill-catalog-tabs button {
+  background: transparent;
+  border-color: transparent;
+  padding: 8px 12px;
+}
+.skill-catalog-tabs button[aria-pressed='true'] {
+  background: var(--selected);
+  color: var(--forest);
+}
+.skill-catalog-search {
+  flex: 0 1 220px;
+}
+.skill-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.skill-catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--input-background);
+}
+.skill-card-heading {
+  align-items: flex-start;
+}
+.skill-card-heading h2 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.skill-card-heading small,
+.skill-card-description,
+.skill-card-source,
+.skill-card-bottom small {
+  color: var(--muted);
+}
+.skill-catalog-icon {
+  color: var(--forest);
+  background: var(--selected);
+  padding: 10px;
+  border-radius: 7px;
+  display: flex;
+}
+.skill-card-description {
+  line-height: 1.7;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+.skill-card-source,
+.skill-card-version {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.skill-card-version,
+.skill-card-bottom {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.skill-card-bottom {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.skill-catalog-detail code {
+  overflow-wrap: anywhere;
+}
+.skill-catalog-detail .setup-section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.skill-catalog-detail .setup-section > h2,
+.skill-catalog-detail .skill-record:first-of-type {
+  border-top: 0;
+}
+@media (max-width: 1150px) {
+  .skill-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .skill-catalog-grid {
+    grid-template-columns: 1fr;
+  }
+  .skill-catalog-search {
+    flex: 1 1 100%;
+  }
+}

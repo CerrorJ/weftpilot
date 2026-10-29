@@ -4,34 +4,54 @@ import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
 import { TextField, formText } from './form-fields'
 import { latestVersions } from './object-versions'
+import { skillSourceLabel } from './skill-source-label'
 
 export const SkillSources = ({
   sources,
   actions,
+  imported,
 }: {
   sources: SkillSource[]
   actions: WorkspaceActions
+  imported: (id: string) => void
 }) => {
   const { t } = useI18n()
-  const [selected, setSelected] = useState('')
-  const source = latestVersions(sources).find((item) => item.id === selected)
+  // 打开/明确选择时固定编辑基准；轮询到新版本不能卸载正在填写的表单。
+  const [source, setSource] = useState<SkillSource>()
   return (
     <section className="setup-section" aria-labelledby="skill-sources">
       <h2 id="skill-sources">{t('技能源')}</h2>
       <p>{t('当前支持公共 GitHub 仓库的固定提交。修改来源会追加新版本，不自动升级角色。')}</p>
       <label>
         {t('编辑来源')}
-        <select value={selected} onChange={(event) => setSelected(event.target.value)}>
+        <select
+          value={source?.id ?? ''}
+          onChange={(event) =>
+            setSource(latestVersions(sources).find((item) => item.id === event.target.value))
+          }
+        >
           <option value="">{t('新增来源')}</option>
           {latestVersions(sources).map((item) => (
             <option key={item.id} value={item.id}>
-              {item.name} · v{item.version}
+              {skillSourceLabel(item, latestVersions(sources))} · v{item.version}
             </option>
           ))}
         </select>
       </label>
-      <SourceForm key={`${selected}:${source?.version ?? 0}`} source={source} actions={actions} />
-      <SkillImportForm sources={sources} actions={actions} />
+      {source && (
+        <button
+          type="button"
+          onClick={() => setSource(latestVersions(sources).find((item) => item.id === source.id))}
+        >
+          {t('读取当前来源版本')}
+        </button>
+      )}
+      <SourceForm
+        key={`${source?.id ?? ''}:${source?.version ?? 0}`}
+        source={source}
+        actions={actions}
+      />
+      <SkillImportForm sources={sources} actions={actions} imported={imported} />
     </section>
   )
 }
@@ -80,13 +100,18 @@ const SourceForm = ({
 const SkillImportForm = ({
   sources,
   actions,
+  imported,
 }: {
   sources: SkillSource[]
   actions: WorkspaceActions
+  imported: (id: string) => void
 }) => {
   const { t } = useI18n()
   return (
-    <form className="skill-import-form" onSubmit={(event) => submitImport(event, actions)}>
+    <form
+      className="skill-import-form"
+      onSubmit={(event) => submitImport(event, actions, imported)}
+    >
       <h3>{t('预览技能版本')}</h3>
       <label>
         {t('来源版本')}
@@ -96,7 +121,7 @@ const SkillImportForm = ({
           </option>
           {sources.map((source) => (
             <option key={`${source.id}@${source.version}`} value={`${source.id}@${source.version}`}>
-              {source.name} · v{source.version} · {source.commit.slice(0, 10)}
+              {skillSourceLabel(source, sources)} · v{source.version} · {source.commit.slice(0, 10)}
             </option>
           ))}
         </select>
@@ -123,15 +148,24 @@ const SkillImportForm = ({
   )
 }
 
-const submitImport = (event: React.FormEvent<HTMLFormElement>, actions: WorkspaceActions): void => {
+const submitImport = (
+  event: React.FormEvent<HTMLFormElement>,
+  actions: WorkspaceActions,
+  imported: (id: string) => void,
+): void => {
   event.preventDefault()
-  const form = new FormData(event.currentTarget)
+  const element = event.currentTarget
+  const form = new FormData(element)
   const [sourceId, version] = formText(form, 'source').split('@')
-  void actions.execute({
-    type: 'skill.import',
-    sourceId: sourceId!,
-    sourceVersion: Number(version),
-    directory: formText(form, 'directory'),
-    licensePath: formText(form, 'licensePath'),
-  })
+  void actions
+    .execute({
+      type: 'skill.import',
+      sourceId: sourceId!,
+      sourceVersion: Number(version),
+      directory: formText(form, 'directory'),
+      licensePath: formText(form, 'licensePath'),
+    })
+    .then((result) => {
+      if (result && element.isConnected) imported(result.id)
+    })
 }

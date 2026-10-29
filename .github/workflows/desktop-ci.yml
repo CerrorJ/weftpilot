@@ -77,6 +77,23 @@ jobs:
           # 同名应用共享系统Keychain，独立userData不隔离它；先串行排除跨测试进程竞争。
           # 仍使用真实safeStorage，任何不可用照常失败，不使用mock-keychain或明文回退。
           pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/*.test.ts
+      - name: Verify public skill sources in Windows package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:WEFTPILOT_PACKAGED_EXE = (Resolve-Path release/WeftPilot-win32-x64/WeftPilot.exe).Path
+          $env:WEFTPILOT_REAL_SKILLS = '1'
+          $env:WEFTPILOT_E2E_LIFECYCLE = '1'
+          $env:WEFTPILOT_E2E_RELEASE_INSPECTOR = '1'
+          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts
+      - name: Verify public skill sources in macOS package
+        if: runner.os == 'macOS'
+        run: |
+          export WEFTPILOT_PACKAGED_EXE="$(find "$PWD/release" -path '*/WeftPilot.app/Contents/MacOS/WeftPilot' -print -quit)"
+          test -n "$WEFTPILOT_PACKAGED_EXE"
+          export WEFTPILOT_REAL_SKILLS=1
+          # 只下载本仓原创MIT技能的固定公共提交，不调用CLI模型、不传GitHub或飞书凭据。
+          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts
       - name: Preserve project clipboard UI evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -105,5 +122,6 @@ jobs:
             .tmp/evidence/project-settings-*.png
             .tmp/evidence/team-catalog-*.png
             .tmp/evidence/role-feishu-*.png
+            .tmp/evidence/skill-catalog-*.png
           if-no-files-found: warn
           retention-days: 7

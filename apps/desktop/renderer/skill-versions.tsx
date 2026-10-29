@@ -32,7 +32,7 @@ export const SkillImports = ({
   )
 }
 
-const SkillPreview = ({
+export const SkillPreview = ({
   skill,
   previous,
 }: {
@@ -85,51 +85,35 @@ const skillChanges = (previous: SkillPackage | undefined, current: SkillPackage)
   )
 }
 
-export const InstalledSkills = ({
-  skills,
+export const SkillAvailability = ({
+  skill,
   actions,
 }: {
-  skills: SkillPackage[]
+  skill: SkillPackage
   actions: WorkspaceActions
 }) => {
   const { t } = useI18n()
   return (
-    <section className="setup-section" aria-labelledby="installed-skills">
-      <h2 id="installed-skills">{t('已安装版本')}</h2>
+    <section className="skill-record" data-skill-id={skill.id}>
+      <h2>{t(skill.available ? '可用于新执行' : '已卸载，历史保留')}</h2>
       <p>{t('升级需导入新提交，再保存角色新版本并试运行。卸载保留历史 Run 的固定内容。')}</p>
-      {!skills.length && <p>{t('尚未安装技能。添加你已核验许可的公共来源开始。')}</p>}
-      {skills.map((skill) => (
-        <article className="skill-record" key={skill.id} data-skill-id={skill.id}>
-          <div className="skill-record-heading">
-            <h3>{skill.name}</h3>
-            <span>{skill.available ? t('可用于新执行') : t('已卸载，历史保留')}</span>
-          </div>
-          <p>{skill.description}</p>
-          <p>
-            {skill.source.name} · v{skill.source.version}
-          </p>
-          <code>{skill.source.repository}</code>
-          <br />
-          <code>{skill.source.commit}</code>
-          <p>
-            SHA-256 <code>{skill.digest}</code>
-          </p>
-          {skill.available && (
-            <button
-              disabled={actions.busy}
-              onClick={() =>
-                void actions.execute({
-                  type: 'skill.uninstall',
-                  id: skill.id,
-                  expectedVersion: skill.version,
-                })
-              }
-            >
-              {t('卸载此版本')}
-            </button>
-          )}
-        </article>
-      ))}
+      <p>
+        SHA-256 <code>{skill.digest}</code>
+      </p>
+      {skill.available && (
+        <button
+          disabled={actions.busy}
+          onClick={() =>
+            void actions.execute({
+              type: 'skill.uninstall',
+              id: skill.id,
+              expectedVersion: skill.version,
+            })
+          }
+        >
+          {t('卸载此版本')}
+        </button>
+      )}
     </section>
   )
 }
