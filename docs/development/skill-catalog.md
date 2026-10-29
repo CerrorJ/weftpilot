@@ -32,6 +32,8 @@ Reviewer另发现第三P2：已安装视图卸载后原卡片消失，关闭详�
 
 第三P2独立窗口补验已限定PASS：新自有受控历史仅准备展示状态，后续卸载/Esc/Close全部由agent-browser操作；中文卸载A后回已安装标签，B仍在时回原详情按钮，英文深色700px同样正常。只读核A已卸载、B完整对象原样、0Run/0import、quick_check=ok，原生菜单exit0及登记PID缺席。未下载、未模型调用，不把该结果改写为安装全链通过；源码补审及新CI仍单独收口。
 
+焦点修复已推939f491，独立Reviewer在GUI之后补审APPROVE，保留初REQUEST_CHANGES。[修后CI40860718489](https://github.com/CerrorJ/weftpilot/actions/runs/40860718489)Windows开发72项55通过17跳过，但实际包72项54通过1失败17跳过：第一次卸载/Esc/归焦断言已过，第二张仍存在卡片打开后立即Esc，原生详情未关闭。其后安装器和公共来源专项未执行，不能借首轮安装包装配补齐。检查发现测试helper点击后直接返回locator，未等React effect调用showModal；现补实际dialog visible等待才允许后续键盘操作，不删除任何Esc/卡片/焦点断言。此修正不改产品资源或内核，修后新CI须再验证，不仅凭解释关闭939失败。
+
 ## 复现
 
 固定Node24与pnpm12.3.4，执行`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm typecheck`、`pnpm lint`、`pnpm test`、`pnpm test:packaging`、`pnpm build`。默认窗口`pnpm test:e2e`；实际包设置WEFTPILOT_PACKAGED_EXE后运行同一测试。公共来源专项设置WEFTPILOT_REAL_SKILLS=1再运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts`，不设置真实CLI开关。首次下载失败不应清除或覆盖原有可用安装。

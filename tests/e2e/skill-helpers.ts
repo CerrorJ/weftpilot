@@ -87,5 +87,8 @@ export const openSkillDetail = async (page: Page, id: string) => {
     .locator(`[data-catalog-id="${id}"]`)
     .getByRole('button', { name: '查看详情', exact: true })
     .click()
-  return page.getByRole('dialog', { name: '技能版本详情', exact: true })
+  const dialog = page.getByRole('dialog', { name: '技能版本详情', exact: true })
+  // React先挂载dialog再由effect调用showModal；不能在原生弹窗打开前发送Esc。
+  await dialog.waitFor({ state: 'visible' })
+  return dialog
 }
