@@ -88,6 +88,10 @@ const RoleChannelFields = ({ draft, role, mode }: Context & { mode: ChannelMode 
       </button>
       {error && <p role="alert">{t(error)}</p>}
       <RoleChannelIdentity draft={draft} role={role} />
+      <label className="check-label">
+        <input type="checkbox" name="feishuEnabled" defaultChecked={draft.feishuEnabled} />
+        {t('允许此角色绑定连接飞书')}
+      </label>
       <p className="field-note">
         {t('不同应用的所有者 Open ID 需分别核验，不能直接复制其他机器人身份。')}
       </p>

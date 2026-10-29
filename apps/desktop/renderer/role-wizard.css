@@ -186,6 +186,10 @@
   justify-self: start;
 }
 
+.role-channel-fields input[type='checkbox'] {
+  accent-color: var(--forest);
+}
+
 .role-channel-status {
   margin-top: 24px;
   padding-top: 20px;

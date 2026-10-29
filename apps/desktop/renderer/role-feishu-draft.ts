@@ -8,6 +8,7 @@ export const roleFeishuDraftFields = {
   feishuTenantKey: z.string().max(200).default(''),
   feishuOwnerOpenId: z.string().max(200).default(''),
   feishuChatId: z.string().max(200).default(''),
+  feishuEnabled: z.boolean().default(true),
 }
 
 export const initialRoleFeishuDraft = (role: RoleVersion | undefined) => {
@@ -19,6 +20,7 @@ export const initialRoleFeishuDraft = (role: RoleVersion | undefined) => {
       feishuTenantKey: '',
       feishuOwnerOpenId: '',
       feishuChatId: '',
+      feishuEnabled: true,
     }
   return {
     feishuMode: 'existing' as const,
@@ -26,5 +28,12 @@ export const initialRoleFeishuDraft = (role: RoleVersion | undefined) => {
     feishuTenantKey: binding.tenantKey,
     feishuOwnerOpenId: binding.ownerOpenId,
     feishuChatId: binding.chatId,
+    feishuEnabled: binding.enabled,
   }
 }
+
+/** fieldset停用时FormData不含勾选值，仍保留草稿的公开许可意图。 */
+export const readRoleFeishuEnabled = (element: HTMLFormElement, fallback?: boolean): boolean =>
+  element.querySelector<HTMLInputElement>('input[name="feishuEnabled"]')?.checked ??
+  fallback ??
+  true

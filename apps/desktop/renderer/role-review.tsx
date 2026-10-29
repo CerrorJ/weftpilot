@@ -49,6 +49,6 @@ export const RoleConfigurationReview = ({
 
 const channelReview = (draft: RoleDraft, t: (value: string) => string): string => {
   if (draft.feishuMode === 'new' || draft.feishuMode === 'existing')
-    return `${draft.feishuAppId} · ${t('待连接与核验')}`
+    return `${draft.feishuAppId} · ${t(draft.feishuEnabled ? '待连接与核验' : '飞书绑定未启用')}`
   return t(draft.feishuMode === 'inherit' ? '保留旧工作空间渠道' : '暂不接入飞书')
 }

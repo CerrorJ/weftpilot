@@ -17,7 +17,7 @@ export const roleFeishuSubmission = (
       ownerOpenId: rawField(form, 'feishuOwnerOpenId'),
       chatId: rawField(form, 'feishuChatId'),
       credentialRef: role?.feishuBinding?.credentialRef ?? '',
-      enabled: true,
+      enabled: form.has('feishuEnabled'),
     },
     ...(secret ? { feishuSecret: secret } : {}),
   }

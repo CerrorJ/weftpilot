@@ -58,8 +58,11 @@ export const useRoleFormDraft = (
 
 const initialState = (role: RoleVersion | undefined, roles: RoleVersion[], key: string) => {
   const fallback = initialRoleDraft(role)
-  const initial = readRoleDraft(key, fallback) ?? fallback
-  const base =
-    role && roles.find((item) => item.id === role.id && item.version === initial.baseVersion)
+  const stored = readRoleDraft(key, fallback)
+  const version = stored?.baseVersion ?? fallback.baseVersion
+  const base = role && roles.find((item) => item.id === role.id && item.version === version)
+  // 新增字段须从草稿固定的历史版本补缺省，不能借最新配置静默改写旧草稿。
+  const initial =
+    stored && base ? (readRoleDraft(key, initialRoleDraft(base)) ?? stored) : (stored ?? fallback)
   return { initial, preview: initial, base, step: initial.step, revision: 0 }
 }

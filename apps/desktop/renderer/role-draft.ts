@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import type { RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
 import { skillReferenceSchema } from '@weftpilot/agent-team-kernel/protocol'
-import { roleFeishuDraftFields, initialRoleFeishuDraft } from './role-feishu-draft'
+import {
+  roleFeishuDraftFields,
+  initialRoleFeishuDraft,
+  readRoleFeishuEnabled,
+} from './role-feishu-draft'
 
 export const roleDraftSchema = z
   .object({
@@ -106,6 +110,7 @@ export const writeRoleDraft = (
   const draft = roleDraftSchema.safeParse({
     ...fields,
     feishuMode: String(form.get('feishuMode') ?? previous?.feishuMode ?? 'inherit'),
+    feishuEnabled: readRoleFeishuEnabled(element, previous?.feishuEnabled),
     skills: selectedSkills(form),
     maxConcurrency: Number(form.get('maxConcurrency')),
     step: step ?? Number(form.get('step')),

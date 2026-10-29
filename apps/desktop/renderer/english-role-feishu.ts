@@ -21,6 +21,7 @@ export const englishRoleFeishu: Record<string, string> = {
   角色飞书渠道: 'Role Feishu channel',
   飞书绑定已配置: 'Feishu binding configured',
   飞书绑定未启用: 'Feishu binding disabled',
+  允许此角色绑定连接飞书: 'Allow this role binding to connect to Feishu',
   待连接与核验: 'Awaiting connection and verification',
   待同步执行: 'Runs awaiting sync',
   连接角色渠道: 'Connect role channels',
