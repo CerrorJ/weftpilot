@@ -1,6 +1,7 @@
 import { englishProduct } from './english-product'
 import { englishHuman } from './english-human'
 import { englishFeishu } from './english-feishu'
+import { englishRoleFeishu } from './english-role-feishu'
 import { englishSkills } from './english-skills'
 import { englishBackup } from './english-backup'
 import { englishDiagnostics } from './english-diagnostics'
@@ -28,6 +29,7 @@ export const english: Record<string, string> = {
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,
+  ...englishRoleFeishu,
   ...englishSkills,
   ...englishBackup,
   ...englishDiagnostics,

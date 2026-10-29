@@ -6,6 +6,7 @@ import { RoleRuntimeStep } from './role-runtime-step'
 import { RoleSkills } from './role-skills'
 import { RoleWizardTrial } from './role-wizard-trial'
 import { useI18n } from './preferences'
+import { RoleChannel } from './role-channel'
 
 export const roleSteps = [
   '基本信息',
@@ -38,7 +39,7 @@ export const RoleWizardFields = ({
       <RoleSkills skills={actions.state?.skills ?? []} selected={wizard.initial.skills} />
     </>,
     <RolePermission draft={wizard.initial} />,
-    <RoleChannel />,
+    <RoleChannel draft={wizard.initial} role={wizard.base} />,
     <RoleWizardTrial wizard={wizard} actions={actions} />,
   ]
   return (
@@ -49,22 +50,6 @@ export const RoleWizardFields = ({
           {content}
         </section>
       ))}
-    </>
-  )
-}
-
-const RoleChannel = () => {
-  const { t } = useI18n()
-  return (
-    <>
-      <label className="check-label">
-        <input type="radio" checked readOnly />
-        {t('暂不接入飞书')}
-      </label>
-      <p>{t('桌面角色可以独立工作，飞书为可选的消息与通知入口。')}</p>
-      <p className="field-note">
-        {t('角色独立飞书应用与路由尚未完成；工作空间连接不会自动视为当前角色已授权。')}
-      </p>
     </>
   )
 }

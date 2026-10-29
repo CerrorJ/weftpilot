@@ -6,6 +6,7 @@ import { RoleHealth } from './role-health'
 import { RoleTrialHistory } from './role-trial-history'
 import { SubmissionError } from './submission-error'
 import { useI18n } from './preferences'
+import { RoleChannelStatus } from './role-channel-status'
 
 interface Context {
   role: RoleVersion
@@ -39,6 +40,7 @@ const RoleManagementPanel = ({ role, state, actions, close }: Context & { close:
           {t('停用后不再接收新执行，已经创建的执行不会自动停止；停止需单独操作。')}
         </p>
         <RoleTrialHistory role={base} state={state} actions={operationActions} />
+        <RoleChannelStatus key={`${base.id}@${base.version}`} role={base} state={state} />
       </div>
       <footer className="review-dialog-footer">
         <button onClick={close}>{t('关闭')}</button>

@@ -20,6 +20,14 @@
 
 [官方顶层开发流程](https://open.feishu.cn/llms.txt) 仍引导从开发者后台创建应用。M3 因此实现控制台辅助创建流程、明确权限/事件清单和连接检测；“全自动创建应用”保持未验证，不使用未公开控制台接口、用户登录缓存或自动点击替代官方授权。
 
+## 2026-10-29 SDK注册与身份范围补核
+
+上节“没有找到并验证”的结论属于10月23日的REST/CLI探索时点。本轮对照锁定`@larksuiteoapi/node-sdk 1.71.1`的README.zh.md及实现确认`registerApp`提供OAuth设备授权流程，onQRCodeReady返回验证URL与期限，支持拒绝/过期/取消和限流轮询状态。createOnly可以限制创建新应用；传appId表示更新已有应用，不能用模板App ID来当作复制新应用。appPreset可预填名称/描述；addons只增量申请公开权限、事件与回调，不能直接设置长连接方式/敏感安全配置，而且SDK仅校验形状，平台可能忽略不存在的权限名称。
+
+因此“全自动无授权复制机器人”仍未验证、未实现；当前桌面为控制台辅助。尚未启动真实device grant，不提前生成将过期的授权会话，也没有读取模板Secret。注册返回凭据未来只能进入宿主密文通道，不能照搬SDK示例打印Secret。
+
+沿官方顶层索引→应用信息模块→单API补核：[查询应用信息](https://open.feishu.cn/document/server-docs/application-v6/application/get.md)、[机器人信息](https://open.feishu.cn/document/client-docs/bot-v3/obtain-bot-info.md)、[开发配置更新](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/application-v7/application-v7/application-config/patch.md)。只读取公开文档，未调用租户API。开发配置更新要求application:application:patch，应用身份只能管理自身，用户身份另受开发/管理权限限制；配置生效及发布仍要分别核验。open_id按App隔离，新应用不能复制模板所有者open_id。角色路由实现与验证见[当前增量](role-feishu-routing.md)。
+
 ## 待真实验证
 
 专用测试应用的凭据与可用范围、bot 发消息/更新卡片权限、新式卡片回调订阅、真实所有者 open_id/tenant_key 绑定、断网重连和重复/过期决定。当前不调用生产应用或以合成接口成功代替租户验证。

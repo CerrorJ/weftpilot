@@ -16,6 +16,7 @@ export const useRoleWizard = (
     base: draft.base,
     baseMissing: draft.baseMissing,
     draftKey: draft.key,
+    revision: draft.revision,
     actions,
   })
   const id = saved?.id ?? draft.base?.id ?? role?.id

@@ -52,7 +52,7 @@ const ConsoleGuide = ({ open }: { open: () => void }) => {
       </ol>
       <button onClick={open}>{t('打开飞书开发者后台')}</button>
       <p className="field-note">
-        {t('自动创建应用的官方接口尚未核验。当前提供控制台辅助流程，不代表已创建或验证应用。')}
+        {t('当前提供控制台辅助流程。扫码注册尚未接入，创建后仍需核验权限、发布与回调。')}
       </p>
     </section>
   )

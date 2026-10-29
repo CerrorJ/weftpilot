@@ -25,6 +25,14 @@ type MaintenanceInput = {
   >
 }[MaintenanceMethod]
 
+type RoleFeishuMethod = 'feishu.role.connect' | 'feishu.role.disconnect' | 'feishu.role.status'
+type RoleFeishuInput = {
+  [Method in RoleFeishuMethod]: Omit<
+    Extract<KernelRequest, { method: Method }>,
+    'requestId' | 'protocolVersion'
+  >
+}[RoleFeishuMethod]
+
 interface PendingRequest {
   resolve(value: unknown): void
   reject(reason: Error): void
@@ -123,6 +131,10 @@ export class KernelClient {
 
   maintenance(input: MaintenanceInput): Promise<unknown> {
     return this.sendRequest({ ...input, protocolVersion: 1, requestId: randomUUID() }, 180_000)
+  }
+
+  roleFeishu(input: RoleFeishuInput): Promise<unknown> {
+    return this.sendRequest({ ...input, protocolVersion: 1, requestId: randomUUID() })
   }
 
   private sendRequest(request: KernelRequest, timeoutMs = 30_000): Promise<unknown> {

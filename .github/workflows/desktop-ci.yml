@@ -96,5 +96,6 @@ jobs:
             .tmp/evidence/requirement-metadata-*.png
             .tmp/evidence/project-settings-*.png
             .tmp/evidence/team-catalog-*.png
+            .tmp/evidence/role-feishu-*.png
           if-no-files-found: warn
           retention-days: 7

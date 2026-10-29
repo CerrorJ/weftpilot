@@ -8,6 +8,7 @@ import type { ProjectGitCopyInput } from './project-clipboard'
 type Input<T extends BusinessCommand['type']> = Omit<Extract<BusinessCommand, { type: T }>, 'type'>
 export type ModelSubmission = Input<'model.save'> & { secret?: string }
 export type FeishuSubmission = Input<'feishu.save'> & { secret?: string }
+export type RoleSubmission = Input<'role.save'> & { feishuSecret?: string }
 export interface Submission<T> {
   key: string
   input: T
@@ -27,7 +28,7 @@ export interface WorkflowBridge {
   createProject(
     input: Submission<Omit<Input<'project.create'>, 'repositoryPath'>>,
   ): Promise<unknown>
-  saveRole(input: Submission<Input<'role.save'>>): Promise<unknown>
+  saveRole(input: Submission<RoleSubmission>): Promise<unknown>
   configureProject(input: Submission<Input<'project.configure'>>): Promise<unknown>
   copyRole(input: Submission<Input<'role.copy'>>): Promise<unknown>
   saveSkillSource(input: Submission<Input<'skill.source.save'>>): Promise<unknown>
@@ -51,6 +52,9 @@ export interface WorkflowBridge {
   connectFeishu(): Promise<unknown>
   disconnectFeishu(): Promise<unknown>
   feishuStatus(): Promise<unknown>
+  connectRoleFeishu(input: { roleId: string; expectedRoleVersion: number }): Promise<unknown>
+  disconnectRoleFeishu(input: { roleId: string }): Promise<unknown>
+  roleFeishuStatus(input: { roleId: string }): Promise<unknown>
   openFeishuConsole(): Promise<void>
   delivery(id: string): Promise<unknown>
   run(id: string): Promise<unknown>

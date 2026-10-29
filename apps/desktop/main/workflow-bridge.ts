@@ -13,6 +13,7 @@ import type { ModelVault } from './model-vault'
 import { prepareModelSubmission } from './model-submission'
 import type { FeishuVault } from './feishu-vault'
 import { registerFeishuBridge } from './feishu-bridge'
+import { registerRoleFeishuBridge } from './role-feishu-bridge'
 import { registerMaintenanceBridge } from './maintenance-bridge'
 import type { KernelController } from './kernel-controller'
 import { parseInput } from './input-validation'
@@ -23,7 +24,6 @@ const submissionSchema = z
   .strict()
 const commandTypes = {
   configureProject: 'project.configure',
-  saveRole: 'role.save',
   copyRole: 'role.copy',
   saveSkillSource: 'skill.source.save',
   importSkill: 'skill.import',
@@ -77,6 +77,7 @@ export const registerWorkflowBridge = (options: {
   registerProjectPicker({ ...options, assertSender })
   registerMaintenanceBridge({ assertSender, controller: options.controller })
   registerFeishuBridge({ assertSender, client: options.client, vault: options.feishuVault })
+  registerRoleFeishuBridge({ assertSender, client: options.client, vault: options.feishuVault })
   ipcMain.handle('workflow:saveModel', async (event, raw: unknown) => {
     assertSender(event)
     const input = parseInput(submissionSchema, raw)

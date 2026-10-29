@@ -142,3 +142,65 @@
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+.role-channel-choices,
+.role-channel-fields {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.role-channel-fields[hidden] {
+  display: none;
+}
+
+.role-channel-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.role-channel-choice:has(input:checked) {
+  border-color: var(--forest);
+  background: var(--surface);
+}
+
+.role-channel-choice input {
+  width: auto;
+  margin: 3px 0 0;
+  accent-color: var(--forest);
+}
+
+.role-channel-choice small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.role-channel-fields > button {
+  justify-self: start;
+}
+
+.role-channel-status {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.role-channel-status > button {
+  margin: 8px 12px 0 0;
+}
+
+.role-channel-connection {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding-block: 8px;
+  overflow-wrap: anywhere;
+}

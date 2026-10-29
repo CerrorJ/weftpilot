@@ -1,9 +1,11 @@
 import { z } from 'zod'
 import type { RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
 import { skillReferenceSchema } from '@weftpilot/agent-team-kernel/protocol'
+import { roleFeishuDraftFields, initialRoleFeishuDraft } from './role-feishu-draft'
 
 export const roleDraftSchema = z
   .object({
+    ...roleFeishuDraftFields,
     name: z.string().max(200),
     responsibility: z.string().max(20_000),
     cli: z.enum(['codex', 'claude']),
@@ -23,6 +25,7 @@ export type RoleDraft = z.infer<typeof roleDraftSchema>
 export const initialRoleDraft = (role: RoleVersion | undefined): RoleDraft => {
   if (!role)
     return {
+      ...initialRoleFeishuDraft(role),
       name: '',
       responsibility: '',
       cli: 'codex',
@@ -39,6 +42,7 @@ export const initialRoleDraft = (role: RoleVersion | undefined): RoleDraft => {
     }
   const profile = role.modelProfileSnapshot
   return {
+    ...initialRoleFeishuDraft(role),
     name: role.name,
     responsibility: role.responsibility,
     cli: role.cli,
@@ -90,6 +94,10 @@ export const writeRoleDraft = (
       'slug',
       'inputRequirements',
       'deliveryRequirements',
+      'feishuAppId',
+      'feishuTenantKey',
+      'feishuOwnerOpenId',
+      'feishuChatId',
     ].map((name) => [name, String(form.get(name) ?? '')]),
   )
   // CLI切换时旧select可能尚未完成React重绘；草稿必须同步清空旧引擎的模型引用。
@@ -97,6 +105,7 @@ export const writeRoleDraft = (
   if (previous && previous.cli !== fields.cli) fields.profile = ''
   const draft = roleDraftSchema.safeParse({
     ...fields,
+    feishuMode: String(form.get('feishuMode') ?? previous?.feishuMode ?? 'inherit'),
     skills: selectedSkills(form),
     maxConcurrency: Number(form.get('maxConcurrency')),
     step: step ?? Number(form.get('step')),

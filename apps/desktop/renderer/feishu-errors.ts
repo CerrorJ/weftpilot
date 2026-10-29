@@ -1,4 +1,8 @@
 export const feishuErrors: Record<string, [string, string]> = {
+  FEISHU_APP_IN_USE: [
+    '该飞书应用已属于其他角色或工作空间连接，请使用独立应用',
+    'This Feishu app belongs to another role or workspace channel. Use a dedicated app.',
+  ],
   FEISHU_APP_SECRET_REQUIRED: [
     '更换 App ID 后请填写新应用的 App Secret，不能复用原应用密钥',
     'Enter the new app’s App Secret after changing App ID. The previous app’s secret cannot be reused.',

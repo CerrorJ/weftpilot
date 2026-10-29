@@ -56,7 +56,7 @@ const RoleCardLifecycle = ({ role, state, actions, copied }: Omit<Context, 'edit
     <>
       <div className="role-card-footer">
         <span className="badge">{t(roleCardStatus(state, role))}</span>
-        <span className="muted">{t('飞书角色路由未配置')}</span>
+        <span className="muted">{t(roleChannelLabel(role))}</span>
       </div>
       <p className="role-card-permission">
         {t(role.permission === 'read-only' ? '只读建议' : '受控执行')} · {t('并发上限')}{' '}
@@ -93,6 +93,13 @@ const RoleSkillTags = ({ state, role }: Pick<Context, 'state' | 'role'>) => {
       )}
     </span>
   )
+}
+
+/** 卡片只投影配置维度；连接健康要在运行设置中实时查询，不能由绑定存在推断。 */
+const roleChannelLabel = (role: RoleVersion): string => {
+  if (role.feishuBinding === undefined) return '保留旧工作空间渠道'
+  if (role.feishuBinding === null) return '暂不接入飞书'
+  return role.feishuBinding.enabled ? '飞书绑定已配置' : '飞书绑定未启用'
 }
 
 const EditMark = () => (

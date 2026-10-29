@@ -112,6 +112,7 @@ test(
       const copied = after.roles.find((role) => role.name === '独立配置副本')!
       assert.equal(after.roles.length, before.roles.length + 1)
       assert.notEqual(copied.id, source.id)
+      assert.equal(copied.feishuBinding, null)
       assert.deepEqual(
         {
           ...copied,
@@ -120,7 +121,7 @@ test(
           slug: source.slug,
           createdAt: source.createdAt,
         },
-        source,
+        { ...source, feishuBinding: null },
       )
       assert.deepEqual(after.runs, before.runs)
       assert.deepEqual(after.tasks, before.tasks)
