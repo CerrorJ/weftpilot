@@ -90,6 +90,8 @@ test(
       const role = saved.roles.find((role) => role.name === '保留的角色草稿')!
       assert.deepEqual(role.skills, [{ id: first.id, digest: first.digest }])
       await page.getByRole('button', { name: '技能中心', exact: true }).click()
+      // 从角色页返回会重建技能页，默认是市场；明确切到已安装才测试触发卡片移除。
+      await page.getByRole('button', { name: /^已安装/ }).click()
       const uninstall = await openSkillDetail(page, first.id)
       await page
         .locator(`[data-skill-id="${first.id}"]`)
@@ -101,6 +103,7 @@ test(
         predicate: (state) =>
           state.skills.find((skill) => skill.id === first.id)?.available === false,
       })
+      await page.locator(`[data-catalog-id="${first.id}"]`).waitFor({ state: 'detached' })
       await page.keyboard.press('Escape')
       await uninstall.waitFor({ state: 'detached' })
       await page.waitForFunction(() =>
