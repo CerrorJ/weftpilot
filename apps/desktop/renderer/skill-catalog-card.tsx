@@ -34,7 +34,8 @@ export const SkillCatalogCard = ({
         </div>
       </div>
       <p className="skill-card-description">
-        {entry.package?.description ?? t('下载完成后可核对完整说明和许可证。')}
+        {entry.package?.description ??
+          t(entry.imported?.failureCode ?? '下载完成后可核对完整说明和许可证。')}
       </p>
       <p className="skill-card-source">{entry.source.repository}</p>
       <p className="skill-card-version">

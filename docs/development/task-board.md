@@ -1,6 +1,12 @@
 # 任务列表与看板切换
 
-2026-10-29，开发中。独立`feat/task-board`承接技能目录939及测试维护637/0a3，固定Agent-Team `2750d66321d4920745c2f3f2a88428fcc73f78bd / 0.13.0 / protocol1 / schema12`。正规产物142文件、tar SHA-256 `c5efd3cee257afa2e723f64f5a5fd6b4f3fd74dac40f51652c6b3237175e9ecd`，本增量不改内核、协议或业务状态。
+2026-10-29，功能限定验收通过、整轮CI未通过。独立`feat/task-board`承接技能目录939及测试维护637/0a3，固定Agent-Team `2750d66321d4920745c2f3f2a88428fcc73f78bd / 0.13.0 / protocol1 / schema12`。正规产物142文件、tar SHA-256 `c5efd3cee257afa2e723f64f5a5fd6b4f3fd74dac40f51652c6b3237175e9ecd`，本增量不改内核、协议或业务状态。
+
+## 最终源码与CI限定结论
+
+源码`e4a64bc666cf17e0e18177c8721159f0b8e8262a`已推送，独立Tester实际窗口限定PASS、Reviewer APPROVE，无本轮阻塞产品项。[CI40868460148](https://github.com/CerrorJ/weftpilot/actions/runs/40868460148) attempt1整轮FAIL：Win成功，核心185/单元60/装配8，开发和实际包各73项56通过17跳过，实际公共来源专项1通过2CLI跳过、未签名NSIS装配通过。Mac核心175通过10平台跳过/单元60/装配7通过1跳过，开发同为56通过17跳过；实际包55通过1失败17跳过，唯一失败为backup-workflow保存模型密钥`CREDENTIAL_STORAGE_UNAVAILABLE`，公共来源步骤未执行，ARM64 DMG/ZIP此前已装配。
+
+新增看板用例在两平台开发与实际包四处均通过，不能扩写为整轮CI绿色或密钥存储根因已修。独立CI Tester核对完整日志及官方34张图片/归档摘要；Reviewer另独立核官方run/jobs和日志后批准上述限定事实，未重复下载/查看34图。Mac英文700px图片只覆盖工具栏及指标，卡片位于图片下方；看板DOM用例通过与卡片完整视觉证据分别记录。
 
 ## 实际功能
 

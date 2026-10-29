@@ -124,5 +124,6 @@ jobs:
             .tmp/evidence/role-feishu-*.png
             .tmp/evidence/skill-catalog-*.png
             .tmp/evidence/task-board-*.png
+            .tmp/evidence/skill-download-errors-*.png
           if-no-files-found: warn
           retention-days: 7

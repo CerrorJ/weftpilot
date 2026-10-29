@@ -23,6 +23,42 @@ export const skillErrors: Record<string, [string, string]> = {
     '技能下载未完成，可核对来源后重新导入',
     'Download did not complete. Check the source and import again.',
   ],
+  SKILL_DOWNLOAD_NETWORK_FAILED: [
+    '技能下载网络未完成，请检查连接后手动重新导入',
+    'The network request did not complete. Check connectivity and import again manually.',
+  ],
+  SKILL_DOWNLOAD_TIMEOUT: [
+    '技能下载超时，请稍后手动重新导入',
+    'The skill download timed out. Import again manually later.',
+  ],
+  SKILL_DOWNLOAD_DNS_FAILED: [
+    '无法解析技能源域名，请检查网络与DNS',
+    'The skill source hostname could not be resolved. Check connectivity and DNS.',
+  ],
+  SKILL_DOWNLOAD_TLS_FAILED: [
+    '技能源证书校验失败，请检查系统时间与可信证书，不要关闭TLS校验',
+    'The source certificate could not be verified. Check the clock and trusted certificates; keep TLS verification enabled.',
+  ],
+  SKILL_DOWNLOAD_RATE_LIMITED: [
+    '技能源请求被限流，请稍后手动重新导入；不会自动重试',
+    'The skill source rate limit was reached. Import again manually later; there is no automatic retry.',
+  ],
+  SKILL_DOWNLOAD_FORBIDDEN: [
+    '技能源拒绝访问；当前仅支持公开仓库',
+    'Access to the source was denied. Only public repositories are supported.',
+  ],
+  SKILL_DOWNLOAD_NOT_FOUND: [
+    '未找到技能源文件或固定提交，请核对公开仓库与路径',
+    'The source file or pinned commit was not found. Check the public repository and path.',
+  ],
+  SKILL_DOWNLOAD_SERVER_UNAVAILABLE: [
+    '技能源服务暂时不可用，请稍后手动重新导入',
+    'The skill source service is unavailable. Import again manually later.',
+  ],
+  SKILL_DOWNLOAD_HTTP_FAILED: [
+    '技能源HTTP请求未成功，请核对来源后手动重新导入',
+    'The source HTTP request failed. Check the source before importing again manually.',
+  ],
   SKILL_PREVIEW_REQUIRED: [
     '请先查看本版本技能及许可证，再确认安装',
     'Review this version and its license before installing.',
