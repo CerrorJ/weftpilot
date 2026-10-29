@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+角色渠道候选f3的[CI40850060710](https://github.com/CerrorJ/weftpilot/actions/runs/40850060710)Windows成功、macOS实际包备份用例因CREDENTIAL_STORAGE_UNAVAILABLE失败，独立核官方日志/24图/摘要后仍FAIL。Reviewer第二P2为普通编辑静默放行未启用绑定，当前已保留许可并增加显式选项、固定旧草稿版本补缺省；54单元及新Windows实际包13专项通过，独立GUI/审查与修后新CI继续。加密仅新增失败后元数据，不回退明文、不掩盖失败，内核2750/0.13.0/142文件与摘要不变。详细证据见[角色渠道记录](role-feishu-routing.md)，下方候选未运行CI等表述保留历史时点。
+
 继续[角色飞书绑定与固定路由](role-feishu-routing.md)：唯一内核2750/0.13.0/p1/schema12已先提交推送，185核心与独立Tester/Reviewer通过，历史归属/大小写P2修后关闭。两干净重建同SHA、142正规产物/额外宿主锁分别核验，固定装配真实IPC/关机通过。桌面已接角色第5步三入口/宿主密文/版本与null/历史路由状态、53单元/8装配/开发相关9项及实际包新增3项通过，完整包与独立GUI正在验收，候选原生CI未运行。QR注册尚未接入、测试应用未创建/连接，不复制凭据或切换在线服务；下方保留旧增量时点。
 
 团队目录代码aae及测试关闭等待2f已推，固定内核2ab/0.12.0/p1/schema11/135文件不变。[修正CI40452246829](https://github.com/CerrorJ/weftpilot/actions/runs/40452246829)双平台SUCCESS：Win核心175、51单元、8装配；Mac165核心通过10平台跳过、51单元、7装配1平台跳过；各开发/实际包66项49通过17跳过0失败0取消，未签名NSIS/ARM64 DMG/ZIP装配通过。本轮官方20图/逐条摘要/完整日志已由独立Tester及Reviewer核验，最终限定PASS/APPROVE，详情见[团队记录](team-catalog.md)。下方aae首轮失败、本地串行红轮和旧Windows故障仍保留原归属，后续成功不覆盖根因或整体M0—M4验收。

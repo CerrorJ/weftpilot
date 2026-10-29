@@ -36,6 +36,16 @@ saveRole由宿主专用处理器剥离feishuSecret，系统加密后只向内核
 
 ## 复现与未验事项
 
+2026-10-29补充：候选`f3ab1c6`的[原生CI40850060710](https://github.com/CerrorJ/weftpilot/actions/runs/40850060710)总体失败。Windows核心185、单元53、装配8、开发及实际包各52通过17跳过，未签名NSIS装配通过；macOS核心175通过10平台跳过、单元53、装配7通过1平台跳过、开发52通过17跳过、未签名ARM64 DMG/ZIP装配通过，但实际包51通过1失败17跳过。唯一失败是备份用例saveModel返回CREDENTIAL_STORAGE_UNAVAILABLE；角色渠道三个新增容器在两系统两模式均通过。独立Tester核官方完整日志、两份官方ZIP摘要与24张逐文件截图后仍给出FAIL，不用截图或Windows成功覆盖macOS失败。
+
+桌面Reviewer另发现第二项P2：普通角色编辑会把未启用绑定固定提交成enabled=true。现增加明确连接许可复选框，初始值、公开草稿、预览和提交均保留该值；旧格式草稿缺少新字段时从自身baseVersion补值，不能借最新角色配置重新放行。保存仅修改版本化配置，不发起渠道连接、不启用执行角色。新增54单元通过，新Windows实际包13个角色/渠道/备份相关容器通过；独立GUI补验和最终审查尚待报告，不关闭P2或整个增量。
+
+该许可修复首轮开发专项为7通过1失败，失败因测试先读到内核v2就立即打开尚未轮询到v2的卡片；增加实际v2/v4卡片等待后新增容器1/1通过，保留失败日志并区分驱动修正与产品修复。macOS加密失败仍未查明原因：只在原备份断言失败后采集系统加密可用性、ready、平台和运行时版本元数据，原异常照常抛出；不读取凭据、不重试写入、不提供明文回退、不跳过断言。新增诊断不代表macOS问题已修复，须新提交原生CI另验。
+
+许可修复新Windows包完整串行70项为53通过17明确跳过、0失败0取消、exit0（225215ms）；strict/lint/规模/格式再次通过。独立Tester使用实际新包和agent-browser确认普通编辑保false、显式切换、旧草稿固定版本补false/冲突/明确重载、停用fieldset/市场返回、700px英文深色和重启，0Run且执行角色未启用。只读历史许可精确为false,false,true,false,true,false，旧v2原文不变，3次原生菜单自然退出及登记PID缺席，限定PASS。新包renderer JS摘要262e30c91e4285e68a388d6ec51778d67904af295a2d900f83f6a5f7496b26cf，不把前67350包的测试移作本包证据；代码补审与原生CI尚待。
+
+许可修复单独提交c5ab41f；失败后原生加密诊断另作测试提交，不改变应用行为。同一新包另跑真实公共技能来源专项1通过2明确CLI跳过（10490ms），实际固定提交下载、许可确认、升级差异、草稿、卸载及重启通过；没有模型调用，不把此前默认17跳过改为全部真实通过。
+
 固定Node24与pnpm12.3.4：`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm build`、`pnpm dev`；检查`pnpm typecheck`、`pnpm lint`、`pnpm format:check`、`pnpm test`、`pnpm test:packaging`。专项`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/role-feishu.test.ts`。`pnpm package`后以WEFTPILOT_PACKAGED_EXE指定实际新包再跑`pnpm test:e2e`；本机完整轮显式串行，与CI标准命令分开记录。
 
 独立测试应用已获以“产品经理”为模板的授权，仍未创建或连接；不复制其Secret、登录和生产数据，也不切换现有服务。官方SDK注册/设备授权已核源码及文档，尚未集成或真实授权；所有者Open ID须在新App单独核对。用户设备安装升级、macOS真实CLI、自定义模型成功调用、签名/更新公开发行、历史Windows故障根因和八页整体设计仍独立待办，不据本增量宣告M0—M4完成。

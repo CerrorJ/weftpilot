@@ -85,6 +85,14 @@ jobs:
           path: .tmp/evidence/project-git-copy-*.png
           if-no-files-found: warn
           retention-days: 7
+      - name: Preserve native credential failure metadata
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: credential-availability-${{ runner.os }}
+          path: .tmp/evidence/credential-availability-*.json
+          if-no-files-found: warn
+          retention-days: 7
       - name: Preserve requirement UI evidence
         if: always()
         uses: actions/upload-artifact@v4

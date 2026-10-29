@@ -16,6 +16,7 @@ import {
   quit,
 } from './workflow-helpers'
 import type { ElectronApplication } from 'playwright'
+import { recordCryptoAvailability } from './crypto-availability-evidence'
 
 test(
   '真实Electron备份恢复：系统选择器、密钥排除、完整快照、新内核切换/重启与损坏拒绝',
@@ -162,6 +163,10 @@ test(
       await mkdir('.tmp/evidence', { recursive: true })
       await page.screenshot({ path: '.tmp/evidence/m4-backup-restored-en-dark.png' })
       await quit(application)
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('CREDENTIAL_STORAGE_UNAVAILABLE'))
+        await recordCryptoAvailability(application).catch(() => undefined)
+      throw error
     } finally {
       await application.close().catch(() => undefined)
       await fixture.cleanup()
