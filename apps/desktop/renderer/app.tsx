@@ -10,6 +10,7 @@ import { WorkspaceHome } from './workspace-home'
 import { SettingsPage } from './settings-page'
 import { SkillPage } from './skill-page'
 import { TasksPage } from './tasks-page'
+import { homeAttentionTasks } from './home-attention'
 
 export const App = () => (
   <PreferencesProvider>
@@ -36,10 +37,12 @@ const AppShell = () => {
           <PageContent
             page={page}
             taskEntry={taskEntry}
+            projectEntry={routing.projectEntry}
             actions={actions}
             navigate={navigate}
             openTask={openTask}
             openProjectTasks={openProjectTasks}
+            openProject={routing.openProject}
             roleReturn={roleReturn}
             returnRole={() => {
               setRoleReturn(false)
@@ -124,7 +127,7 @@ const Sidebar = ({ page, navigate, actions }: SidebarProps) => {
 }
 const SidebarFooter = ({ actions }: { actions: WorkspaceActions }) => {
   const { t } = useI18n()
-  const pending = actions.state?.humanRequests.filter((item) => item.status === 'pending').length
+  const pending = actions.state ? homeAttentionTasks(actions.state).length : undefined
   return (
     <div className="sidebar-bottom">
       <div className="runtime-note">
@@ -143,29 +146,41 @@ const SidebarFooter = ({ actions }: { actions: WorkspaceActions }) => {
   )
 }
 
-const PageContent = ({
-  page,
-  taskEntry,
-  actions,
-  navigate,
-  openTask,
-  openProjectTasks,
-  roleReturn,
-  returnRole,
-  roleNavigation,
-}: {
+interface PageContentProps {
   page: NavigationId
   taskEntry: TaskEntry
+  projectEntry: { projectId: string; visit: number }
   actions: WorkspaceActions
   navigate: (page: NavigationId) => void
   openTask: (id: string) => void
   openProjectTasks: (id: string) => void
+  openProject: (id: string) => void
   roleReturn: boolean
   returnRole: () => void
   roleNavigation: RoleNavigation
-}) => {
+}
+const PageContent = ({
+  page,
+  taskEntry,
+  projectEntry,
+  actions,
+  navigate,
+  openTask,
+  openProjectTasks,
+  openProject,
+  roleReturn,
+  returnRole,
+  roleNavigation,
+}: PageContentProps) => {
   if (page === 'home')
-    return <WorkspaceHome actions={actions} navigate={navigate} openTask={openTask} />
+    return (
+      <WorkspaceHome
+        actions={actions}
+        navigate={navigate}
+        openTask={openTask}
+        openProject={openProject}
+      />
+    )
   if (isCatalog(page))
     return (
       <CatalogPage
@@ -174,6 +189,7 @@ const PageContent = ({
         roleNavigation={roleNavigation}
         openTask={openTask}
         openProjectTasks={openProjectTasks}
+        projectEntry={projectEntry}
       />
     )
   if (page === 'settings') return <SettingsPage actions={actions} />

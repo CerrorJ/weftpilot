@@ -31,6 +31,7 @@ const createWindow = (): void => {
     minWidth: 700,
     minHeight: 540,
     title: '纬舟 WeftPilot',
+    autoHideMenuBar: true,
     backgroundColor: '#f7f7f5',
     webPreferences: {
       preload: join(root, 'preload.cjs'),

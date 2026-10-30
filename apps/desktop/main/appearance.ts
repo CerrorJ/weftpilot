@@ -59,4 +59,6 @@ export const setNativeMenus = (ui: NativeUi, language: 'zh-CN' | 'en'): void => 
       },
     ]),
   )
+  // Windows/Linux窗口不显示菜单栏；保留共享退出动作供托盘及macOS系统菜单使用。
+  if (process.platform !== 'darwin') ui.window()?.removeMenu()
 }

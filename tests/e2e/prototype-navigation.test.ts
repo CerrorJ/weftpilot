@@ -22,7 +22,12 @@ test('原型八页真实入口：筛选、键盘抽屉、工作台跳转与设�
       '设置',
     ]) {
       await navigate(page, name)
-      await page.getByRole('heading', { name, exact: true }).waitFor()
+      await page
+        .getByRole('heading', {
+          name: name === '工作台' ? '让团队，开始推进。' : name,
+          exact: true,
+        })
+        .waitFor()
     }
     await createTask(page, '此任务不启动 CLI，仅检查真实任务导航。', '对齐原型的第一项任务')
     await page.getByRole('button', { name: '关闭详情', exact: true }).click()

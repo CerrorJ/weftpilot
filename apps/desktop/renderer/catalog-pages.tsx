@@ -27,12 +27,14 @@ export const CatalogPage = ({
   roleNavigation,
   openTask,
   openProjectTasks,
+  projectEntry,
 }: {
   page: CatalogId
   actions: WorkspaceActions
   roleNavigation: RoleNavigation
   openTask: (id: string) => void
   openProjectTasks: (id: string) => void
+  projectEntry: { projectId: string; visit: number }
 }) => {
   const { t } = useI18n()
   const [title, description] = titles[page]
@@ -41,6 +43,8 @@ export const CatalogPage = ({
   if (page === 'projects' && actions.state)
     return (
       <ProjectSetup
+        key={projectEntry.visit}
+        initialProjectId={projectEntry.projectId}
         state={actions.state}
         actions={actions}
         openTask={openTask}

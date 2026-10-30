@@ -91,7 +91,9 @@ test(
       )
       await page.locator('.backup-consent input').check()
       await page.getByRole('button', { name: '恢复到新工作台', exact: true }).click()
-      await page.getByRole('heading', { name: '工作台', exact: true }).waitFor({ timeout: 20000 })
+      await page
+        .getByRole('heading', { name: '让团队，开始推进。', exact: true })
+        .waitFor({ timeout: 20000 })
       const restored = await waitForSnapshot({
         page,
         timeout: 20000,

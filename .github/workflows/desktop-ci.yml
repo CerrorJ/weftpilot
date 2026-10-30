@@ -125,5 +125,6 @@ jobs:
             .tmp/evidence/skill-catalog-*.png
             .tmp/evidence/task-board-*.png
             .tmp/evidence/skill-download-errors-*.png
+            .tmp/evidence/workbench-*.png
           if-no-files-found: warn
           retention-days: 7

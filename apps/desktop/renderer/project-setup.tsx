@@ -14,13 +14,15 @@ export const ProjectSetup = ({
   actions,
   openTask,
   openProjectTasks,
+  initialProjectId = '',
 }: {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
   openTask: (id: string) => void
   openProjectTasks: (id: string) => void
+  initialProjectId?: string
 }) => {
-  const selection = useProjectCatalogSelection(state.projects)
+  const selection = useProjectCatalogSelection(state.projects, initialProjectId)
   const project = state.projects.find((item) => item.id === selection.selected)
   return (
     <div className="project-page" ref={selection.root}>

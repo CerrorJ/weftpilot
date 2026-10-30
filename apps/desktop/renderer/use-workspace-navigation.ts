@@ -5,13 +5,20 @@ import type { NavigationId, TaskEntry } from './navigation'
 export const useWorkspaceNavigation = () => {
   const [page, setPage] = useState<NavigationId>('home')
   const [taskEntry, setTaskEntry] = useState<TaskEntry>({ taskId: '', projectId: '', visit: 0 })
+  const [projectId, setProjectId] = useState('')
   // 显式页面入口重建列表交互；轮询或其他渠道更新不会改变visit或抢走当前详情。
   const enter = (entry: Pick<TaskEntry, 'taskId' | 'projectId'>, next: NavigationId) => {
+    setProjectId('')
     setTaskEntry((current) => ({ ...entry, visit: current.visit + 1 }))
     setPage(next)
   }
   const navigate = (next: NavigationId) => enter({ taskId: '', projectId: '' }, next)
   const openTask = (taskId: string) => enter({ taskId, projectId: '' }, 'tasks')
   const openProjectTasks = (projectId: string) => enter({ taskId: '', projectId }, 'tasks')
-  return { page, taskEntry, navigate, openTask, openProjectTasks }
+  const openProject = (id: string) => {
+    enter({ taskId: '', projectId: '' }, 'projects')
+    setProjectId(id)
+  }
+  const projectEntry = { projectId, visit: taskEntry.visit }
+  return { page, taskEntry, projectEntry, navigate, openTask, openProjectTasks, openProject }
 }

@@ -1,6 +1,14 @@
 # 技能下载错误与固定内核0.13.1
 
-2026-10-29，桌面接入已获Windows独立限定PASS/APPROVE，待确切新提交及双平台CI。承接任务看板`e4a64bc`，不把旧技能0a3或看板CI当作本版本结果。
+2026-10-30，桌面接入已获Windows独立限定PASS/APPROVE，新错误用例双平台通过，整轮CI因Mac备份密钥存储失败未通过。承接任务看板`e4a64bc`，不把旧技能0a3或看板CI当作本版本结果。
+
+## 确切提交与原生CI
+
+桌面源码`5ff4958942f0740b610ab23bce1dfdb14c3a1ad0`已推送。[CI40874507588](https://github.com/CerrorJ/weftpilot/actions/runs/40874507588) attempt1整轮FAIL：Windows核心189、单元60、装配8，开发及实际包默认74项57通过17明确跳过，真实公共来源1通过2CLI跳过（21.026秒），未签名NSIS装配通过。Mac核心179通过10平台跳过、单元60、装配7通过1平台跳过，开发同为57通过17跳过；实际包56通过1失败17跳过，唯一失败为backup-workflow前置保存合成模型的`CREDENTIAL_STORAGE_UNAVAILABLE`，公共来源整个步骤未运行；ARM64 DMG/ZIP此前已装配。
+
+新增限流/TLS错误用例两平台开发和实际包四处通过。独立CI Tester核官方完整日志、46张新图及五份ZIP官方摘要/字节数/安全解包，Reviewer另读取官方run/jobs/两日志、复算缓存ZIP摘要并查看Mac两张新详情图后，批准上述限定事实；46图全量查看归Tester，非Reviewer重复全量。Mac窄看板截图只含工具栏、部分表单在滚动以下的限制保留，不把未入镜内容说成全面视觉验收。
+
+失败后白名单诊断只观察到appReady=true/appName=weftpilot/encryptionAvailable=false，不能据此确定Keychain因果根因。历史失败继续开放；未跳过加密断言或回退明文，不把本CI写成双平台全绿或发行通过。此docs分支只记录确切5ff证据，不重建已固定内核。
 
 ## 两仓固定关联
 

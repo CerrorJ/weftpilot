@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import type { Project } from '@weftpilot/agent-team-kernel/protocol'
 
 /** 仅确切本窗口创建回执聚焦新卡片；轮询及其他渠道新增项目不改变选择。 */
-export const useProjectCatalogSelection = (projects: Project[]) => {
+export const useProjectCatalogSelection = (projects: Project[], initialProjectId = '') => {
   const root = useRef<HTMLDivElement>(null)
-  const [selected, select] = useState('')
+  const [selected, select] = useState(initialProjectId)
   const [created, setCreated] = useState('')
   useEffect(() => {
     if (!created || !projects.some((item) => item.id === created)) return
