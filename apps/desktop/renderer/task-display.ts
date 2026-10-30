@@ -1,17 +1,6 @@
 import type { Run, Task } from '@weftpilot/agent-team-kernel/protocol'
 import { taskLabels, runLabel } from './task-status'
-
-/** 只读展示始终取最大attempt，不能因轮询数组顺序退回旧Run。 */
-export const latestTaskRun = <T extends Pick<Run, 'taskId' | 'attempt'>>(
-  runs: T[],
-  taskId: string,
-): T | undefined =>
-  runs
-    .filter((run) => run.taskId === taskId)
-    .reduce<T | undefined>(
-      (latest, run) => (!latest || run.attempt > latest.attempt ? run : latest),
-      undefined,
-    )
+export { latestTaskRun } from '../../../packages/kernel-client/task-projection'
 
 export const taskStatusText = (
   task: Task,

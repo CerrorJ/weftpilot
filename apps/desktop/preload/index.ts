@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { WorkflowBridge } from '../../../packages/kernel-client/bridge-contract'
+import { createNotificationTaskInbox } from '../../../packages/system-bridge/notification-task-inbox'
+
+const notificationInbox = createNotificationTaskInbox()
+ipcRenderer.on('weftpilot:openTask', (_event, input: unknown) => notificationInbox.receive(input))
 
 const workflow: WorkflowBridge = {
   createBackup: (input) => ipcRenderer.invoke('workflow:createBackup', input),
@@ -54,6 +58,13 @@ contextBridge.exposeInMainWorld(
       ipcRenderer.invoke('weftpilot:exportDiagnostics', input),
     appearance: (input: unknown): Promise<void> =>
       ipcRenderer.invoke('weftpilot:appearance', input),
+    notifications: Object.freeze({
+      status: (): Promise<unknown> => ipcRenderer.invoke('weftpilot:notifications:status'),
+      save: (input: unknown): Promise<unknown> =>
+        ipcRenderer.invoke('weftpilot:notifications:save', input),
+      test: (): Promise<unknown> => ipcRenderer.invoke('weftpilot:notifications:test'),
+    }),
+    onOpenTask: notificationInbox.subscribe,
     workflow: Object.freeze(workflow),
   }),
 )

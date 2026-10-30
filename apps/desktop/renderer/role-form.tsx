@@ -4,13 +4,14 @@ import { useI18n } from './preferences'
 import { CreateDialog } from './create-dialog'
 import { useRoleWizard, type RoleWizard } from './use-role-wizard'
 import { RoleWizardFields, roleSteps } from './role-wizard-fields'
+import { roleDraftStorage } from './role-draft-storage'
 import './role-wizard.css'
 
 interface RoleContext {
   role: RoleVersion | undefined
   models: ModelProfile[]
   actions: WorkspaceActions
-  visitSkills?: () => void
+  visitSkills?: (id?: string) => void
   resume?: boolean
   resumed?: () => void
   hideTrigger?: boolean
@@ -69,7 +70,7 @@ const RoleWizardForm = ({
         visitSkills={() => {
           wizard.persist()
           close()
-          visitSkills?.()
+          visitSkills?.(wizard.savedRole?.id ?? wizard.base?.id ?? role?.id ?? newDraftId)
         }}
       />
       <RoleWizardFooter wizard={wizard} busy={actions.busy} close={close} />
@@ -110,6 +111,9 @@ const RoleDraftStatus = ({
   const version = wizard.saved?.version ?? wizard.base?.version ?? 0
   return (
     <div className="role-draft-status">
+      {roleDraftStorage.volatile() && (
+        <p role="alert">{t('本窗口草稿暂存于内存，重载或退出后无法恢复。')}</p>
+      )}
       <p className="field-note">
         {t('配置版本')} · {version || t('待保存')}
       </p>

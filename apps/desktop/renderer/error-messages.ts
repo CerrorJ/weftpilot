@@ -4,7 +4,9 @@ import { feishuErrors } from './feishu-errors'
 import { skillErrors } from './skill-errors'
 import { backupErrors } from './english-backup'
 import { diagnosticErrors } from './english-diagnostics'
+import { notificationErrors } from './english-settings-runtime'
 const messages: Record<string, [string, string]> = {
+  ...notificationErrors,
   GIT_INSPECTION_FAILED: [
     'Git检查未完成或期间仓库发生变化，请核对仓库后重新检查。',
     'The Git check did not complete or the repository changed during it. Inspect the repository and check again.',

@@ -17,14 +17,22 @@ export const roleCatalogDescription = '从职责、能力到权限，让每位�
 interface Context {
   state: WorkspaceSnapshot
   actions: WorkspaceActions
-  visitSkills: () => void
+  visitSkills: (id?: string) => void
+  initialRoleId?: string
   resume: boolean
   resumed: () => void
 }
 
-export const RoleSetup = ({ state, actions, visitSkills, resume, resumed }: Context) => {
+export const RoleSetup = ({
+  state,
+  actions,
+  visitSkills,
+  resume,
+  resumed,
+  initialRoleId,
+}: Context) => {
   const { t } = useI18n()
-  const [selected, setSelected] = useState(readSelectedRole)
+  const [selected, setSelected] = useState(() => initialRoleId ?? readSelectedRole())
   const [opening, setOpening] = useState(false)
   const roles = latestVersions(state.roles)
   const copied = useCreatedRoleFocus(roles)

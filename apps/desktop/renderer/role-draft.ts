@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
+import { roleDraftStorage } from './role-draft-storage'
 import { skillReferenceSchema } from '@weftpilot/agent-team-kernel/protocol'
 import {
   roleFeishuDraftFields,
@@ -69,8 +70,8 @@ export const roleDraftKey = (role: RoleVersion | undefined, newDraftId = 'new'):
 export const readRoleDraft = (key: string, fallback?: RoleDraft): RoleDraft | undefined => {
   try {
     const raw: unknown = JSON.parse(
-      sessionStorage.getItem(key) ??
-        sessionStorage.getItem(`${key}.${fallback?.baseVersion ?? 0}`) ??
+      roleDraftStorage.read(key) ??
+        roleDraftStorage.read(`${key}.${fallback?.baseVersion ?? 0}`) ??
         'null',
     )
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined
@@ -118,7 +119,7 @@ export const writeRoleDraft = (
   })
   if (!draft.success) return
   try {
-    sessionStorage.setItem(key, JSON.stringify(draft.data))
+    roleDraftStorage.write(key, JSON.stringify(draft.data))
   } catch {
     /* 存储不可用不阻断表单操作。 */
   }
@@ -127,7 +128,7 @@ export const writeRoleDraft = (
 
 export const clearRoleDraft = (key: string): void => {
   try {
-    sessionStorage.removeItem(key)
+    roleDraftStorage.remove(key)
   } catch {
     /* 保存已经成功，不将草稿清理失败变成业务失败。 */
   }
@@ -135,7 +136,7 @@ export const clearRoleDraft = (key: string): void => {
 
 export const readSelectedRole = (): string => {
   try {
-    return sessionStorage.getItem('weftpilot.role-selection') ?? ''
+    return roleDraftStorage.read('weftpilot.role-selection') ?? ''
   } catch {
     return ''
   }
@@ -143,7 +144,7 @@ export const readSelectedRole = (): string => {
 
 export const rememberSelectedRole = (id: string): void => {
   try {
-    sessionStorage.setItem('weftpilot.role-selection', id)
+    roleDraftStorage.write('weftpilot.role-selection', id)
   } catch {
     /* 当前窗口仍可选择角色。 */
   }

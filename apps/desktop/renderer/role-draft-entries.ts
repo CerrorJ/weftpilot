@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { RoleVersion } from '@weftpilot/agent-team-kernel/protocol'
 import { initialRoleDraft, readRoleDraft } from './role-draft'
+import { roleDraftStorage } from './role-draft-storage'
 
 const prefix = 'weftpilot.role-draft.'
 const targetSchema = z.union([
@@ -23,8 +24,7 @@ export const newRoleDraftTarget = (): string => `new.${crypto.randomUUID()}`
 export const readRoleDraftEntries = (roles: RoleVersion[]): RoleDraftEntry[] => {
   try {
     const entries: RoleDraftEntry[] = []
-    for (let index = 0; index < sessionStorage.length; index++) {
-      const key = sessionStorage.key(index)
+    for (const key of roleDraftStorage.keys()) {
       if (!key?.startsWith(prefix)) continue
       const target = targetSchema.safeParse(key.slice(prefix.length))
       if (!target.success) continue

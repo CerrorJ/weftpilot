@@ -10,6 +10,12 @@ declare global {
         theme: 'system' | 'light' | 'dark'
       }): Promise<void>
       workflow: WorkflowBridge
+      notifications: {
+        status(): Promise<unknown>
+        save(input: unknown): Promise<unknown>
+        test(): Promise<unknown>
+      }
+      onOpenTask(listener: (id: string) => void): () => void
     }
   }
 }

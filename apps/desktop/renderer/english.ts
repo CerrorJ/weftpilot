@@ -17,6 +17,7 @@ import { englishProjects } from './english-projects'
 import { englishTeams } from './english-teams'
 import { englishTaskBoard } from './english-task-board'
 import { englishWorkbench } from './english-workbench'
+import { englishSettingsRuntime } from './english-settings-runtime'
 export const english: Record<string, string> = {
   ...englishShell,
   ...englishRoleWizard,
@@ -30,6 +31,7 @@ export const english: Record<string, string> = {
   ...englishTeams,
   ...englishTaskBoard,
   ...englishWorkbench,
+  ...englishSettingsRuntime,
   ...englishProduct,
   ...englishHuman,
   ...englishFeishu,

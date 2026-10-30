@@ -9,6 +9,7 @@ interface NativeUi {
   tray: () => Tray | undefined
   quit: () => Promise<void>
   rendererUrl: string
+  languageChanged?: (language: 'zh-CN' | 'en') => void
 }
 
 /** 主题和菜单属于系统桥接；不会写入或改变业务状态。 */
@@ -25,6 +26,7 @@ export const registerAppearance = (ui: NativeUi): void => {
     const value = appearanceSchema.parse(raw)
     nativeTheme.themeSource = value.theme
     setNativeMenus(ui, value.language)
+    ui.languageChanged?.(value.language)
   })
 }
 

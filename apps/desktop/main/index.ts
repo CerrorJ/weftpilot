@@ -10,6 +10,7 @@ import { FeishuVault } from './feishu-vault'
 import { registerWorkflowBridge } from './workflow-bridge'
 import { registerAppearance, setNativeMenus } from './appearance'
 import { DiagnosticReports } from './diagnostic-reports'
+import { DesktopNotifications } from './desktop-notifications'
 
 let window: BrowserWindow | undefined
 let host: KernelController | undefined
@@ -58,6 +59,7 @@ const quit = async (): Promise<void> => {
   quitPending = true
   try {
     await host?.stop()
+    notifications.stop()
     quitting = true
     tray?.destroy()
     app.quit()
@@ -110,7 +112,23 @@ ipcMain.handle('weftpilot:exportDiagnostics', async (event, input: unknown) => {
   return diagnosticReports.export(input)
 })
 
-const nativeUi = { window: () => window, tray: () => tray, quit, rendererUrl }
+const notifications = new DesktopNotifications({
+  userData: app.getPath('userData'),
+  rendererUrl,
+  window: () => window,
+  client: () => {
+    if (!host) throw new Error('KERNEL_STOPPED')
+    return host.client
+  },
+})
+notifications.register()
+const nativeUi = {
+  window: () => window,
+  tray: () => tray,
+  quit,
+  rendererUrl,
+  languageChanged: (language: 'zh-CN' | 'en') => notifications.language(language),
+}
 registerAppearance(nativeUi)
 
 registerWorkflowBridge({
@@ -138,6 +156,13 @@ if (ownsInstance)
   void app
     .whenReady()
     .then(() => {
+      // 与NSIS正式/隔离验证安装器的有限身份一致，不注册额外协议或修改系统通知设置。
+      if (process.platform === 'win32')
+        app.setAppUserModelId(
+          app.getName() === 'weftpilot-validation'
+            ? 'io.weftpilot.desktop.validation'
+            : 'io.weftpilot.desktop',
+        )
       const encryption = {
         available: () => safeStorage.isEncryptionAvailable(),
         encrypt: (value: string) => safeStorage.encryptString(value),
@@ -152,6 +177,7 @@ if (ownsInstance)
       tray.setToolTip('纬舟 WeftPilot')
       tray.on('double-click', () => window?.show())
       setNativeMenus(nativeUi, 'zh-CN')
+      notifications.start()
     })
     .catch(async (error: unknown) => {
       await dialog.showMessageBox({

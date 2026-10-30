@@ -1,4 +1,3 @@
-﻿import { useState } from 'react'
 import { useI18n, PreferencesProvider, AppearanceSettings } from './preferences'
 import './desktop-api'
 import { useWorkspace, type WorkspaceActions } from './use-workspace'
@@ -11,6 +10,8 @@ import { SettingsPage } from './settings-page'
 import { SkillPage } from './skill-page'
 import { TasksPage } from './tasks-page'
 import { homeAttentionTasks } from './home-attention'
+import { useRoleNavigation } from './use-role-navigation'
+import { useNotificationNavigation } from './use-notification-navigation'
 
 export const App = () => (
   <PreferencesProvider>
@@ -21,13 +22,10 @@ export const App = () => (
 const AppShell = () => {
   const routing = useWorkspaceNavigation()
   const { page, taskEntry, openTask, openProjectTasks } = routing
-  const [roleReturn, setRoleReturn] = useState(false)
-  const [roleResume, setRoleResume] = useState(false)
+  const roles = useRoleNavigation(routing.navigate)
+  useNotificationNavigation(openTask)
   const actions = useWorkspace()
-  const navigate = (id: NavigationId) => {
-    routing.navigate(id)
-    setRoleResume(false)
-  }
+  const navigate = roles.navigate
   return (
     <div className="workspace">
       <Sidebar page={page} navigate={navigate} actions={actions} />
@@ -43,20 +41,10 @@ const AppShell = () => {
             openTask={openTask}
             openProjectTasks={openProjectTasks}
             openProject={routing.openProject}
-            roleReturn={roleReturn}
-            returnRole={() => {
-              setRoleReturn(false)
-              routing.navigate('roles')
-              setRoleResume(true)
-            }}
-            roleNavigation={{
-              resume: roleResume,
-              resumed: () => setRoleResume(false),
-              visitSkills: () => {
-                navigate('skills')
-                setRoleReturn(true)
-              },
-            }}
+            roleReturn={roles.roleReturn}
+            returnRole={roles.returnRole}
+            roleNavigation={roles.roleNavigation}
+            configureRole={roles.configureRole}
           />
         </div>
       </main>
@@ -134,7 +122,7 @@ const SidebarFooter = ({ actions }: { actions: WorkspaceActions }) => {
         <span>{t('待处理')}</span>
         <strong>{pending ?? '—'}</strong>
       </div>
-      <p>{t('关闭窗口后继续运行；从应用菜单完全退出。')}</p>
+      <p>{t('关闭窗口后继续运行；从托盘或系统菜单完全退出。')}</p>
       <div className="local-owner">
         <span className="owner-avatar">W</span>
         <div>
@@ -147,6 +135,7 @@ const SidebarFooter = ({ actions }: { actions: WorkspaceActions }) => {
 }
 
 interface PageContentProps {
+  configureRole: (id: string) => void
   page: NavigationId
   taskEntry: TaskEntry
   projectEntry: { projectId: string; visit: number }
@@ -160,6 +149,7 @@ interface PageContentProps {
   roleNavigation: RoleNavigation
 }
 const PageContent = ({
+  configureRole,
   page,
   taskEntry,
   projectEntry,
@@ -192,7 +182,7 @@ const PageContent = ({
         projectEntry={projectEntry}
       />
     )
-  if (page === 'settings') return <SettingsPage actions={actions} />
+  if (page === 'settings') return <SettingsPage actions={actions} configureRole={configureRole} />
   if (page === 'skills')
     return (
       <>

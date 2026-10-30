@@ -22,6 +22,7 @@ export const openSettingsPage = async (
     .getByRole('navigation', { name: /^(设置分类|Settings sections)$/ })
     .getByRole('button', { name: names[section], exact: true })
     .click()
+  if (section === 'feishu') await page.locator('.legacy-feishu summary').click()
 }
 
 export const openHumanPage = async (page: Page): Promise<void> => {

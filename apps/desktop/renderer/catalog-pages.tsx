@@ -17,7 +17,8 @@ type CatalogId = keyof typeof titles
 export const isCatalog = (page: NavigationId): page is CatalogId => page in titles
 
 export interface RoleNavigation {
-  visitSkills: () => void
+  visitSkills: (id?: string) => void
+  initialRoleId?: string
   resume: boolean
   resumed: () => void
 }

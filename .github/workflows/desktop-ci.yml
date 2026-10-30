@@ -110,6 +110,14 @@ jobs:
           path: .tmp/evidence/credential-availability-*.json
           if-no-files-found: warn
           retention-days: 7
+      - name: Preserve native notification outcome
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-notification-${{ runner.os }}
+          path: .tmp/evidence/notification-native-*.json
+          if-no-files-found: warn
+          retention-days: 7
       - name: Preserve requirement UI evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -126,5 +134,7 @@ jobs:
             .tmp/evidence/task-board-*.png
             .tmp/evidence/skill-download-errors-*.png
             .tmp/evidence/workbench-*.png
+            .tmp/evidence/settings-connections-*.png
+            .tmp/evidence/settings-notifications-*.png
           if-no-files-found: warn
           retention-days: 7

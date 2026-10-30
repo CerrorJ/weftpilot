@@ -3,11 +3,19 @@ import type { WorkspaceActions } from './use-workspace'
 import { useI18n, AppearanceSettings } from './preferences'
 import { PageHeading } from './page-heading'
 import { ModelSetup } from './model-setup'
-import { FeishuPage } from './feishu-page'
+import { SettingsRoleConnections } from './settings-role-connections'
+import { NotificationSettings } from './notification-settings'
 import { DiagnosticsPanel } from './diagnostics'
+import './settings-runtime.css'
 
-const sections = ['通用设置', '模型配置', '飞书连接', '内核信息'] as const
-export const SettingsPage = ({ actions }: { actions: WorkspaceActions }) => {
+const sections = ['通用设置', '模型配置', '飞书连接', '通知与后台', '内核信息'] as const
+export const SettingsPage = ({
+  actions,
+  configureRole,
+}: {
+  actions: WorkspaceActions
+  configureRole: (id: string) => void
+}) => {
   const { t } = useI18n()
   const [section, setSection] = useState<(typeof sections)[number]>('通用设置')
   return (
@@ -33,7 +41,10 @@ export const SettingsPage = ({ actions }: { actions: WorkspaceActions }) => {
             </section>
           )}
           {section === '模型配置' && <ModelSetup actions={actions} />}
-          {section === '飞书连接' && <FeishuPage actions={actions} />}
+          {section === '飞书连接' && (
+            <SettingsRoleConnections actions={actions} configureRole={configureRole} />
+          )}
+          {section === '通知与后台' && <NotificationSettings />}
           {section === '内核信息' && <DiagnosticsPanel />}
         </div>
       </div>
