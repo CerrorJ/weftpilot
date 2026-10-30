@@ -4,6 +4,8 @@
 
 ## 实际功能
 
+当前桌面实现提交`6b35cbb3a48d8defdf4d343cc912b2fceda179e1`已推送，Agent-Team仅关联文档`09bb77516c9fa804e7d2cb8e3aa85415aa5a3543`已推送，运行内核仍为下文73固定产物。[CI40994207392](https://github.com/CerrorJ/weftpilot/actions/runs/40994207392) attempt1两平台SUCCESS，独立官方证据核验及Reviewer补审APPROVE。**Mac原生测试通知实际failed，CI成功不等于显示成功**；下文过程时点与最终结果分开。
+
 飞书分类按角色最新配置版本展示；“未接入”“继承工作空间”“已保存配置”与真实连接状态分开。用户展开一个角色后才查询原角色渠道状态，连接/断开仍调用Agent-Team同一用例，不自动授权或连接。配置入口携带确切角色UUID进入原六步表单；旧工作空间飞书表单保留在折叠区。真实租户成功联调仍待独立测试应用，不把未连接角色的界面验收当飞书成功。
 
 角色草稿继续使用当前窗口sessionStorage，配置/市场往返保持确切角色或新草稿身份。存储被拒绝或配额失败时，保留已校验的非敏感输入到本窗口内存，并明确提示重载/退出后不能恢复；失败删除保留tombstone，避免旧草稿复活。恢复存储后显式保存可重试。角色版本、既有Run快照和凭据存储未改写。
@@ -41,6 +43,33 @@ Root同6ebe包另启真实workflow回归4/4通过，0跳过0失败0取消/exit0�
 
 独立Reviewer随后限定APPROVE，无未解决P级问题。另跑八项风险回归及双TS/lint/规模/格式，核39原源SHA及新增真实测试、143文件/四锁、四资源和独立真实通知补验；文档已将Root受控UUID导航与独立GUI范围分开。当前源码重新构建四资源仍逐SHA一致，未用后加注释冒认旧包来源。
 
+提交后Reviewer通过git-show另核40项源/测试/CI，确切6b35与已审SHA一致，五文档结论保守准确，限定APPROVE维持。随后[八页独立审计](eight-page-validation.md)核心新对象流程通过，294源SHA/20图/快照与自然退出有独立补核；未验状态仍保留。
+
+Root同包真实Codex→Claude团队专项1/1通过、exit0，101225ms，覆盖文件挑战、上游验收门控、贡献交接、父任务与重启。另从干净6b35构建独立validation身份的0.0.1/0.0.2未签名NSIS，两个release:verify均通过；真实安装/升级/卸载专项1/1通过、exit0，22957ms，运行中升级/卸载返回32且未改现有运行，正常退出后升级保留业务/加密凭据/中英文及明暗偏好，卸载保留数据。只针对本轮新建隔离身份，未接管其他安装；本轮未额外断言通知偏好跨升级，不扩写该项。
+
+本机computer-use另作空fixture有界尝试，固定测试通知原生shown、窗口隐藏；没有取得可选系统通知浮层，窗口截图内容不属于测试应用而未采纳。未向其他窗口输入或改系统权限，原生菜单exit0后清理自己的fixture。OS横幅/真实点击仍待验，不拿API或DOM截图代替。
+
+## 本提交原生CI与通知限制
+
+确切6b35的Windows job123863424586、macOS job123863424279均SUCCESS。Win核心189通过、单元69/装配8；Mac核心179通过10平台跳过、单元69/装配7通过1平台跳过。两平台开发与实际包默认79项均61通过18明确跳过0失败0取消，新增两设置用例四种原生模式共八条成功记录；实际公共来源专项各1通过2CLI跳过，未签名NSIS和ARM64 DMG/ZIP装配通过。CI未调用真实模型或执行NSIS安装升级；本机专项另记。
+
+独立CI Tester用官方run/jobs/artifacts元数据核确切head/attempt，六ZIP逐官方大小/摘要、CRC、安全路径/上限和逐文件字节核验，60张官方PNG（每平台26主图+4剪贴板）全部逐张查看。连接器临时断联后，Tester独立匿名官方元数据、Root正常Git身份仅内存从官方只读API下载原始日志/ZIP，跨域去Authorization、不保存凭据或签名URL；不将下载分工冒称全程独立下载。两份原始完整日志均独立核验。
+
+| 官方artifact                 | ID          | 字节    | SHA-256                                                          |
+| ---------------------------- | ----------- | ------- | ---------------------------------------------------------------- |
+| requirement-ui-Windows       | 12951235773 | 1430005 | 3509e6f97c1a2244f53b9d1b83fb013febd2bb5729c7eb180260d78d84b58c56 |
+| requirement-ui-macOS         | 12950499966 | 2075832 | 5e0db03190695d15d48de083e9571b637827b18ffca4884e213cf5a9e082f711 |
+| project-clipboard-ui-Windows | 12950783258 | 234768  | ef3aee04aa55771554de182806eb4c65c3a226a738fb30366afc4045bebea4d1 |
+| project-clipboard-ui-macOS   | 12951076998 | 322102  | 1f15a1546520226796d3808f7f78d8d5afd613a25d9bc9adebfd130737003a45 |
+| native-notification-Windows  | 12950882930 | 374     | 33e6e6d217ed2aae95d56d199240e4b821798899c2936030b04a0c44e71c2e31 |
+| native-notification-macOS    | 12950699119 | 376     | f2acdcdac5f7bb17fd2e8a052f5206acfa1d489a9b4c29eecc00aafa2e0a24a6 |
+
+两份原生JSON均packaged=true/supported=true/watching，属于显式测试通知。Windows最终test.shown，Mac最终test.failed；截图拍于较早requested，不能拿截图替代后续系统反馈，更不能当OS横幅。Mac本轮通知显示失败是实际观察，不标成未发生；Mac备份开发和实际包均通过仅为未复现历史Keychain失败，不关闭其根因。
+
+Reviewer另从匿名官方API核run/jobs/artifacts，对原始日志计数、六ZIP官方摘要/CRC、60PNG逐摘要和两JSON独立补审APPROVE；仅另看两张代表图，60图全看归Tester。连接器故障与只读下载分工、Mac failed及无签名对照均如实保留，没有重跑换绿或把通知失败条件放宽成成功。
+
+已核固定[Electron42通知API原文](https://github.com/electron/electron/blob/v42.0.0/docs/api/notification.md)及[平台说明](https://github.com/electron/electron/blob/v42.0.0/docs/tutorial/notifications.md)：macOS的UNNotification要求应用签名，未签名材料不满足此前置条件。本轮材料明确未签名，与failed一致；未做有签名对照，不据此声称唯一根因、已经修复或正式签名后必然成功。正式签名凭据、用户设备权限及横幅/点击仍需后续验证；不自行使用签名凭据或改变系统权限。可以先研究隔离、无凭据的开发签名对照，不把它当正式签名或发行验收。
+
 ## 复现与后续
 
 使用固定Node24.18/pnpm12.3.4及自己的空测试目录。依次运行：
@@ -60,4 +89,4 @@ pnpm test:e2e
 
 实际包验证显式设置`WEFTPILOT_PACKAGED_EXE`为本机新包；真实CLI专项另设`WEFTPILOT_REAL_NOTIFICATIONS=1`运行`tests/e2e/native-notification-cli.test.ts`，需要已有正常CLI授权并产生真实模型调用。默认CI不调用付费模型，保留两平台截图及有限字段的原生反馈JSON。CI结果须关联确切源码提交，不继承ab82绿色。
 
-下一步为确切提交原生CI、整体八页流程审计。真实飞书/自定义模型、Mac Keychain间歇失败、旧Windows未知进程现场、用户设备安装升级/通知显示、签名许可和更新渠道仍分别待验，M0—M4与整体原型不封板。
+下一步为Mac通知前置条件对照及剩余状态/发行验证。真实飞书/自定义模型、Mac Keychain间歇失败、旧Windows未知进程现场、用户设备安装升级/通知显示、签名许可和更新渠道仍分别待验，M0—M4与整体原型不封板。
