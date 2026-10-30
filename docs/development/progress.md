@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+工作台与窗口菜单实现`ab82b4a`的[CI40986263270](https://github.com/CerrorJ/weftpilot/actions/runs/40986263270)双平台SUCCESS，独立Tester/Reviewer完成限定CI补验：各开发/实际76项59通过17跳过，实际公共来源各1通过2CLI跳过、未签名安装装配通过，52张官方新图与四归档摘要核验。Mac本轮备份未复现旧失败，历史根因不关闭；固定73/0131/p1/schema12/143/d9不变。当前docs仅记录ab82，下一项设置已在独立feat/settings-notifications开发、尚未完成验收；详见[工作台最终结论](workbench.md)。
+
 当前[工作台](workbench.md)接入已获独立Windows GUI限定PASS、随后Reviewer APPROVE：固定c29绿色概览、待处理/近期工作、我的项目及确切UUID入口，用户新要求顶部原生窗口菜单已移除，Alt/语言切换不恢复，复制粘贴/隐藏继续/完全退出保留。61单元/8装配/严格检查及两专项通过，最终菜单包完整76项59通过17明确跳过0失败0取消、exit0（244145ms）；原048包侧栏失败保留。固定73/0131/p1/schema12/143/d9不变，新提交原生CI待验证，不扩写为M0—M4或八页封板。下一项设置的逐角色连接总览和实际通知，外部联调/原生发行条件继续记录。
 
 0.13.1接入源码5ff的[CI40874507588](https://github.com/CerrorJ/weftpilot/actions/runs/40874507588)最终FAIL：Win完整74项57通过17跳过、真实来源1通过2CLI跳过；Mac实际包56通过1失败17跳过，唯一backup保存密钥失败、来源专项未运行。新限流/TLS用例四处原生通过。独立Tester核46图/官方摘要/完整日志、Reviewer独立补审批准限定事实；固定73/0131/p1/schema12/143/d9不变，旧Mac根因仍开放。详见[最终CI结论](skill-download-diagnostics.md)，下方“待CI”为历史时点。下一项为工作台真实快照/项目入口/待处理区，设置页仍待实现，整体M0—M4不封板。
