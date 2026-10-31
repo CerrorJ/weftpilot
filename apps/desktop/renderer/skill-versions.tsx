@@ -1,6 +1,7 @@
 import type { SkillImport, SkillPackage } from '@weftpilot/agent-team-kernel/protocol'
 import type { WorkspaceActions } from './use-workspace'
 import { useI18n } from './preferences'
+import { SkillImportRecovery } from './skill-import-recovery'
 
 const states: Record<SkillImport['state'], string> = {
   queued: '等待下载',
@@ -15,10 +16,12 @@ export const SkillImports = ({
   imports,
   skills,
   actions,
+  openImport,
 }: {
   imports: SkillImport[]
   skills: SkillPackage[]
   actions: WorkspaceActions
+  openImport: (id: string) => void
 }) => {
   const { t } = useI18n()
   return (
@@ -26,7 +29,13 @@ export const SkillImports = ({
       <h2 id="skill-imports">{t('预览与安装记录')}</h2>
       {!imports.length && <p>{t('添加来源后，下载技能目录以查看完整说明与许可证。')}</p>}
       {[...imports].reverse().map((item) => (
-        <SkillImportRecord key={item.id} item={item} skills={skills} actions={actions} />
+        <SkillImportRecord
+          key={item.id}
+          item={item}
+          skills={skills}
+          actions={actions}
+          openImport={openImport}
+        />
       ))}
     </section>
   )
@@ -122,10 +131,12 @@ const SkillImportRecord = ({
   item,
   skills,
   actions,
+  openImport,
 }: {
   item: SkillImport
   skills: SkillPackage[]
   actions: WorkspaceActions
+  openImport: (id: string) => void
 }) => {
   const { t } = useI18n()
   return (
@@ -139,6 +150,7 @@ const SkillImportRecord = ({
       </p>
       <code>{item.source.commit}</code>
       {item.failureCode && <p className="error">{t(item.failureCode)}</p>}
+      <SkillImportRecovery item={item} actions={actions} openImport={openImport} />
       {item.package && (
         <SkillPreview
           skill={item.package}

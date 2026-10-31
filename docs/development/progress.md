@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+当前[技能失败手动恢复](skill-import-recovery.md)已实现：沿原内核skill.import新建下载UUID，固定旧来源版本、保留旧失败、显式重新核对许可，无自动重试/安装。Root最终Win包两项2P，相关专项4P1明确跳过，71单元/9装配及严格检查通过；独立Tester14项PASS，实际公共下载/明确同意安装/重启全文快照不变、旧对象不变和退出已核。源码Reviewer已限定APPROVE，新确切提交CI待验，内核仍73/0131/p1/schema12/143/d9，不覆盖e9f Mac来源失败或未验平台/发行条件。
+
 最新e9f的[原生诊断CI41192789086](notification-ci-diagnostics.md)整轮FAIL，Win成功，Mac公共来源返回SKILL_DOWNLOAD_RATE_LIMITED（0P1F2S），实际网络限流原因未独立定位；两平台71单元、开发/包各80项62P18S均通过，Mac首probe/默认通知均shown、原outcome硬gate通过。有限诊断实际created59/scheduled76ms，无授权行、未复现失败，不能关闭02f波动根因。独立Tester核六ZIP/63PNG元数据/四JSON，实际看九图，Reviewer补审限定APPROVE_VERIFIED_PARTIAL_CI_ONLY并另看两张Mac图；源码与Windows独立GUI此前均限定APPROVE/PASS。三类待办和M0—M4整体仍未封板；下面“待新CI”为历史时点。
 
 最新[02f通知失败与诊断](notification-ci-diagnostics.md)：Mac新常规CI在strict签名通过后must-shown实际failed，后续80项和新GUI图片未执行；不继承784绿色。当前只补测试侧有限授权/调度事件和失败前sidecar保留，单项失败继续独立UI但末尾按原始outcome硬阻断；Root71单元/Win真实shown、独立probe/真实设置点击与gate边界通过，审查及新Mac实际采集继续，原因未定。下面02f Windows本机62P18S/真实2P及784双平台成功仍各自成立，不是新02f Mac成功。

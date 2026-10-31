@@ -8,10 +8,12 @@ export const SkillCatalogDetail = ({
   entry,
   actions,
   close,
+  openImport,
 }: {
   entry: SkillCatalogEntry
   actions: WorkspaceActions
   close: () => void
+  openImport: (id: string) => void
 }) => (
   <CreateDialog
     key={entry.id}
@@ -22,16 +24,18 @@ export const SkillCatalogDetail = ({
     closeIcon
     onClosed={close}
   >
-    {() => <SkillCatalogContent entry={entry} actions={actions} />}
+    {() => <SkillCatalogContent entry={entry} actions={actions} openImport={openImport} />}
   </CreateDialog>
 )
 
 const SkillCatalogContent = ({
   entry,
   actions,
+  openImport,
 }: {
   entry: SkillCatalogEntry
   actions: WorkspaceActions
+  openImport: (id: string) => void
 }) => {
   const { t } = useI18n()
   return (
@@ -56,6 +60,7 @@ const SkillCatalogContent = ({
           imports={[entry.imported]}
           skills={actions.state?.skills ?? []}
           actions={actions}
+          openImport={openImport}
         />
       ) : (
         entry.package && <SkillPreview skill={entry.package} previous={undefined} />

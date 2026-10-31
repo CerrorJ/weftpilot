@@ -4,6 +4,8 @@
 
 ## 当前六类清单（三类待办、三类限定完成；本节优先于历史）
 
+当前[技能手动恢复](skill-import-recovery.md)补失败详情直接入口，复用现有内核创建新下载、不自动换来源版本或安装。最终Win包真实公共恢复2项及独立Tester14项通过，源码Reviewer已限定APPROVE，新确切提交CI继续；这是新增恢复能力，不是e9f Mac失败已补验或全部异常路径已经关闭。
+
 最新e9f[诊断CI](notification-ci-diagnostics.md)整轮FAIL：Win全通过，Mac通知及开发/包各80项62P18S通过，公共来源返回SKILL_DOWNLOAD_RATE_LIMITED，实际网络限流原因未独立定位。实际两事件创建/调度，无授权/失败行，旧02f通知波动与Keychain/未知现场不关闭；六ZIP/63PNG元数据与四JSON独立核完，CI补审限定APPROVE_VERIFIED_PARTIAL_CI_ONLY。剩余仍为整体状态验收、真实外部联调、原生发行三类；网络失败条件只记录，不盲重跑或索取新凭据替代。
 
 最新[02f Mac通知检查](notification-ci-diagnostics.md)在strict通过后仍failed，Mac后续80项没有运行；当前补有限诊断/sidecar和保留整轮失败的独立检查策略。784的开发通知成功不关闭该波动，历史Keychain/未知现场、正式安装器及用户设备仍待验。Windows本机最新62P18S及真实双CLI2P不扩为Mac通过。

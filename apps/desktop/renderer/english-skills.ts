@@ -1,4 +1,10 @@
 export const englishSkills: Record<string, string> = {
+  '创建新下载记录并保留本次失败；下载后仍需核对内容与许可证。':
+    'Create a new download record and keep this failure. Review the content and license again before installation.',
+  '新下载记录已创建，本次失败保持原状。':
+    'A new download record was created. This failure remains unchanged.',
+  查看新下载记录: 'View new download record',
+  按此来源版本重新下载: 'Download this source version again',
   查看详情: 'View details',
   '为角色补充能力，从安装到引用都在这里完成。':
     'Extend your roles, from installation to assignment.',

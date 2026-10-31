@@ -104,7 +104,7 @@ jobs:
           $env:WEFTPILOT_REAL_SKILLS = '1'
           $env:WEFTPILOT_E2E_LIFECYCLE = '1'
           $env:WEFTPILOT_E2E_RELEASE_INSPECTOR = '1'
-          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts
+          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts tests/e2e/skill-import-recovery.test.ts
       - name: Verify public skill sources in macOS package
         if: runner.os == 'macOS'
         run: |
@@ -112,7 +112,7 @@ jobs:
           test -n "$WEFTPILOT_PACKAGED_EXE"
           export WEFTPILOT_REAL_SKILLS=1
           # 只下载本仓原创MIT技能的固定公共提交，不调用CLI模型、不传GitHub或飞书凭据。
-          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts
+          pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts tests/e2e/skill-import-recovery.test.ts
       - name: Enforce original native notification outcome
         if: always() && !cancelled() && runner.os == 'macOS'
         env:
@@ -165,5 +165,6 @@ jobs:
             .tmp/evidence/settings-connections-*.png
             .tmp/evidence/settings-notifications-*.png
             .tmp/evidence/appearance-drawer-*.png
+            .tmp/evidence/skill-recovery-*.png
           if-no-files-found: warn
           retention-days: 7

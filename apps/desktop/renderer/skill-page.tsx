@@ -50,19 +50,31 @@ export const SkillPage = ({ actions }: { actions: WorkspaceActions }) => {
           </p>
         </>
       )}
-      {entry && (
-        <SkillCatalogDetail
-          entry={entry}
-          actions={actions}
-          close={() => {
-            select('')
-            restoreSkillCatalogFocus()
-          }}
-        />
-      )}
+      <SelectedSkillDetail entry={entry} actions={actions} select={select} />
     </section>
   )
 }
+
+const SelectedSkillDetail = ({
+  entry,
+  actions,
+  select,
+}: {
+  entry: SkillCatalogEntry | undefined
+  actions: WorkspaceActions
+  select: (id: string) => void
+}) =>
+  entry && (
+    <SkillCatalogDetail
+      entry={entry}
+      actions={actions}
+      openImport={select}
+      close={() => {
+        select('')
+        restoreSkillCatalogFocus()
+      }}
+    />
+  )
 
 const SkillCatalogResults = ({
   entries,
