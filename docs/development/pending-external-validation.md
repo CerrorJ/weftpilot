@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+2026-10-31补充：[83006e专用通知对照](macos-notification-probe.md)已验证无凭据的开发应用级ad-hoc重签可令当前runner由failed变shown。原包实际带Electron/linker-ad-hoc局部签名，但Info/资源未完整绑定、strict失败；不能把“未正式签名”写成完全无签名，也不应把开发通知修复一概等待正式证书。常规CI仍因Mac Keychain和归焦失败，分别继续修复/调查。Root真实技能3项因固定tree URL匿名限流0P3F、0Run/0安装；该服务额度条件记录后继续独立开发，不注入Git凭据或关闭下载校验。
+
 2026-10-30：[6b35设置CI](https://github.com/CerrorJ/weftpilot/actions/runs/40994207392)双平台SUCCESS，Mac原生测试通知JSON却实际failed，Win为shown，不能混为成功。固定Electron42[官方通知文档](https://github.com/electron/electron/blob/v42.0.0/docs/api/notification.md)明确macOS UNNotification需应用签名；当前材料未签名，不满足前置条件，尚无有签名对照不能定唯一根因。可先验证无凭据的隔离开发签名；正式签名凭据使用仍需另行授权，Mac通知成功/用户设备横幅点击仍待验。Mac本轮备份通过仅未复现历史Keychain错误。本机当前包真实workflow4P、双CLI团队1P、隔离NSIS安装升级卸载1P及[八页核心流程](eight-page-validation.md)已限定通过，不接管旧现场/线上服务；飞书与有效模型条件仍待所有者。
 
 2026-10-27：0100初版实际Windows包完整61项45通过16明确跳过，原两个真实剪贴板成功/迟到回执用例已实际执行通过，error5本轮未复现。没有改系统权限或剪贴板产品实现，不把旧失败改称已永久修复；下文error5为此前环境时点，当前不再据此等待用户解锁。后续6a修复的双平台CI各开发/实际包45通过16跳过，已独立核12图/摘要；本机修复只重跑相关专项，不冒称再次全61。其余凭据/用户设备/签名条件仍保留，范围见[本增量](requirement-metadata.md)。
