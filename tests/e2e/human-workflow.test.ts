@@ -1,6 +1,7 @@
 import { confirmPreflight } from './preflight-helpers'
 import { openDeliveryReview, checkAcceptanceCriteria } from './delivery-helpers'
 import { openHumanPage } from './navigation-helpers'
+import { assertHumanCrossPagePhase } from './human-cross-page-helpers'
 import {
   openRoleEditor,
   goRoleStep,
@@ -51,6 +52,7 @@ for (const cli of ['codex', 'claude'] as const)
           false,
         )
         await assert.rejects(access(join(run.workDirectory, 'answer.txt')))
+        await assertHumanCrossPagePhase({ page, taskId, phase: 'pending', cli })
         await quit(application)
         application = await launch(fixture.data)
         page = await application.firstWindow()
@@ -96,6 +98,7 @@ for (const cli of ['codex', 'claude'] as const)
           'answered',
         )
         assert.equal(finished.tasks.find((item) => item.id === taskId)?.status, 'in_review')
+        await assertHumanCrossPagePhase({ page, taskId, phase: 'review', cli })
         await page.getByRole('button', { name: 'Tasks', exact: true }).click()
         await page.getByRole('button', { name: 'All tasks', exact: true }).click()
         await page
@@ -114,6 +117,7 @@ for (const cli of ['codex', 'claude'] as const)
           timeout: 10000,
           predicate: (state) => state.tasks.find((item) => item.id === taskId)?.status === 'done',
         })
+        await assertHumanCrossPagePhase({ page, taskId, phase: 'accepted', cli })
         await quit(application)
       } catch (error) {
         // 仅保存本用例合成数据，失败后仍能区分模型拒绝、协议失败和执行未结束。

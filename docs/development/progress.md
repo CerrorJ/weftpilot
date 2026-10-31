@@ -8,6 +8,10 @@
 
 ## 当前状态
 
+当前[人工处理跨页与弹层修复](cross-page-state-validation.md)已获独立GUI九项PASS、源码Reviewer APPROVE；Root真实Codex/Claude2P0F，三稳定阶段跨工作台/列表/看板/历史只读一致。新实际包默认串行80项62P18明确跳过0失败0取消，强制真实剪贴板成功；原并行60P2取消和修前0P2F保留。当前提交/新原生CI待完成，不继承78449结果。承接e2db四份交接入口，固定73/0131/p1/schema12/143/d9不变；完整M0—M4仍未封板。
+
+78449的[双平台CI41190049143](https://github.com/CerrorJ/weftpilot/actions/runs/41190049143)已SUCCESS，各开发/实际79项61P18S，Mac新应用目录strict/157载荷不变/两份真实shown，原归焦和备份断言均通过。独立Tester核六官方ZIP/60图摘要/四有限JSON并实际看12代表图，CI Reviewer补审已获限定APPROVE；源码和WindowsGUI已限定APPROVE/PASS。只完成本增量，历史Keychain/旧Windows未知现场、真实默认profile与正式发行不关闭，详见[实际记录](macos-development-packaging.md)。下方待CI均为此前时点。
+
 2026-10-31当前增量见[Mac开发包与焦点修复](macos-development-packaging.md)：明确开发应用名称/默认数据目录、项目UUID同步归焦、仅新Mac开发包ad-hoc及strict/全载荷不变核验，默认CI强制原生shown。Windows独立GUI限定PASS；最终main补验、69单元/9装配通过，真实无TEST默认profile未接管；源码审查及新Mac/Win CI待完成。Root此前技能限流失败保留，明确观察同一tree URL额度恢复后3项真实来源/Codex/Claude通过；该结果归6b35旧包，不借给本轮Mac修复。以下为历史提交时点。
 
 83006e的[专用Mac对照41184747174](https://github.com/CerrorJ/weftpilot/actions/runs/41184747174)限定PASS/独立APPROVE：原包存在Electron上游linker-ad-hoc签名、Info未绑定、strict失败，开发应用级重签后io.weftpilot.desktop/strict通过/原生shown，157载荷/143内核不变；不是必须正式证书才可通知。[常规41184747138](https://github.com/CerrorJ/weftpilot/actions/runs/41184747138)整轮FAIL，Win成功、Mac包内59P2F18S（Keychain保存及返回项目焦点），来源专项跳过。独立七归档/58图摘要核完，只实看8设置图，不继承旧60全看。后续修复默认Mac包身份/焦点并单独排查系统凭据；Root新技能3项被GitHub tree限流挡在预览前置，未执行模型，旧失败保留。详见[本轮实际记录](macos-notification-probe.md)。

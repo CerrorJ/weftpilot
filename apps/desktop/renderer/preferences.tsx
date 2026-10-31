@@ -1,6 +1,7 @@
 ﻿import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { english } from './english'
 import { translateError } from './error-messages'
+import { useAppearanceDismissal } from './use-appearance-dismissal'
 
 export type Language = 'zh-CN' | 'en'
 export type Theme = 'system' | 'light' | 'dark'
@@ -68,8 +69,9 @@ export const useI18n = () => {
 
 export const AppearanceSettings = ({ expanded = false }: { expanded?: boolean }) => {
   const { language, theme, setLanguage, setTheme, t } = useI18n()
+  const root = useAppearanceDismissal(expanded)
   return (
-    <details className="appearance-settings" open={expanded || undefined}>
+    <details ref={root} className="appearance-settings" open={expanded || undefined}>
       <summary>{t('设置')}</summary>
       <label>
         {t('语言')}

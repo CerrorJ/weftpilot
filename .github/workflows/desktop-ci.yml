@@ -149,5 +149,6 @@ jobs:
             .tmp/evidence/workbench-*.png
             .tmp/evidence/settings-connections-*.png
             .tmp/evidence/settings-notifications-*.png
+            .tmp/evidence/appearance-drawer-*.png
           if-no-files-found: warn
           retention-days: 7
