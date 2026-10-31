@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+2026-10-31最新[78449常规CI](macos-development-packaging.md)双平台成功，Mac默认新开发应用目录strict/两份真实shown、开发与包内备份均通过，不再将该runner的开发通知等待正式证书。正式installer/manifest仍未改变，用户系统横幅点击、旧密文兼容/历史Keychain根因、无TEST真实默认profile、用户安装升级/实际MacCLI、正式证书/公证及真实飞书/自定义模型仍各自待验，不能由一次CI成功代替。
+
 2026-10-31当前[Mac开发包修复](macos-development-packaging.md)已进入审查/新原生CI，开发名称及默认数据目录隔离不搬迁旧数据；正式installer/manifest未改变。真实无TEST默认profile未接管，Mac Keychain旧密文/用户设备仍待验。Root曾限流0P3F的同一tree URL额度恢复后3项真实技能通过，原失败保留，不再把当时额度当作当前停工条件。Windows本机两次恢复单元偶发失败保留，后续正常69P和独立69P不能关闭未知根因。下文均保留对应历史时点。
 
 2026-10-31补充：[83006e专用通知对照](macos-notification-probe.md)已验证无凭据的开发应用级ad-hoc重签可令当前runner由failed变shown。原包实际带Electron/linker-ad-hoc局部签名，但Info/资源未完整绑定、strict失败；不能把“未正式签名”写成完全无签名，也不应把开发通知修复一概等待正式证书。常规CI仍因Mac Keychain和归焦失败，分别继续修复/调查。Root真实技能3项因固定tree URL匿名限流0P3F、0Run/0安装；该服务额度条件记录后继续独立开发，不注入Git凭据或关闭下载校验。

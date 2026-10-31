@@ -23,3 +23,13 @@ Root另在明确观察同一Git tree URL由403/remaining0变为200/remaining41�
 独立Tester限定PASS：同名项目按精确UUID返回/Enter、跨轮询不抢焦、双语明暗窄窗口与新任务0Run均由真实agent-browser操作；五张必要图实际查看。最终1986主进程另补身份/TEST_DATA/脏仓库/重启单项1P和安全桥接检查，独立69单元/9装配通过；合成密文重启摘要/解密不变、自己的旧包数据库不变。自有GUI/开发、最终namespace和桥接登记的25/12/6个PID+CreationDate身份均终态缺席，不处理历史未知现场。旧fc0 GUI只复用字节相同的7c renderer结论，不冒认最终main完整79已执行。无TEST真实默认profile与Mac原生部分仍待验；本机ignored报告为validation-independent-tester.md/json。
 
 复现使用Node24.18/pnpm12.3.4，冻结安装后依次运行`pnpm kernel:assemble`、`pnpm typecheck`、`pnpm lint`、`pnpm test`、`pnpm test:packaging`、`pnpm build`。`pnpm dev`使用新的开发应用名称/默认profile；打包或测试应使用自己的新输出目录与TEST_DATA。macOS本机运行`pnpm package`后核development-signature.json及实际原生通知，不用编译成功代替运行；正式证书、用户设备和其余外部条件仍按待办处理。
+
+## 确切提交与新原生CI
+
+源码`fix/macos-validation/78449e45c2ff8fe653dd0baeb5ec6b7b06867ed5`通过上述独立Tester与Reviewer限定审查后已推送。[Desktop41190049143](https://github.com/CerrorJ/weftpilot/actions/runs/41190049143) attempt1确切head78449双平台SUCCESS：Windows job124504784928、macOS job124504785096。Win内核189P、单元69P、装配9P；Mac内核179P10平台跳过、单元69P、装配8P1平台跳过；两平台开发与实际包默认79项均61P18明确跳过、0失败0取消；公共技能各3项1P2真实CLI跳过。CI没有执行真实模型或真实租户联调。
+
+本次新Mac应用目录实际codesign覆盖旧局部签名后strict通过，有限旁证为development-adhoc、io.weftpilot.desktop、157份dist载荷不变，内核仍73/143/d9；probe中sourceCommit确切78449。新强制探针和默认设置用例两份Mac回执均为test.shown，Win默认同样shown。原项目归焦与备份断言未改，开发及实际包各真实通过；本轮未复现Keychain错误，不等于确认历史根因或旧密文升级已解决。
+
+六份官方ZIP大小/SHA-256/CRC、成员白名单及60张PNG尺寸/摘要、Mac三份与Win一份有限JSON已经独立Tester核验。Tester实际查看12张本轮代表图（双平台设置八张与工作台四张），不是60图全部查看。部分截图截于requested时，后续JSON才shown，按时点区分；不把请求中的截图说成系统横幅。Root只读官方原日志Win179302字节/SHA `a044c4c1d0d5bb6277fb543f9ef45b0701ae701a035a42827b4d435b96551201`、Mac131413字节/SHA `7991611a6d871e36f7df1a06de31907b6257c763c751304bc98d417832b6f753`。独立源码/WindowsGUI已经APPROVE/PASS，新CI补审已获限定APPROVE；不扩大到正式installer/manifest、用户安装升级、实际横幅点击或真实无TEST默认profile。
+
+内核仓关联交接提交`050fedd0432935e184693cf85388dc3c6723876f`已推送；它只更新验收文档，运行产物仍固定73/0.13.1/p1/schema12/143/d9。
