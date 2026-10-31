@@ -5,6 +5,7 @@ import type { Page } from 'playwright'
 import { z } from 'zod'
 import { createFixture, launch, quit, snapshot } from '../e2e/workflow-helpers'
 import { notificationStatus } from '../e2e/notification-helpers'
+import { observeNotificationDiagnostics } from './notification-diagnostics'
 
 const mode = process.env.WEFTPILOT_PROBE_MODE
 assert.ok(mode === 'unsigned' || mode === 'adhoc', 'PROBE_MODE_REQUIRED')
@@ -52,7 +53,9 @@ const emptyBusinessState = async (page: Page) => {
 const runProbe = async () => {
   const fixture = await createFixture()
   const application = await launch(fixture.data)
+  let diagnostics: ReturnType<typeof observeNotificationDiagnostics>
   try {
+    diagnostics = observeNotificationDiagnostics(application)
     const page = await application.firstWindow()
     const before = await emptyBusinessState(page)
     const status = await feedback(page)
@@ -71,6 +74,7 @@ const runProbe = async () => {
           packaged,
           status,
           unchangedBusinessCounts: before,
+          ...(diagnostics ? { diagnostics: diagnostics.snapshot() } : {}),
         },
         null,
         2,
@@ -82,6 +86,7 @@ const runProbe = async () => {
   } finally {
     // 对照失败也经过产品正常退出守卫；状态未知时不强杀或清空现场。
     await quit(application)
+    diagnostics?.close()
     await fixture.cleanup()
   }
 }

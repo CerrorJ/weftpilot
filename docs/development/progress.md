@@ -8,6 +8,8 @@
 
 ## 当前状态
 
+最新[02f通知失败与诊断](notification-ci-diagnostics.md)：Mac新常规CI在strict签名通过后must-shown实际failed，后续80项和新GUI图片未执行；不继承784绿色。当前只补测试侧有限授权/调度事件和失败前sidecar保留，单项失败继续独立UI但末尾按原始outcome硬阻断；Root71单元/Win真实shown、独立probe/真实设置点击与gate边界通过，审查及新Mac实际采集继续，原因未定。下面02f Windows本机62P18S/真实2P及784双平台成功仍各自成立，不是新02f Mac成功。
+
 当前[人工处理跨页与弹层修复](cross-page-state-validation.md)已获独立GUI九项PASS、源码Reviewer APPROVE；Root真实Codex/Claude2P0F，三稳定阶段跨工作台/列表/看板/历史只读一致。新实际包默认串行80项62P18明确跳过0失败0取消，强制真实剪贴板成功；原并行60P2取消和修前0P2F保留。当前提交/新原生CI待完成，不继承78449结果。承接e2db四份交接入口，固定73/0131/p1/schema12/143/d9不变；完整M0—M4仍未封板。
 
 78449的[双平台CI41190049143](https://github.com/CerrorJ/weftpilot/actions/runs/41190049143)已SUCCESS，各开发/实际79项61P18S，Mac新应用目录strict/157载荷不变/两份真实shown，原归焦和备份断言均通过。独立Tester核六官方ZIP/60图摘要/四有限JSON并实际看12代表图，CI Reviewer补审已获限定APPROVE；源码和WindowsGUI已限定APPROVE/PASS。只完成本增量，历史Keychain/旧Windows未知现场、真实默认profile与正式发行不关闭，详见[实际记录](macos-development-packaging.md)。下方待CI均为此前时点。

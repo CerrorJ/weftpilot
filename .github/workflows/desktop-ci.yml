@@ -48,16 +48,24 @@ jobs:
       - run: pnpm test:packaging
       - run: pnpm package
       - name: Require native notification in the macOS development package
+        id: native-notification
         if: runner.os == 'macOS'
+        # 单项失败先留证并继续独立UI检查，末尾必须按原始outcome重新阻断整轮。
+        continue-on-error: true
+        env:
+          WEFTPILOT_NOTIFICATION_DIAGNOSTICS: '1'
+          ELECTRON_DEBUG_NOTIFICATIONS: '1'
+          ELECTRON_ENABLE_LOGGING: '1'
         run: |
           export WEFTPILOT_PACKAGED_EXE="$(find "$PWD/release" -path '*/WeftPilot.app/Contents/MacOS/WeftPilot' -print -quit)"
           test -n "$WEFTPILOT_PACKAGED_EXE"
           export WEFTPILOT_PROBE_MODE=adhoc
           export WEFTPILOT_PROBE_REQUIRE_SHOWN=1
-          pnpm exec tsx --tsconfig tsconfig.runtime.json tests/native/notification-platform-probe.ts
           signature="$(find "$PWD/release" -name development-signature.json -print -quit)"
           test -n "$signature"
+          mkdir -p .tmp/evidence
           cp "$signature" .tmp/evidence/notification-platform-package.json
+          pnpm exec tsx --tsconfig tsconfig.runtime.json tests/native/notification-platform-probe.ts
       - run: pnpm test:e2e
       - name: Packaged application (Windows)
         id: windows-packaged
@@ -105,6 +113,13 @@ jobs:
           export WEFTPILOT_REAL_SKILLS=1
           # 只下载本仓原创MIT技能的固定公共提交，不调用CLI模型、不传GitHub或飞书凭据。
           pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/skill-workflow.test.ts
+      - name: Enforce original native notification outcome
+        if: always() && !cancelled() && runner.os == 'macOS'
+        env:
+          NATIVE_NOTIFICATION_OUTCOME: ${{ steps.native-notification.outcome }}
+        run: |
+          # continue-on-error仅让独立检查继续，failed/skipped/空结果一律不能让整轮通过。
+          test "$NATIVE_NOTIFICATION_OUTCOME" = success
       - name: Preserve project clipboard UI evidence
         if: always()
         uses: actions/upload-artifact@v4

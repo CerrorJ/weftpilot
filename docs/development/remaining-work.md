@@ -4,6 +4,8 @@
 
 ## 当前六类清单（三类待办、三类限定完成；本节优先于历史）
 
+最新[02f Mac通知检查](notification-ci-diagnostics.md)在strict通过后仍failed，Mac后续80项没有运行；当前补有限诊断/sidecar和保留整轮失败的独立检查策略。784的开发通知成功不关闭该波动，历史Keychain/未知现场、正式安装器及用户设备仍待验。Windows本机最新62P18S及真实双CLI2P不扩为Mac通过。
+
 最新[人工处理跨页补验](cross-page-state-validation.md)关闭顶部外观弹层遮挡详情的真实缺陷：独立GUI九项/源码APPROVE、Root真实双CLI2P、最终串行全80项62P18S通过。当前新提交原生CI待执行；plan/operation、未知停止、需求/团队非空全状态仍不能由澄清三个阶段代替。下面78449为已独立核验的前一确切提交，历史超时/Keychain根因仍保留。
 
 当前[Mac开发包、环境隔离与焦点修复](macos-development-packaging.md)78449已获独立源码/GUI限定通过，[新CI41190049143](https://github.com/CerrorJ/weftpilot/actions/runs/41190049143)双平台SUCCESS：各开发/包79项61P18S、原归焦/备份断言通过，Mac新包两份原生shown。独立核六ZIP/60图摘要及四有限JSON，实际看12代表图，CI补审已获限定APPROVE。此前83006e常规CI整体FAIL仍保留，不定Keychain唯一根因；真实默认profile、正式installer/manifest、用户设备与横幅/点击未验。
