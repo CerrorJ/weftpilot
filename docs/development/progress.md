@@ -8,6 +8,10 @@
 
 ## 当前状态
 
+2026-10-31继续[Mac通知开发签名对照](macos-notification-probe.md)：只增隔离CI和原生探针，不改产品/内核；当前Windows真实探针shown/空业务不变/正常退出及独立Tester/Reviewer已通过，Mac实际对照待新提交CI。固定73/0131/p1/schema12/143/d9不变。Root另以6b35实际包真实Codex与Claude人工等待重启、同Run续接、交付验收2/2通过，不能扩大为全部审批/飞书或发行完成。
+
+设置实现`6b35cbb`的[CI40994207392](https://github.com/CerrorJ/weftpilot/actions/runs/40994207392)双平台SUCCESS：69单元，各开发/实际79项61通过18明确跳过，公共来源各1通过2CLI跳过，60图/六摘要已独立核；原生Win测试shown、Mac实际failed，不能当Mac显示成功。固定Electron42原文要求Mac应用签名，当前未签名材料不满足前置，仍须对照和用户设备验证。Windows真实自动通知独立通过，Root真实workflow4P/双CLI团队1P/隔离NSIS安装升级1P；[八页核心流程](eight-page-validation.md)20图/294源SHA独立限定通过，完整状态与M0—M4不封板。详见[设置最终记录](settings-notifications.md)，下段为此前时点。
+
 设置增量进入[独立验收收尾](settings-notifications.md)：逐角色连接总览/确切配置入口、存储拒绝时内存草稿、实际通知偏好CAS和主进程后台观察已实现；69单元/8装配、最终6ebe包完整78项61通过17跳过0失败0取消exit0及独立GUI限定PASS。Root和独立Tester各自真实Codex隐藏窗口→实际内核交付→原生review show回执专项1/1通过、仍0验收；源码审查/新CI继续，横幅和点击不冒认。固定73/0131/p1/schema12/143/d9不变，M0—M4与整体八页未封板。
 
 工作台与窗口菜单实现`ab82b4a`的[CI40986263270](https://github.com/CerrorJ/weftpilot/actions/runs/40986263270)双平台SUCCESS，独立Tester/Reviewer完成限定CI补验：各开发/实际76项59通过17跳过，实际公共来源各1通过2CLI跳过、未签名安装装配通过，52张官方新图与四归档摘要核验。Mac本轮备份未复现旧失败，历史根因不关闭；固定73/0131/p1/schema12/143/d9不变。当前docs仅记录ab82，下一项设置已在独立feat/settings-notifications开发、尚未完成验收；详见[工作台最终结论](workbench.md)。

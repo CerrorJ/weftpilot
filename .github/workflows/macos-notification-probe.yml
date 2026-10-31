@@ -1,0 +1,96 @@
+name: macOS notification signature probe
+on:
+  push:
+    branches: ['fix/macos-notification-probe']
+permissions:
+  contents: read
+jobs:
+  native-signature-comparison:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.3.4
+      - run: pnpm install --frozen-lockfile
+      - run: node node_modules/electron/install.js
+      - name: Validate fixed private kernel access
+        id: kernel-pin
+        env:
+          AGENT_TEAM_READ_TOKEN: ${{ secrets.AGENT_TEAM_READ_TOKEN }}
+        run: node build/ci-kernel-pin.mjs
+      - uses: actions/checkout@v4
+        with:
+          repository: CerrorJ/Agent-Team
+          ref: ${{ steps.kernel-pin.outputs.commit }}
+          token: ${{ secrets.AGENT_TEAM_READ_TOKEN }}
+          path: .kernel/source
+          persist-credentials: false
+      - run: pnpm kernel:assemble
+      - name: Build original package without signing credentials
+        id: package
+        run: pnpm package
+      - name: Prepare one isolated copy for both observations
+        id: copy
+        run: |
+          original="$(find "$PWD/release" -type d -name WeftPilot.app -print -quit)"
+          test -n "$original"
+          probe_dir="$(mktemp -d "$RUNNER_TEMP/weftpilot-native-probe.XXXXXX")"
+          ditto "$original" "$probe_dir/WeftPilot.app"
+          mkdir -p .tmp/evidence
+          (cd "$probe_dir/WeftPilot.app/Contents/Resources/app/dist" && find . -type f -exec shasum -a 256 {} \; | sort) > .tmp/evidence/notification-platform-payload-before.txt
+          # 原始材料可能含Electron上游签名，先记录实际身份/有效性，不用“unsigned”标签代替观察。
+          if codesign -dv --verbose=4 "$probe_dir/WeftPilot.app" 2>&1 | sed "s|$probe_dir|<probe>|g" > .tmp/evidence/notification-platform-signature-before.txt; then
+            echo 'inspection_exit=0' >> .tmp/evidence/notification-platform-signature-before.txt
+          else
+            echo "inspection_exit=$?" >> .tmp/evidence/notification-platform-signature-before.txt
+          fi
+          if codesign --verify --deep --strict --verbose=2 "$probe_dir/WeftPilot.app" 2>&1 | sed "s|$probe_dir|<probe>|g" > .tmp/evidence/notification-platform-verification-before.txt; then
+            echo 'verification_exit=0' >> .tmp/evidence/notification-platform-verification-before.txt
+          else
+            echo "verification_exit=$?" >> .tmp/evidence/notification-platform-verification-before.txt
+          fi
+          echo "WEFTPILOT_PROBE_APP=$probe_dir/WeftPilot.app" >> "$GITHUB_ENV"
+          echo "WEFTPILOT_PROBE_EXE=$probe_dir/WeftPilot.app/Contents/MacOS/WeftPilot" >> "$GITHUB_ENV"
+      - name: Observe original unsigned notification
+        run: |
+          export WEFTPILOT_PACKAGED_EXE="$WEFTPILOT_PROBE_EXE"
+          export WEFTPILOT_PROBE_MODE=unsigned
+          pnpm exec tsx --tsconfig tsconfig.runtime.json tests/native/notification-platform-probe.ts
+      - name: Ad-hoc sign a separate disposable copy without certificates
+        if: always() && steps.copy.outcome == 'success'
+        id: adhoc
+        run: |
+          # 同一路径的临时副本前后对照；--deep仅此开发实验，不是正式发行签名方案。
+          # 保留嵌套Electron的执行权限，不读取证书/Keychain身份或修改原安装材料。
+          codesign --force --deep --sign - --timestamp=none --preserve-metadata=entitlements,flags "$WEFTPILOT_PROBE_APP"
+          codesign --verify --deep --strict --verbose=2 "$WEFTPILOT_PROBE_APP"
+          codesign -dv --verbose=4 "$WEFTPILOT_PROBE_APP" 2>&1 | sed "s|$WEFTPILOT_PROBE_APP|<probe>|g" > .tmp/evidence/notification-platform-signature.txt
+          (cd "$WEFTPILOT_PROBE_APP/Contents/Resources/app/dist" && find . -type f -exec shasum -a 256 {} \; | sort) > .tmp/evidence/notification-platform-payload-after.txt
+          diff .tmp/evidence/notification-platform-payload-before.txt .tmp/evidence/notification-platform-payload-after.txt
+      - name: Require an actual shown event from the signed copy
+        if: always() && steps.adhoc.outcome == 'success'
+        run: |
+          export WEFTPILOT_PACKAGED_EXE="$WEFTPILOT_PROBE_EXE"
+          export WEFTPILOT_PROBE_MODE=adhoc
+          export WEFTPILOT_PROBE_REQUIRE_SHOWN=1
+          pnpm exec tsx --tsconfig tsconfig.runtime.json tests/native/notification-platform-probe.ts
+      - name: Preserve finite native outcomes and development signature identity
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-notification-signature-probe
+          path: .tmp/evidence/notification-platform-*
+          if-no-files-found: warn
+          retention-days: 7
