@@ -29,3 +29,11 @@ Root最小实际包用例宽窗口1P，再补中文浅色1124/英文深色700的
 ## 复现
 
 Node24.18/pnpm12.3.4，`pnpm install --frozen-lockfile`、`pnpm kernel:assemble`、`pnpm build`，使用自己的全新实际包和测试目录。默认`pnpm exec tsx --tsconfig tsconfig.runtime.json --test tests/e2e/appearance-dismissal.test.ts`不执行CLI；显式`WEFTPILOT_REAL_HUMAN=1`后运行`pnpm exec tsx --tsconfig tsconfig.runtime.json --test --test-concurrency=1 tests/e2e/human-workflow.test.ts`验证两种CLI。实际包通过`WEFTPILOT_PACKAGED_EXE`指定；需要本机已授权的CLI登录，不复制认证文件、不连接生产飞书。失败保留原日志与未确认结束的自有数据，不用重跑改写旧结果。
+
+## 02f确切原生CI结果
+
+[Desktop41191641941](https://github.com/CerrorJ/weftpilot/actions/runs/41191641941) attempt1、head02f614fa2db91884b6455a61bb0262391d2157c4，整轮**FAIL**。Windows job124509460549成功：核心189P、单元69P、装配9P，开发及实际包各80项62P18明确跳过0失败0取消，公共来源3项1P2真实CLI跳过。新增外观/原项目归焦/备份/identity均在两组日志实际成功，80份launcher记录exit0/null。CI没有执行真实模型，前述Root真实双CLI单独归属。
+
+Mac job124509460313在核心179P10平台跳过、单元69P、装配8P1平台跳过及ad-hoc strict通过后，must-shown实际failed，后续80项、来源及新MacGUI均未执行；无默认native JSON或签名sidecar，不继承784的图/157aggregate，也不将此CI当Mac界面通过。原因未定，后续有限诊断为[e9f独立增量](notification-ci-diagnostics.md)，不能倒填02f结果。
+
+独立Tester核官方元数据、完整日志和四ZIP的大小/SHA/CRC/安全白名单、实际32张Win PNG（28主图+4剪贴板）及两有限JSON；实际看六张Win代表图。随后Reviewer独立复核并另看两张外观图，**APPROVE_VERIFIED_FAILURE_ONLY**只批准失败事实准确，应用Mac验收仍不通过。中文CI外观图实际1008×681、英文700×820，不把Root本机1124尺寸硬套到runner。原始Win日志180471字节/SHA `15a2805da49dfc5d6e83d68574bd03dd10e87691976af3f8e818227d90546c7d`，Mac98730字节/SHA `2b471ef2f3db50db362b99c67eba21824c77122b2b58bc2b1824dc85c266871f`；连接器正文正规化对齐，不冒称独立二进制下载。

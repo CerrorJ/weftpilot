@@ -3,6 +3,8 @@
 用户最新要求：阻塞信息先记录，继续开发，不等待确认；明天统一处理。
 本清单不作为普通开发停工条件，也不将未验证项目标为通过。
 
+2026-10-31最新e9f[诊断CI](notification-ci-diagnostics.md)：Mac首次/默认通知均shown，两平台开发及包80项62P18S；整轮仍因Mac公共来源返回SKILL_DOWNLOAD_RATE_LIMITED失败，实际网络限流原因未独立定位；Win结果不能替代Mac失败。有限诊断只见创建/调度，没有授权行或失败，旧通知波动/Keychain根因和用户设备验收继续保留。未重跑换绿、未注入Git凭据、未改变系统通知权限；真实飞书/有效模型及正式发行条件仍待所有者后续处理，普通开发继续。
+
 2026-10-31最新[78449常规CI](macos-development-packaging.md)双平台成功，Mac默认新开发应用目录strict/两份真实shown、开发与包内备份均通过，不再将该runner的开发通知等待正式证书。正式installer/manifest仍未改变，用户系统横幅点击、旧密文兼容/历史Keychain根因、无TEST真实默认profile、用户安装升级/实际MacCLI、正式证书/公证及真实飞书/自定义模型仍各自待验，不能由一次CI成功代替。
 
 2026-10-31当前[Mac开发包修复](macos-development-packaging.md)已进入审查/新原生CI，开发名称及默认数据目录隔离不搬迁旧数据；正式installer/manifest未改变。真实无TEST默认profile未接管，Mac Keychain旧密文/用户设备仍待验。Root曾限流0P3F的同一tree URL额度恢复后3项真实技能通过，原失败保留，不再把当时额度当作当前停工条件。Windows本机两次恢复单元偶发失败保留，后续正常69P和独立69P不能关闭未知根因。下文均保留对应历史时点。
