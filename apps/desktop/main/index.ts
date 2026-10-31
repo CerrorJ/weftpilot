@@ -21,7 +21,12 @@ let modelVault: ModelVault | undefined
 let feishuVault: FeishuVault | undefined
 const root = __dirname
 const rendererUrl = pathToFileURL(join(root, 'renderer/index.html')).href
-if (process.env.WEFTPILOT_TEST_DATA) app.setPath('userData', process.env.WEFTPILOT_TEST_DATA)
+// userData隔离不等于系统Keychain隔离；开发态不复用已打包应用的系统凭据名称。
+if (!app.isPackaged) app.setName('weftpilot-development')
+const userDataOverride =
+  process.env.WEFTPILOT_TEST_DATA ||
+  (!app.isPackaged ? join(app.getPath('appData'), 'weftpilot-development') : undefined)
+if (userDataOverride) app.setPath('userData', userDataOverride)
 const ownsInstance = app.requestSingleInstanceLock()
 if (!ownsInstance) app.quit()
 

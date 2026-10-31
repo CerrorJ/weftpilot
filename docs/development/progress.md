@@ -8,6 +8,10 @@
 
 ## 当前状态
 
+2026-10-31当前增量见[Mac开发包与焦点修复](macos-development-packaging.md)：明确开发应用名称/默认数据目录、项目UUID同步归焦、仅新Mac开发包ad-hoc及strict/全载荷不变核验，默认CI强制原生shown。Windows独立GUI限定PASS；最终main补验、69单元/9装配通过，真实无TEST默认profile未接管；源码审查及新Mac/Win CI待完成。Root此前技能限流失败保留，明确观察同一tree URL额度恢复后3项真实来源/Codex/Claude通过；该结果归6b35旧包，不借给本轮Mac修复。以下为历史提交时点。
+
+83006e的[专用Mac对照41184747174](https://github.com/CerrorJ/weftpilot/actions/runs/41184747174)限定PASS/独立APPROVE：原包存在Electron上游linker-ad-hoc签名、Info未绑定、strict失败，开发应用级重签后io.weftpilot.desktop/strict通过/原生shown，157载荷/143内核不变；不是必须正式证书才可通知。[常规41184747138](https://github.com/CerrorJ/weftpilot/actions/runs/41184747138)整轮FAIL，Win成功、Mac包内59P2F18S（Keychain保存及返回项目焦点），来源专项跳过。独立七归档/58图摘要核完，只实看8设置图，不继承旧60全看。后续修复默认Mac包身份/焦点并单独排查系统凭据；Root新技能3项被GitHub tree限流挡在预览前置，未执行模型，旧失败保留。详见[本轮实际记录](macos-notification-probe.md)。
+
 2026-10-31继续[Mac通知开发签名对照](macos-notification-probe.md)：只增隔离CI和原生探针，不改产品/内核；当前Windows真实探针shown/空业务不变/正常退出及独立Tester/Reviewer已通过，Mac实际对照待新提交CI。固定73/0131/p1/schema12/143/d9不变。Root另以6b35实际包真实Codex与Claude人工等待重启、同Run续接、交付验收2/2通过，不能扩大为全部审批/飞书或发行完成。
 
 设置实现`6b35cbb`的[CI40994207392](https://github.com/CerrorJ/weftpilot/actions/runs/40994207392)双平台SUCCESS：69单元，各开发/实际79项61通过18明确跳过，公共来源各1通过2CLI跳过，60图/六摘要已独立核；原生Win测试shown、Mac实际failed，不能当Mac显示成功。固定Electron42原文要求Mac应用签名，当前未签名材料不满足前置，仍须对照和用户设备验证。Windows真实自动通知独立通过，Root真实workflow4P/双CLI团队1P/隔离NSIS安装升级1P；[八页核心流程](eight-page-validation.md)20图/294源SHA独立限定通过，完整状态与M0—M4不封板。详见[设置最终记录](settings-notifications.md)，下段为此前时点。

@@ -3,8 +3,8 @@ import { test } from 'node:test'
 import { installerConfiguration, installerEnvironment } from '../build/installer-config.mjs'
 import { verifyPackagedKernel } from '../build/verify-packaged-kernel.mjs'
 import { hashBytes } from '../build/release-inputs.mjs'
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises'
-import { join } from 'node:path'
+import { mkdtemp, mkdir, writeFile, rm, realpath } from 'node:fs/promises'
+import { join, dirname, basename } from 'node:path'
 import { tmpdir } from 'node:os'
 
 test('本地安装构建不继承签名/发布/模型/飞书秘密，明确禁用签名发现', () => {
@@ -64,4 +64,26 @@ test('隔离验收安装器使用独立身份；本地包关闭签名公证发�
   assert.equal(production.nsis.runAfterFinish, false)
   assert.equal(production.nsis.allowElevation, false)
   assert.equal(production.nsis.perMachine, false)
+})
+
+test('开发宿主锁只可显式放行且必须与外锁一致，不放宽实际安装器文件白名单', async () => {
+  const directory = await realpath(await mkdtemp(join(tmpdir(), 'weftpilot-host-lock-')))
+  const kernel = { files: { 'entry.js': hashBytes(Buffer.from('fixed kernel')) } }
+  try {
+    await mkdir(join(directory, 'kernel'))
+    await writeFile(join(directory, 'kernel-lock.json'), JSON.stringify(kernel))
+    await writeFile(join(directory, 'kernel/entry.js'), 'fixed kernel')
+    await writeFile(join(directory, 'kernel/artifact-lock.json'), JSON.stringify(kernel))
+    await assert.rejects(verifyPackagedKernel(directory, kernel), /非锁定/)
+    await verifyPackagedKernel(directory, kernel, { hostLock: true })
+    await writeFile(join(directory, 'kernel/artifact-lock.json'), '{}')
+    await assert.rejects(verifyPackagedKernel(directory, kernel, { hostLock: true }), /宿主内核锁/)
+    await writeFile(join(directory, 'kernel/artifact-lock.json'), JSON.stringify(kernel))
+    await writeFile(join(directory, 'kernel/extra.js'), 'unlocked')
+    await assert.rejects(verifyPackagedKernel(directory, kernel, { hostLock: true }), /非锁定/)
+  } finally {
+    assert.equal(dirname(directory), await realpath(tmpdir()))
+    assert.ok(basename(directory).startsWith('weftpilot-host-lock-'))
+    await rm(directory, { recursive: true, force: true })
+  }
 })

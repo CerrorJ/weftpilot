@@ -21,6 +21,13 @@ test(
     const fixture = await createFixture()
     let application = await launch(fixture.data)
     try {
+      const identity = await application.evaluate(({ app }) => ({
+        packaged: app.isPackaged,
+        name: app.getName(),
+        userData: app.getPath('userData'),
+      }))
+      assert.equal(identity.name, identity.packaged ? 'weftpilot' : 'weftpilot-development')
+      assert.equal(identity.userData, fixture.data, '开发身份不能覆盖显式测试目录')
       const page = await configure(application, fixture.repository)
       await createTask(page, '在隔离目录创建 hello.txt。')
       await writeFile(join(fixture.repository, 'user-uncommitted.txt'), '必须保留')

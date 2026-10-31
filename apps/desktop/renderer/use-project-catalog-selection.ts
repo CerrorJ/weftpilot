@@ -1,28 +1,25 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { Project } from '@weftpilot/agent-team-kernel/protocol'
 
-/** 仅确切本窗口创建回执聚焦新卡片；轮询及其他渠道新增项目不改变选择。 */
+/** 仅显式创建/返回聚焦确切卡片；轮询及其他渠道新增项目不改变选择。 */
 export const useProjectCatalogSelection = (projects: Project[], initialProjectId = '') => {
   const root = useRef<HTMLDivElement>(null)
   const [selected, select] = useState(initialProjectId)
-  const [created, setCreated] = useState('')
-  useEffect(() => {
-    if (!created || !projects.some((item) => item.id === created)) return
+  const [focusTarget, setFocusTarget] = useState('')
+  useLayoutEffect(() => {
+    if (selected || !focusTarget || !projects.some((item) => item.id === focusTarget)) return
     const card = root.current?.querySelector<HTMLButtonElement>(
-      `[data-project-id="${created}"] button`,
+      `[data-project-id="${focusTarget}"] button`,
     )
     if (!card) return
     card.scrollIntoView({ block: 'nearest' })
     card.focus()
-    setCreated('')
-  }, [created, projects])
+    setFocusTarget('')
+  }, [focusTarget, projects, selected])
   const back = () => {
+    // 列表提交挂载后、绘制前还焦，不把一次RAF当作React已经完成提交。
+    setFocusTarget(selected)
     select('')
-    requestAnimationFrame(() =>
-      root.current
-        ?.querySelector<HTMLButtonElement>(`[data-project-id="${selected}"] button`)
-        ?.focus(),
-    )
   }
-  return { root, selected, select, created: setCreated, back }
+  return { root, selected, select, created: setFocusTarget, back }
 }

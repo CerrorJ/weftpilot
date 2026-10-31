@@ -60,6 +60,8 @@ pnpm kernel:assemble
 pnpm dev
 ```
 
+开发态使用`weftpilot-development`应用名称与独立默认数据目录，已打包应用仍使用`weftpilot`；旧数据保留原位，不自动迁移，显式`WEFTPILOT_TEST_DATA`优先。macOS本机应用目录包补齐无证书的开发ad-hoc签名，正式安装器/公证仍另行验证；详见[开发包与系统凭据边界](docs/development/macos-development-packaging.md)。
+
 `pnpm kernel:assemble` 在隔离缓存中检出锁定内核、冻结安装、构建并校验 tarball 摘要，无需相邻源码目录。`pnpm package` 构建当前系统的全新应用目录；`pnpm package:installer`从干净提交装配本机未签名安装器，`pnpm release:verify <输出目录>`校验实际摘要。签名、公证和公开发布未授权。完整检查和打包验收命令见开发交接与[安装器记录](docs/development/m4-installers.md)。
 
 当前 Agent-Team 为私有仓库，新设备须单独获得正常 Git 读取授权。CI 使用专用 `AGENT_TEAM_READ_TOKEN` Secret，不继承开发设备登录状态。

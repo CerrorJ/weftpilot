@@ -47,6 +47,17 @@ jobs:
       - run: pnpm test
       - run: pnpm test:packaging
       - run: pnpm package
+      - name: Require native notification in the macOS development package
+        if: runner.os == 'macOS'
+        run: |
+          export WEFTPILOT_PACKAGED_EXE="$(find "$PWD/release" -path '*/WeftPilot.app/Contents/MacOS/WeftPilot' -print -quit)"
+          test -n "$WEFTPILOT_PACKAGED_EXE"
+          export WEFTPILOT_PROBE_MODE=adhoc
+          export WEFTPILOT_PROBE_REQUIRE_SHOWN=1
+          pnpm exec tsx --tsconfig tsconfig.runtime.json tests/native/notification-platform-probe.ts
+          signature="$(find "$PWD/release" -name development-signature.json -print -quit)"
+          test -n "$signature"
+          cp "$signature" .tmp/evidence/notification-platform-package.json
       - run: pnpm test:e2e
       - name: Packaged application (Windows)
         id: windows-packaged
@@ -115,7 +126,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-notification-${{ runner.os }}
-          path: .tmp/evidence/notification-native-*.json
+          path: |
+            .tmp/evidence/notification-native-*.json
+            .tmp/evidence/notification-platform-*.json
           if-no-files-found: warn
           retention-days: 7
       - name: Preserve requirement UI evidence
