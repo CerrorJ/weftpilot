@@ -8,7 +8,11 @@
 
 ## 当前状态
 
-当前[技能失败手动恢复](skill-import-recovery.md)已实现：沿原内核skill.import新建下载UUID，固定旧来源版本、保留旧失败、显式重新核对许可，无自动重试/安装。Root最终Win包两项2P，相关专项4P1明确跳过，71单元/9装配及严格检查通过；独立Tester14项PASS，实际公共下载/明确同意安装/重启全文快照不变、旧对象不变和退出已核。源码Reviewer已限定APPROVE，新确切提交CI待验，内核仍73/0131/p1/schema12/143/d9，不覆盖e9f Mac来源失败或未验平台/发行条件。
+当前[方案确认与单次操作续接补验](approval-continuation-validation.md)在ded64最终Windows实际包真实Codex通过：1批含两类场景、1P0F0S/exit0、88736ms；等待正常重启仍保留、CAS与已决定请求拒绝、同Run/attempt1且角色快照权限不变、文件trim后内容匹配、task先in_review再经独立验收done。验收按deliveryId核恰一条accepted，原临时记录器误用runId的空汇总另留。Root补测与独立GUI/CI区分，不扩成飞书、Mac真实CLI或全部M3。
+
+当前[技能失败手动恢复](skill-import-recovery.md)已实现：沿原内核skill.import新建下载UUID，固定旧来源版本、保留旧失败、显式重新核对许可，无自动重试/安装。Root最终Win包两项2P，相关专项4P1明确跳过，71单元/9装配及严格检查通过；独立Tester14项PASS、源码Reviewer限定APPROVE。ded64的CI41200634442双平台SUCCESS，各开发/包82项63P19跳过、公共技能5项3P2CLI跳过，Mac原始native outcome成功；六ZIP/70图/四有限JSON及新157 aggregate已独立核，正式CI补审继续。内核仍73/0131/p1/schema12/143/d9，不覆盖e9f Mac失败或未验平台/发行条件。
+
+最终CI独立补审已完成，Tester限定PASS、Reviewer限定APPROVE，实际另看四张CI恢复图，完整载荷/Win安装截图异步状态及通知范围均明确限定；Root审批补测仅只读审核通过。下一步继续尚未验收的审批异常和需求/团队非空状态，不以本轮成功覆盖总体三类待办。
 
 最新e9f的[原生诊断CI41192789086](notification-ci-diagnostics.md)整轮FAIL，Win成功，Mac公共来源返回SKILL_DOWNLOAD_RATE_LIMITED（0P1F2S），实际网络限流原因未独立定位；两平台71单元、开发/包各80项62P18S均通过，Mac首probe/默认通知均shown、原outcome硬gate通过。有限诊断实际created59/scheduled76ms，无授权行、未复现失败，不能关闭02f波动根因。独立Tester核六ZIP/63PNG元数据/四JSON，实际看九图，Reviewer补审限定APPROVE_VERIFIED_PARTIAL_CI_ONLY并另看两张Mac图；源码与Windows独立GUI此前均限定APPROVE/PASS。三类待办和M0—M4整体仍未封板；下面“待新CI”为历史时点。
 

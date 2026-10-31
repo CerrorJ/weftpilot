@@ -4,7 +4,11 @@
 
 ## 当前六类清单（三类待办、三类限定完成；本节优先于历史）
 
-当前[技能手动恢复](skill-import-recovery.md)补失败详情直接入口，复用现有内核创建新下载、不自动换来源版本或安装。最终Win包真实公共恢复2项及独立Tester14项通过，源码Reviewer已限定APPROVE，新确切提交CI继续；这是新增恢复能力，不是e9f Mac失败已补验或全部异常路径已经关闭。
+当前[方案/单次操作真实续接](approval-continuation-validation.md)补齐ded64 Windows实际包的真实Codex两场景：等待重启、错误版本/旧请求拒绝、同Run/attempt1及快照权限不变、UTF-8文件trim后内容匹配和交付后独立验收。Root修正临时记录器的Acceptance.deliveryId关联后另跑1批1P（含两场景），完整阶段快照逐关系复核；原错误汇总保留。不是独立Tester模型重跑，也未覆盖Claude这两类、超时/撤销/并发、飞书或Mac真实CLI，下面此前“plan/operation待验”为历史时点。
+
+当前[技能手动恢复](skill-import-recovery.md)补失败详情直接入口，复用现有内核创建新下载、不自动换来源版本或安装。最终Win包真实公共恢复2项及独立Tester14项通过，源码Reviewer已限定APPROVE；ded64的CI41200634442双平台SUCCESS，各开发/包82项63P19跳过、公共技能5项3P2CLI跳过，六ZIP/70图/四有限JSON已核，新sidecar aggregate字段归属已核、未重建完整Mac文件。CI最终补审继续，不把本轮成功改写为e9f网络失败或通知历史根因已关闭。
+
+最终补审已完成：独立Tester限定PASS、Reviewer限定APPROVE，核验范围和图像/载荷/通知限制见专项记录。下一步继续审批失效/拒绝及需求/团队非空状态等验收，三类总体待办不变。
 
 最新e9f[诊断CI](notification-ci-diagnostics.md)整轮FAIL：Win全通过，Mac通知及开发/包各80项62P18S通过，公共来源返回SKILL_DOWNLOAD_RATE_LIMITED，实际网络限流原因未独立定位。实际两事件创建/调度，无授权/失败行，旧02f通知波动与Keychain/未知现场不关闭；六ZIP/63PNG元数据与四JSON独立核完，CI补审限定APPROVE_VERIFIED_PARTIAL_CI_ONLY。剩余仍为整体状态验收、真实外部联调、原生发行三类；网络失败条件只记录，不盲重跑或索取新凭据替代。
 
