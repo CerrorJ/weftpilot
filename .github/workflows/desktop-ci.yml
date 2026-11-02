@@ -166,5 +166,6 @@ jobs:
             .tmp/evidence/settings-notifications-*.png
             .tmp/evidence/appearance-drawer-*.png
             .tmp/evidence/skill-recovery-*.png
+            .tmp/evidence/human-negative-*.png
           if-no-files-found: warn
           retention-days: 7
