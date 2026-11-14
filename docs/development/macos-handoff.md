@@ -4,6 +4,8 @@
 
 桌面代码位于 `CerrorJ/weftpilot` 的 `feat/approval-state-validation` 分支；该分支包含此前内核修复和本交接记录，不能以 `main` 或 `product-design` 的状态代替。Mac 上先获取该分支最新提交，检查工作区干净及 `build` 中的内核锁定信息，再以仓库构建脚本装配指定的 Agent-Team 内核提交。内核修复也保存在 `CerrorJ/Agent-Team` 的 `fix/retry-approval-context` 分支（`373cd2f`）。不要把 Windows 的构建目录、临时数据、认证文件或密钥复制进仓库。
 
+额外保留的旧工作区提交：`CerrorJ/weftpilot` 的 `fix/windows-exit-evidence`（`21fad86`）保存 Windows 退出诊断原始改动，最新验收分支已有后续版本；`chore/preserve-cross-page-lockfile`（`3116e76`）保存重复锁文件增量，不能直接覆盖验收分支锁文件。`CerrorJ/Agent-Team` 的 `docs/daily-assistant-example`（`beeb0aa`）保存独立的日报助手示例配置，不属于桌面内核修复；其中目录需按运行设备自行配置。这些是独立分支，不表示已经合入各仓库的 `main`。
+
 ```sh
 git clone https://github.com/CerrorJ/weftpilot.git
 cd weftpilot
