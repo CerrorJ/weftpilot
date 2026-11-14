@@ -55,16 +55,16 @@ const controlledRequests = (): NonNullable<KernelOptions['execute']> => {
     const index = businessCalls++
     assert.ok(index < 3, '夹具不允许隐式续接或额外执行')
     const humanRequest =
-      index === 1
+      index === 0
         ? { kind: 'plan' as const, title: '受控方案', summary: '仅核对拒绝及历史，不是真实模型。' }
         : {
             kind: 'operation' as const,
             request: {
-              operation: index === 0 ? '受控到期操作' : '受控撤销操作',
+              operation: index === 2 ? '受控到期操作' : '受控撤销操作',
               detail: '不执行文件写入，只生成等待态。',
               impact: '自己的合成项目',
               rollback: '无外部副作用',
-              timeoutSeconds: index === 0 ? 60 : 3600,
+              timeoutSeconds: index === 2 ? 60 : 3600,
             },
           }
     return { answer: '', sessionId: randomUUID(), humanRequest }
@@ -120,7 +120,8 @@ export const prepareHumanStateFixture = async () => {
     })
     const roleId = await enableRole(kernel, projectId)
     const tasks: string[] = []
-    for (const kind of ['到期', '拒绝', '撤销']) {
+    // 最后创建短有效期请求，避免其他夹具准备耗尽它的等待时间。
+    for (const [index, kind] of ['拒绝', '撤销', '到期'].entries()) {
       const taskId = await issue(kernel, {
         type: 'task.create',
         projectId,
@@ -132,7 +133,7 @@ export const prepareHumanStateFixture = async () => {
       const runId = await issue(kernel, { type: 'run.start', taskId, expectedVersion: 1 })
       const state = await waitForEnded(kernel, runId)
       assert.equal(state.runs.find((run) => run.id === runId)?.status, 'waiting_approval')
-      tasks.push(taskId)
+      tasks[[1, 2, 0][index]!] = taskId
     }
     const state = await readState(kernel)
     completed = true
