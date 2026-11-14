@@ -6,6 +6,30 @@ import { launch, quit, snapshot, waitForSnapshot } from './workflow-helpers'
 import { openHumanPage, navigate } from './navigation-helpers'
 import { assertNegativeViews, assertOldDecisionsRejected } from './human-negative-views'
 
+const waitUntilAfter = async (expiresAt: string) => {
+  const deadline = Date.parse(expiresAt) + 100
+  while (Date.now() < deadline)
+    await new Promise((resolve) => setTimeout(resolve, Math.min(deadline - Date.now(), 1000)))
+}
+
+const expireOrRejectClick = async (
+  page: Awaited<ReturnType<Awaited<ReturnType<typeof launch>>['firstWindow']>>,
+  requestId: string,
+) => {
+  const status = (await snapshot(page)).humanRequests.find((item) => item.id === requestId)?.status
+  if (status === 'expired') return
+  assert.equal(status, 'pending', '到期操作前请求已被其他操作改变；保留现场并停止测试')
+  try {
+    await page
+      .getByRole('article', { name: '单次操作审批', exact: true })
+      .getByRole('button', { name: '批准本次操作并继续', exact: true })
+      .click({ timeout: 2000 })
+  } catch (error) {
+    const request = (await snapshot(page)).humanRequests.find((item) => item.id === requestId)
+    if (request?.status !== 'expired') throw error
+  }
+}
+
 test(
   '受控等待态+实际窗口：带原因拒绝、真实时钟到期拒绝、停止撤销及重启历史',
   { timeout: 150000 },
@@ -60,12 +84,9 @@ test(
       assert.equal(cancelled.runs.find((item) => item.id === cancelling.runId)?.status, 'stopped')
       await page.getByRole('button', { name: '关闭详情', exact: true }).click()
       await openHumanPage(page)
-      const operation = page.getByRole('article', { name: '单次操作审批', exact: true })
       // 等待协议允许的真实60秒期限，不改数据库时间或应用时钟。
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.max(0, Date.parse(expiring.expiresAt) - Date.now() + 100)),
-      )
-      await operation.getByRole('button', { name: '批准本次操作并继续', exact: true }).click()
+      await waitUntilAfter(expiring.expiresAt)
+      await expireOrRejectClick(page, expiring.id)
       const expired = await waitForSnapshot({
         page,
         timeout: 10000,
