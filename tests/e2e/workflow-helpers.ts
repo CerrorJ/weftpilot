@@ -15,13 +15,15 @@ import {
   activateSavedRole,
   waitRoleCard,
 } from './role-helpers'
+import { prepareElectronTest } from './electron-test-session'
 
-export const launch = (data: string) => {
+export const launch = async (data: string) => {
   const executablePath = process.env.WEFTPILOT_PACKAGED_EXE
-  return electron.launch({
+  const application = await electron.launch({
     ...(executablePath ? { executablePath, args: [] } : { args: ['.'] }),
     env: { ...process.env, WEFTPILOT_TEST_DATA: data },
   })
+  return prepareElectronTest(application)
 }
 
 export const quit = async (application: ElectronApplication) => {
@@ -35,7 +37,8 @@ export const quit = async (application: ElectronApplication) => {
     await application.evaluate(({ Menu }) => {
       const item = Menu.getApplicationMenu()?.items[0]?.submenu?.items[0]
       if (!item) throw new Error('TEST_QUIT_MENU_UNAVAILABLE')
-      item.click()
+      // 先返回控制RPC，再触发原生菜单，避免will-quit释放调试器抢走本次响应。
+      setImmediate(() => item.click())
     })
   } catch (error) {
     // macOS可能先退出主进程、后丢失evaluate响应；只有实际关闭及exit 0才接受这种传输竞态。

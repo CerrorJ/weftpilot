@@ -5,6 +5,7 @@ on:
   pull_request:
 jobs:
   desktop:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -46,11 +47,19 @@ jobs:
       - run: pnpm package
       - run: pnpm test:e2e
       - name: Packaged application (Windows)
+        id: windows-packaged
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          "started_at=$([DateTime]::UtcNow.ToString('o'))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           $env:WEFTPILOT_PACKAGED_EXE = (Resolve-Path release/WeftPilot-win32-x64/WeftPilot.exe).Path
+          $env:WEFTPILOT_E2E_LIFECYCLE = '1'
+          $env:WEFTPILOT_E2E_RELEASE_INSPECTOR = '1'
           pnpm test:e2e
+      - name: Windows application failure metadata
+        if: failure() && runner.os == 'Windows' && steps.windows-packaged.outcome == 'failure'
+        shell: pwsh
+        run: ./build/windows-test-events.ps1 -StartedAt '${{ steps.windows-packaged.outputs.started_at }}'
       - name: Inspect source changes before installer
         run: |
           git status --short
